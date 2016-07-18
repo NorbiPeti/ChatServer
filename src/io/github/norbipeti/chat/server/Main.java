@@ -31,32 +31,7 @@ public class Main {
 				results.getString(0);
 			System.out.println("Starting webserver...");
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), 8080), 10);
-			server.createContext("/").setHandler(new HttpHandler() {
-
-				@Override
-				public void handle(HttpExchange exchange) {
-					try {
-						System.out.println("Received request from " + exchange.getRemoteAddress());
-						System.out.println("Body: " + IOUtils.toString(exchange.getRequestBody(), "ASCII"));
-						System.out.println("Headers: ");
-						for (Entry<String, List<String>> entry : exchange.getRequestHeaders().entrySet())
-							System.out.println(entry.getKey() + " - " + entry.getValue());
-						System.out.println(exchange.getRequestURI().getPath());
-						/*
-						 * String resp =
-						 * Pages.get(exchange.getRequestURI().getPath()).Run(
-						 * exchange); exchange.sendResponseHeaders(200,
-						 * resp.length()); IOUtils.write(resp,
-						 * exchange.getResponseBody());
-						 * exchange.getResponseBody().close();
-						 */
-						exchange.sendResponseHeaders(404, 0);
-						exchange.getResponseBody().close();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			});
+			server.createContext("/").setHandler(new IndexPage());
 			server.createContext("/register").setHandler(new RegisterPage());
 			server.start();
 			System.out.println("Ready... Press Enter to stop.");

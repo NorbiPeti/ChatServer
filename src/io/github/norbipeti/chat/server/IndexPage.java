@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
 
-public class Index extends Page {
+public class IndexPage extends Page {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
