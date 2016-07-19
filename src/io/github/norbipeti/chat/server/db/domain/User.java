@@ -16,15 +16,15 @@ public class User {
 	private String email;
 	private String password;
 	@ElementCollection(fetch = FetchType.EAGER)
-	private List<Long> contacts;
+	private List<User> contacts;
 
-	public List<Long> getContacts() {
+	public List<User> getContacts() {
 		if (contacts == null)
 			contacts = new ArrayList<>();
 		return contacts;
 	}
 
-	public void setContacts(List<Long> contacts) {
+	public void setContacts(List<User> contacts) {
 		this.contacts = contacts;
 	}
 

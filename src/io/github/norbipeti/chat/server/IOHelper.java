@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import com.sun.net.httpserver.HttpExchange;
@@ -34,5 +36,15 @@ public class IOHelper {
 		FileInputStream inputStream = new FileInputStream(file);
 		String content = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
 		return content;
+	}
+
+	public static String GetPOST(HttpExchange exchange) throws IOException {
+		String[] content = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.ISO_8859_1).split("\\&");
+		HashMap<String, String> vars = new HashMap<>();
+		for (String var : content) {
+			String[] spl = var.split("\\=");
+			vars.put(spl[0], spl[1]);
+		}
+		return null;
 	}
 }

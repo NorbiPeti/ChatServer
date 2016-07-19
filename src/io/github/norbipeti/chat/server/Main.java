@@ -30,10 +30,10 @@ public class Main {
 				provider.addUser(user);
 				User user2 = new User();
 				user2.setName("Teszt");
-				user2.getContacts().add(user.getId());
+				user2.getContacts().add(user);
 				provider.addUser(user2);
 				System.out.println(provider.getUsers());
-				System.out.println("Contact: " + provider.getUser(user2.getContacts().get(0)));
+				System.out.println("Contact: " + user2.getContacts().get(0));
 			}
 			System.out.println("Starting webserver...");
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), 8080), 10);
