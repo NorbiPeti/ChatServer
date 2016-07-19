@@ -12,6 +12,8 @@ import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
 import io.github.norbipeti.chat.server.db.DataProvider;
+import io.github.norbipeti.chat.server.page.IndexPage;
+import io.github.norbipeti.chat.server.page.RegisterPage;
 
 public class Main {
 	// public static final HashMap<String, Page> Pages = new HashMap<String,

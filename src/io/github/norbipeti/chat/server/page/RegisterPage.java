@@ -1,8 +1,10 @@
-package io.github.norbipeti.chat.server;
+package io.github.norbipeti.chat.server.page;
 
 import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
+
+import io.github.norbipeti.chat.server.IOHelper;
 
 public class RegisterPage extends Page {
 	@Override
