@@ -17,7 +17,7 @@ public abstract class Page implements HttpHandler {
 	public final String GetHTMLPath() {
 		if (GetName().length() == 0)
 			return "pages/index.html";
-		return new StringBuilder("pages/").append(GetName().length() == 0).append(".html").toString();
+		return new StringBuilder("pages/").append(GetName()).append(".html").toString();
 	}
 
 	@Override
