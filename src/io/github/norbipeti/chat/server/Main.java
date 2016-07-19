@@ -12,7 +12,8 @@ import org.reflections.util.ConfigurationBuilder;
 
 import com.sun.net.httpserver.HttpServer;
 
-import io.github.norbipeti.chat.server.db.DataProvider;
+import io.github.norbipeti.chat.server.db.*;
+import io.github.norbipeti.chat.server.db.domain.*;
 import io.github.norbipeti.chat.server.page.*;
 
 public class Main {
@@ -25,7 +26,11 @@ public class Main {
 				// https://docs.oracle.com/javase/8/docs/api/
 			System.out.println("Loading database...");
 			try (DataProvider provider = new DataProvider()) {
-
+				User user = new User();
+				provider.addUser(user);
+				System.out.println(provider.getUsers());
+				provider.removeUser(user);
+				System.out.println(provider.getUsers());
 			}
 			System.out.println("Starting webserver...");
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), 8080), 10);
