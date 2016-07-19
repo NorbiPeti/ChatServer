@@ -8,9 +8,13 @@ import io.github.norbipeti.chat.server.IOHelper;
 
 public class RegisterPage extends Page {
 	@Override
-	public void handle(HttpExchange exchange) throws IOException {
-		//exchange.getRequestURI().getPath()
-		IOHelper.SendResponse(200, "<h1>Register</h1>", exchange);
+	public void handlePage(HttpExchange exchange) throws IOException {
+		IOHelper.SendPage(200, this, exchange);
+	}
+
+	@Override
+	public String GetName() {
+		return "register";
 	}
 
 }

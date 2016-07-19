@@ -2,18 +2,11 @@ package io.github.norbipeti.chat.server;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.sql.*;
-import java.util.List;
-import java.util.Map.Entry;
-import org.apache.commons.io.IOUtils;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
 import io.github.norbipeti.chat.server.db.DataProvider;
-import io.github.norbipeti.chat.server.page.IndexPage;
-import io.github.norbipeti.chat.server.page.RegisterPage;
+import io.github.norbipeti.chat.server.page.*;
 
 public class Main {
 	// public static final HashMap<String, Page> Pages = new HashMap<String,
@@ -25,12 +18,13 @@ public class Main {
 				// https://docs.oracle.com/javase/8/docs/api/
 			System.out.println("Loading database...");
 			try (DataProvider provider = new DataProvider()) {
-				
+
 			}
 			System.out.println("Starting webserver...");
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), 8080), 10);
-			server.createContext("/").setHandler(new IndexPage());
-			server.createContext("/register").setHandler(new RegisterPage());
+			addPage(server, new IndexPage());
+			addPage(server, new RegisterPage());
+			addPage(server, new LoginPage());
 			server.start();
 			System.out.println("Ready... Press Enter to stop.");
 			System.in.read();
@@ -40,5 +34,9 @@ public class Main {
 			e.printStackTrace();
 		}
 		System.out.println("Stopped");
+	}
+
+	private static void addPage(HttpServer server, Page page) {
+		server.createContext("/" + page.GetName(), page);
 	}
 }
