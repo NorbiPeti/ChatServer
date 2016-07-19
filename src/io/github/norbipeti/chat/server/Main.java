@@ -5,6 +5,9 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
+
+import org.hibernate.Hibernate;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
@@ -28,8 +31,10 @@ public class Main {
 			try (DataProvider provider = new DataProvider()) {
 				User user = new User();
 				provider.addUser(user);
-				System.out.println(provider.getUsers());
-				provider.removeUser(user);
+				User user2 = new User();
+				user2.setName("Teszt");
+				user2.getContacts().add(user.getId());
+				provider.addUser(user2);
 				System.out.println(provider.getUsers());
 			}
 			System.out.println("Starting webserver...");

@@ -1,5 +1,8 @@
 package io.github.norbipeti.chat.server.db.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.*;
 
 @Entity
@@ -12,6 +15,18 @@ public class User {
 	private String name;
 	private String email;
 	private String password;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private List<Long> contacts;
+
+	public List<Long> getContacts() {
+		if (contacts == null)
+			contacts = new ArrayList<>();
+		return contacts;
+	}
+
+	public void setContacts(List<Long> contacts) {
+		this.contacts = contacts;
+	}
 
 	public String getName() {
 		return name;
@@ -27,7 +42,8 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + "]";
+		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", contacts="
+				+ contacts + "]";
 	}
 
 	public void setEmail(String email) {
