@@ -22,11 +22,10 @@ public abstract class Page implements HttpHandler {
 
 	@Override
 	public void handle(HttpExchange exchange) throws IOException {
-		if (exchange.getRequestURI().getPath().equals("/" + GetName()))
+		if (!getDo404() || exchange.getRequestURI().getPath().equals("/" + GetName()))
 			handlePage(exchange);
 		else {
-			if (!IOHelper.SendPage(404, NotFoundPage.Instance, exchange))
-				;
+			IOHelper.SendPage(404, NotFoundPage.Instance, exchange);
 		}
 	}
 

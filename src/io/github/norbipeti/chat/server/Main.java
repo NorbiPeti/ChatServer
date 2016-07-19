@@ -1,7 +1,14 @@
 package io.github.norbipeti.chat.server;
 
+import java.lang.reflect.Modifier;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.util.Set;
+
+import org.reflections.Reflections;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 import com.sun.net.httpserver.HttpServer;
 
@@ -22,9 +29,23 @@ public class Main {
 			}
 			System.out.println("Starting webserver...");
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), 8080), 10);
-			addPage(server, new IndexPage());
-			addPage(server, new RegisterPage());
-			addPage(server, new LoginPage());
+			Reflections rf = new Reflections(
+					new ConfigurationBuilder().setUrls(ClasspathHelper.forClassLoader(Page.class.getClassLoader()))
+							.addClassLoader(Page.class.getClassLoader()).addScanners(new SubTypesScanner())
+							.filterInputsBy((String pkg) -> pkg.contains("io.github.norbipeti.chat.server.page")));
+			Set<Class<? extends Page>> pages = rf.getSubTypesOf(Page.class);
+			for (Class<? extends Page> page : pages) {
+				try {
+					if (Modifier.isAbstract(page.getModifiers()))
+						continue;
+					Page p = page.newInstance();
+					addPage(server, p);
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+			}
 			server.start();
 			System.out.println("Ready... Press Enter to stop.");
 			System.in.read();
