@@ -5,9 +5,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
-
-import org.hibernate.Hibernate;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
@@ -36,6 +33,7 @@ public class Main {
 				user2.getContacts().add(user.getId());
 				provider.addUser(user2);
 				System.out.println(provider.getUsers());
+				System.out.println("Contact: " + provider.getUser(user2.getContacts().get(0)));
 			}
 			System.out.println("Starting webserver...");
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), 8080), 10);

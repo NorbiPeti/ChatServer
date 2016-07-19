@@ -18,16 +18,21 @@ public class IOHelper {
 	}
 
 	public static boolean SendPage(int code, Page page, HttpExchange exchange) throws IOException {
+		String content = GetPage(page, exchange);
+		SendResponse(code, content, exchange);
+		return true;
+	}
+
+	public static String GetPage(Page page, HttpExchange exchange) throws IOException {
 		File file = new File(page.GetHTMLPath());
 		if (!file.exists()) {
 			SendResponse(501,
 					"<h1>501 Not Implemented</h1><p>The page \"" + page.GetName() + "\" cannot be found on disk.</h1>",
 					exchange);
-			return false;
+			return null;
 		}
 		FileInputStream inputStream = new FileInputStream(file);
 		String content = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-		SendResponse(code, content, exchange);
-		return true;
+		return content;
 	}
 }

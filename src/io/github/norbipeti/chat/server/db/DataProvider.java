@@ -36,12 +36,12 @@ public class DataProvider implements AutoCloseable {
 		return users;
 	}
 
-	public List<User> getUser(Long id) { //TODO
+	public User getUser(Long id) {
 		EntityManager em = emf.createEntityManager();
-		TypedQuery<User> query = em.createQuery("SELECT u FROM User u", User.class);
-		List<User> users = query.getResultList();
+		TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.id = " + id, User.class);
+		User user = query.getResultList().get(0);
 		em.close();
-		return users;
+		return user;
 	}
 
 	public void removeUser(User user) {
