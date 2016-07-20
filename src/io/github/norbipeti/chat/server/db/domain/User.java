@@ -42,8 +42,11 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", contacts="
-				+ contacts + "]";
+		List<String> c = new ArrayList<>();
+		for (User u : contacts)
+			c.add(u.name);
+		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", contacts=" + c
+				+ "]";
 	}
 
 	public void setEmail(String email) {

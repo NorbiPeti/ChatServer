@@ -27,13 +27,16 @@ public class Main {
 			System.out.println("Loading database...");
 			try (DataProvider provider = new DataProvider()) {
 				User user = new User();
+				user.setName("asd");
 				provider.addUser(user);
 				User user2 = new User();
 				user2.setName("Teszt");
 				user2.getContacts().add(user);
+				user.getContacts().add(user2);
 				provider.addUser(user2);
 				System.out.println(provider.getUsers());
-				System.out.println("Contact: " + user2.getContacts().get(0));
+				System.out.println("1st's contact: " + user.getContacts().get(0));
+				System.out.println("2nd's contact: " + user2.getContacts().get(0));
 			}
 			System.out.println("Starting webserver...");
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), 8080), 10);
