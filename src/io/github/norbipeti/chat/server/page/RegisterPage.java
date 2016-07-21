@@ -10,15 +10,13 @@ public class RegisterPage extends Page {
 	@Override
 	public void handlePage(HttpExchange exchange) throws IOException {
 		HashMap<String, String> post = IOHelper.GetPOST(exchange);
-		System.out.println("POST: " + post);
 		if (post.size() > 0) {
 			String errormsg = CheckValues(post, "name", "email", "pass", "pass2");
-			System.out.println(errormsg);
 			if (errormsg.length() == 0) {
 				// Process register
 				String successmsg = "";
 				IOHelper.SendModifiedPage(200, this, "<successmsg />", successmsg, exchange);
-				return;
+				return; // TODO: Only show tag when needed
 			} else
 				IOHelper.SendModifiedPage(200, this, "<errormsg />", errormsg, exchange);
 			return;

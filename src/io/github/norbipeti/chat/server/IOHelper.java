@@ -44,17 +44,23 @@ public class IOHelper {
 	}
 
 	public static HashMap<String, String> GetPOST(HttpExchange exchange) throws IOException {
-		System.out.println(exchange.getRequestBody().available());
 		if (exchange.getRequestBody().available() == 0)
 			return new HashMap<>();
-		String[] content = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.ISO_8859_1).split("\\&");
-		System.out.println(content);
-		HashMap<String, String> vars = new HashMap<>();
-		for (String var : content) {
-			String[] spl = var.split("\\=");
-			vars.put(spl[0], spl[1]);
+		try {
+			String[] content = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.ISO_8859_1).split("\\&");
+			HashMap<String, String> vars = new HashMap<>();
+			for (String var : content) {
+				String[] spl = var.split("\\=");
+				if (spl.length == 1)
+					vars.put(spl[0], "");
+				else
+					vars.put(spl[0], spl[1]);
+			}
+			return vars;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new HashMap<>();
 		}
-		return vars;
 	}
 
 	public static boolean SendModifiedPage(int code, Page page, String replace, String with, HttpExchange exchange)
