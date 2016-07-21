@@ -10,6 +10,8 @@ public class IndexPage extends Page {
 
 	@Override
 	public void handlePage(HttpExchange exchange) throws IOException {
+		if (exchange.getRequestHeaders().containsKey("Cookie"))
+			System.out.println(exchange.getRequestHeaders().get("Cookie"));
 		IOHelper.SendPage(200, this, exchange);
 	}
 

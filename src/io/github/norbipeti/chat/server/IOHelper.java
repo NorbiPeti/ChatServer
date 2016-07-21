@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
 import com.sun.net.httpserver.HttpExchange;
 
+import io.github.norbipeti.chat.server.db.domain.User;
 import io.github.norbipeti.chat.server.page.Page;
 
 public class IOHelper {
@@ -70,5 +72,10 @@ public class IOHelper {
 			return false;
 		SendResponse(200, content.replace(replace, with), exchange);
 		return true;
+	}
+
+	public static void LoginUser(HttpExchange exchange, User user) {
+		exchange.getResponseHeaders().add("Set-Cookie", "user_id=" + user.getId());
+		exchange.getResponseHeaders().add("Set-Cookie", "session_id=" + UUID.randomUUID());
 	}
 }

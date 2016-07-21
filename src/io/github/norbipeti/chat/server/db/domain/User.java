@@ -17,6 +17,7 @@ public class User {
 	private String password;
 	@ElementCollection(fetch = FetchType.EAGER)
 	private List<User> contacts;
+	private String salt;
 
 	public List<User> getContacts() {
 		if (contacts == null)
@@ -67,6 +68,14 @@ public class User {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 
 	public User() {

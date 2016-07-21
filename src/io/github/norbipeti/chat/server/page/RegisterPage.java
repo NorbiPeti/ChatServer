@@ -2,6 +2,9 @@ package io.github.norbipeti.chat.server.page;
 
 import java.io.IOException;
 import java.util.HashMap;
+
+import org.mindrot.jbcrypt.BCrypt;
+
 import com.sun.net.httpserver.HttpExchange;
 
 import io.github.norbipeti.chat.server.IOHelper;
@@ -18,7 +21,6 @@ public class RegisterPage extends Page {
 				IOHelper.SendModifiedPage(200, this, "<errormsg />", errormsg, exchange);
 				return; // TODO: Use JavaScript too, for error checks
 			}
-			String successmsg = "";
 			try (DataProvider provider = new DataProvider()) {
 				for (User user : provider.getUsers()) {
 					if (post.get("email").equals(user.getEmail())) {
@@ -28,12 +30,20 @@ public class RegisterPage extends Page {
 				}
 				if (!post.get("pass").equals(post.get("pass2")))
 					errormsg += "<p>The passwords don't match</p>";
+				if (errormsg.length() > 0) {
+					IOHelper.SendModifiedPage(200, this, "<errormsg />", errormsg, exchange);
+					return;
+				}
+				User user = new User();
+				user.setName(post.get("name"));
+				user.setEmail(post.get("email"));
+				user.setSalt(BCrypt.gensalt()); // http://www.mindrot.org/projects/jBCrypt/
+				user.setPassword(BCrypt.hashpw(post.get("password"), user.getSalt()));
+				provider.addUser(user);
+				IOHelper.LoginUser(exchange, user);
+				exchange.getResponseHeaders().add("Location", "/");
+				IOHelper.SendResponse(303, "<a href=\"/\">If you can see this, click here to continue</a>", exchange);
 			}
-			if (errormsg.length() > 0) {
-				IOHelper.SendModifiedPage(200, this, "<errormsg />", errormsg, exchange);
-				return;
-			}
-			IOHelper.SendModifiedPage(200, this, "<successmsg />", successmsg, exchange);
 			return; // TODO: Only show tag when needed
 		}
 		IOHelper.SendPage(200, this, exchange);
