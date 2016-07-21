@@ -29,19 +29,23 @@ public class DataProvider implements AutoCloseable {
 	}
 
 	public List<User> getUsers() {
-		EntityManager em = emf.createEntityManager();
-		TypedQuery<User> query = em.createQuery("SELECT u FROM User u", User.class);
-		List<User> users = query.getResultList();
-		em.close();
-		return users;
+		return get(User.class);
 	}
 
-	public User getUser(Long id) {
+	public List<Message> getMessages() {
+		return get(Message.class);
+	}
+
+	public List<Conversation> getConversations() {
+		return get(Conversation.class);
+	}
+
+	private <T> List<T> get(Class<T> cl) {
 		EntityManager em = emf.createEntityManager();
-		TypedQuery<User> query = em.createQuery("SELECT u FROM User u WHERE u.id = " + id, User.class);
-		User user = query.getResultList().get(0);
+		TypedQuery<T> query = em.createQuery("SELECT x FROM " + cl.getSimpleName() + " x", cl);
+		List<T> results = query.getResultList();
 		em.close();
-		return user;
+		return results;
 	}
 
 	public void removeUser(User user) {
@@ -49,17 +53,6 @@ public class DataProvider implements AutoCloseable {
 		em.getTransaction().begin();
 		User managedUser = em.find(User.class, user.getId());
 		em.remove(managedUser);
-		em.getTransaction().commit();
-		em.close();
-	}
-
-	public EntityManager startTransaction() {
-		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
-		return em;
-	}
-
-	public void endTransaction(EntityManager em) {
 		em.getTransaction().commit();
 		em.close();
 	}
