@@ -5,6 +5,8 @@ import java.util.HashMap;
 import com.sun.net.httpserver.HttpExchange;
 
 import io.github.norbipeti.chat.server.IOHelper;
+import io.github.norbipeti.chat.server.db.DataProvider;
+import io.github.norbipeti.chat.server.db.domain.User;
 
 public class RegisterPage extends Page {
 	@Override
@@ -12,14 +14,27 @@ public class RegisterPage extends Page {
 		HashMap<String, String> post = IOHelper.GetPOST(exchange);
 		if (post.size() > 0) {
 			String errormsg = CheckValues(post, "name", "email", "pass", "pass2");
-			if (errormsg.length() == 0) {
-				// Process register
-				String successmsg = "";
-				IOHelper.SendModifiedPage(200, this, "<successmsg />", successmsg, exchange);
-				return; // TODO: Only show tag when needed
-			} else
+			if (errormsg.length() > 0) {
 				IOHelper.SendModifiedPage(200, this, "<errormsg />", errormsg, exchange);
-			return;
+				return; // TODO: Use JavaScript too, for error checks
+			}
+			String successmsg = "";
+			try (DataProvider provider = new DataProvider()) {
+				for (User user : provider.getUsers()) {
+					if (post.get("email").equals(user.getEmail())) {
+						errormsg += "<p>An user with this name already exists</p>";
+						break;
+					}
+				}
+				if (!post.get("pass").equals(post.get("pass2")))
+					errormsg += "<p>The passwords don't match</p>";
+			}
+			if (errormsg.length() > 0) {
+				IOHelper.SendModifiedPage(200, this, "<errormsg />", errormsg, exchange);
+				return;
+			}
+			IOHelper.SendModifiedPage(200, this, "<successmsg />", successmsg, exchange);
+			return; // TODO: Only show tag when needed
 		}
 		IOHelper.SendPage(200, this, exchange);
 	}
