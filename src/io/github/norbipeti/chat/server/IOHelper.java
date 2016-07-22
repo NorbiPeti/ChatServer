@@ -10,6 +10,8 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
@@ -96,5 +98,19 @@ public class IOHelper {
 	public static void Redirect(String url, HttpExchange exchange) throws IOException {
 		exchange.getResponseHeaders().add("Location", url);
 		IOHelper.SendResponse(303, "<a href=\"" + url + "\">If you can see this, click here to continue</a>", exchange);
+	}
+
+	public static HashMap<String, String> GetCookies(HttpExchange exchange) {
+		if (!exchange.getRequestHeaders().containsKey("Cookie"))
+			return new HashMap<>();
+		HashMap<String, String> map = new HashMap<>(); // TODO
+		for (String cheader : exchange.getRequestHeaders().get("Cookie")) {
+			String[] spl = cheader.split("\\;");
+			for (String s : spl) {
+				String[] kv = s.split("\\=");
+				if (kv.length < 2)
+					continue;
+			}
+		}
 	}
 }
