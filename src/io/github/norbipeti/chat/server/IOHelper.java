@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -80,13 +81,16 @@ public class IOHelper {
 	public static void LoginUser(HttpExchange exchange, User user) {
 		user.setSessionid(UUID.randomUUID());
 		ZonedDateTime expiretime = ZonedDateTime.now(ZoneId.of("GMT")).plus(Period.of(2, 0, 0));
-		exchange.getResponseHeaders().add("Set-Cookie", "user_id=" + user.getId() + "; expires=" + expiretime);
+		exchange.getResponseHeaders().add("Set-Cookie",
+				"user_id=" + user.getId() + "; expires=" + expiretime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
 		exchange.getResponseHeaders().add("Set-Cookie",
 				"session_id=" + user.getSessionid() + "; expires=" + expiretime);
 	}
 
 	public static void LogoutUser(HttpExchange exchange, User user) {
-		exchange.getResponseHeaders().add("Set-Cookie", "user_id=" + user.getId());
-		exchange.getResponseHeaders().add("Set-Cookie", "session_id=" + UUID.randomUUID());
+		user.setSessionid(new UUID(0, 0));
+		String expiretime = "Sat, 19 Mar 2016 23:33:00 GMT";
+		exchange.getResponseHeaders().add("Set-Cookie", "user_id=del; expires=" + expiretime);
+		exchange.getResponseHeaders().add("Set-Cookie", "session_id=del; expires=" + expiretime);
 	}
 }
