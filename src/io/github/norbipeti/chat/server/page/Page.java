@@ -1,6 +1,10 @@
 package io.github.norbipeti.chat.server.page;
 
 import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
+
+import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import com.sun.net.httpserver.*;
 
@@ -21,15 +25,25 @@ public abstract class Page implements HttpHandler {
 	}
 
 	@Override
-	public void handle(HttpExchange exchange) throws IOException {
+	public void handle(HttpExchange exchange) {
 		try {
 			if (!getDo404() || exchange.getRequestURI().getPath().equals("/" + GetName()))
 				handlePage(exchange);
 			else {
 				IOHelper.SendPage(404, NotFoundPage.Instance, exchange);
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			try {
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				PrintStream str = new PrintStream(baos);
+				str.print("<h1>500 Internal Server Error</h1><pre>");
+				e.printStackTrace(str);
+				str.print("</pre>");
+				IOHelper.SendResponse(500, baos.toString(StandardCharsets.ISO_8859_1), exchange);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 
