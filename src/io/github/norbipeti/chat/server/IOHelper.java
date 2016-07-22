@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -75,6 +78,14 @@ public class IOHelper {
 	}
 
 	public static void LoginUser(HttpExchange exchange, User user) {
+		user.setSessionid(UUID.randomUUID());
+		ZonedDateTime expiretime = ZonedDateTime.now(ZoneId.of("GMT")).plus(Period.of(2, 0, 0));
+		exchange.getResponseHeaders().add("Set-Cookie", "user_id=" + user.getId() + "; expires=" + expiretime);
+		exchange.getResponseHeaders().add("Set-Cookie",
+				"session_id=" + user.getSessionid() + "; expires=" + expiretime);
+	}
+
+	public static void LogoutUser(HttpExchange exchange, User user) {
 		exchange.getResponseHeaders().add("Set-Cookie", "user_id=" + user.getId());
 		exchange.getResponseHeaders().add("Set-Cookie", "session_id=" + UUID.randomUUID());
 	}

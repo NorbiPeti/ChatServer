@@ -2,6 +2,7 @@ package io.github.norbipeti.chat.server.db.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.*;
 
@@ -18,6 +19,7 @@ public class User {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private List<User> contacts;
 	private String salt;
+	private UUID sessionid;
 
 	public List<User> getContacts() {
 		if (contacts == null)
@@ -76,6 +78,14 @@ public class User {
 
 	public void setSalt(String salt) {
 		this.salt = salt;
+	}
+
+	public UUID getSessionid() {
+		return sessionid;
+	}
+
+	public void setSessionid(UUID sessionid) {
+		this.sessionid = sessionid;
 	}
 
 	public User() {
