@@ -38,11 +38,10 @@ public class RegisterPage extends Page {
 				user.setName(post.get("name"));
 				user.setEmail(post.get("email"));
 				user.setSalt(BCrypt.gensalt()); // http://www.mindrot.org/projects/jBCrypt/
-				user.setPassword(BCrypt.hashpw(post.get("password"), user.getSalt()));
+				user.setPassword(BCrypt.hashpw(post.get("pass"), user.getSalt()));
 				provider.addUser(user);
 				IOHelper.LoginUser(exchange, user);
-				exchange.getResponseHeaders().add("Location", "/");
-				IOHelper.SendResponse(303, "<a href=\"/\">If you can see this, click here to continue</a>", exchange);
+				IOHelper.Redirect("/", exchange);
 			}
 			return; // TODO: Only show tag when needed
 		}

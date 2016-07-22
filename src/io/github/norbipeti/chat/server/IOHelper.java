@@ -10,7 +10,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
@@ -92,5 +91,10 @@ public class IOHelper {
 		String expiretime = "Sat, 19 Mar 2016 23:33:00 GMT";
 		exchange.getResponseHeaders().add("Set-Cookie", "user_id=del; expires=" + expiretime);
 		exchange.getResponseHeaders().add("Set-Cookie", "session_id=del; expires=" + expiretime);
+	}
+
+	public static void Redirect(String url, HttpExchange exchange) throws IOException {
+		exchange.getResponseHeaders().add("Location", url);
+		IOHelper.SendResponse(303, "<a href=\"" + url + "\">If you can see this, click here to continue</a>", exchange);
 	}
 }
