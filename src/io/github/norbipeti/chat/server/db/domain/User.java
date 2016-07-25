@@ -45,11 +45,14 @@ public class User {
 
 	@Override
 	public String toString() {
-		List<String> c = new ArrayList<>();
-		for (User u : contacts)
-			c.add(u.name);
+		List<String> c = null;
+		if (contacts != null) {
+			c = new ArrayList<>();
+			for (User u : contacts)
+				c.add(u.name);
+		}
 		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", contacts=" + c
-				+ "]";
+				+ ", sessionid=" + sessionid + "]"; //TODO: SessionID null after getting from db
 	}
 
 	public void setEmail(String email) {

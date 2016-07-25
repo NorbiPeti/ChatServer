@@ -39,7 +39,7 @@ public class LoginPage extends Page {
 				}, exchange);
 				return;
 			}
-			IOHelper.LoginUser(exchange, loginuser);
+			IOHelper.LoginUser(exchange, loginuser, provider);
 			IOHelper.Redirect("/", exchange);
 		} catch (Exception e) {
 			throw e;

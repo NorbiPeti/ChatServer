@@ -1,6 +1,7 @@
 package io.github.norbipeti.chat.server.db;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -58,10 +59,22 @@ public class DataProvider implements AutoCloseable {
 	}
 
 	public User getUser(Long id) {
+		return get(User.class, id);
+	}
+
+	private <T> T get(Class<T> cl, Long id) {
 		EntityManager em = emf.createEntityManager();
-		User managedUser = em.find(User.class, id);
+		T result = em.find(cl, id);
 		em.close();
-		return managedUser;
+		return result;
+	}
+
+	public void SetValues(Runnable action) {
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		action.run();
+		em.getTransaction().commit();
+		em.close();
 	}
 
 	@Override

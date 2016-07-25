@@ -44,8 +44,10 @@ public class RegisterPage extends Page {
 				user.setSalt(BCrypt.gensalt()); // http://www.mindrot.org/projects/jBCrypt/
 				user.setPassword(BCrypt.hashpw(post.get("pass"), user.getSalt()));
 				provider.addUser(user);
-				IOHelper.LoginUser(exchange, user);
+				IOHelper.LoginUser(exchange, user, provider);
 				IOHelper.Redirect("/", exchange);
+			} catch (Exception e) {
+				throw e;
 			}
 			return;
 		}

@@ -86,8 +86,9 @@ public class IOHelper {
 		return true;
 	}
 
-	public static void LoginUser(HttpExchange exchange, User user) {
-		user.setSessionid(UUID.randomUUID());
+	public static void LoginUser(HttpExchange exchange, User user, DataProvider provider) {
+		provider.SetValues(() -> user.setSessionid(UUID.randomUUID()));
+		System.out.println("Logging in user: " + user);
 		ZonedDateTime expiretime = ZonedDateTime.now(ZoneId.of("GMT")).plus(Period.of(2, 0, 0));
 		exchange.getResponseHeaders().add("Set-Cookie",
 				"user_id=" + user.getId() + "; expires=" + expiretime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
@@ -112,7 +113,7 @@ public class IOHelper {
 			return new HashMap<>();
 		HashMap<String, String> map = new HashMap<>();
 		for (String cheader : exchange.getRequestHeaders().get("Cookie")) {
-			String[] spl = cheader.split("\\;\\S");
+			String[] spl = cheader.split("\\;\\s*");
 			for (String s : spl) {
 				String[] kv = s.split("\\=");
 				if (kv.length < 2)
@@ -123,14 +124,27 @@ public class IOHelper {
 		return map;
 	}
 
+	/**
+	 * Get logged in user. It may also send logout headers if the cookies are
+	 * invalid.
+	 * 
+	 * @param exchange
+	 * @return The logged in user or null if not logged in.
+	 */
 	public static User GetLoggedInUser(HttpExchange exchange) {
 		HashMap<String, String> cookies = GetCookies(exchange);
+		System.out.println("Cookies: " + cookies);
 		if (!cookies.containsKey("user_id") || !cookies.containsKey("session_id"))
 			return null;
+		System.out.println("Cookies found");
 		try (DataProvider provider = new DataProvider()) {
 			User user = provider.getUser(Long.parseLong(cookies.get("user_id")));
+			System.out.println("User: " + user);
+			System.out.println("session_id: " + cookies.get("session_id"));
+			if (user != null)
+				System.out.println("Equals: " + UUID.fromString(cookies.get("session_id")).equals(user.getSessionid()));
 			if (user != null && cookies.get("session_id") != null
-					&& cookies.get("session_id").equals(user.getSessionid()))
+					&& UUID.fromString(cookies.get("session_id")).equals(user.getSessionid()))
 				return user;
 		}
 		return null;
