@@ -9,7 +9,7 @@ import io.github.norbipeti.chat.server.db.domain.User;
 public class IndexPage extends Page {
 
 	@Override
-	public void handlePage(HttpExchange exchange) throws IOException { //TODO: Make a base HTML and insert all pages into that
+	public void handlePage(HttpExchange exchange) throws IOException {
 		User user = IOHelper.GetLoggedInUser(exchange);
 		if (user == null)
 			IOHelper.SendModifiedPage(200, this,

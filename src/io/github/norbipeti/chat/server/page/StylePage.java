@@ -25,8 +25,10 @@ public class StylePage extends Page {
 			File cssfile = new File("pages", exchange.getRequestURI().getPath());
 			if (!cssfile.exists())
 				IOHelper.SendResponse(404, "<h1>CSS file not found</h1>", exchange);
-			else
+			else {
+				exchange.getResponseHeaders().add("Content-Type", "text/css");
 				IOHelper.SendResponse(200, IOHelper.ReadFile(cssfile), exchange);
+			}
 		} else
 			System.out.println(exchange.getRequestURI().getPath());
 	}

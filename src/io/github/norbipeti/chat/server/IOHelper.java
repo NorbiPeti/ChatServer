@@ -110,7 +110,7 @@ public class IOHelper {
 	public static HashMap<String, String> GetCookies(HttpExchange exchange) {
 		if (!exchange.getRequestHeaders().containsKey("Cookie"))
 			return new HashMap<>();
-		HashMap<String, String> map = new HashMap<>(); // TODO
+		HashMap<String, String> map = new HashMap<>();
 		for (String cheader : exchange.getRequestHeaders().get("Cookie")) {
 			String[] spl = cheader.split("\\;\\S");
 			for (String s : spl) {

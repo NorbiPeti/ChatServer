@@ -47,7 +47,7 @@ public class RegisterPage extends Page {
 				IOHelper.LoginUser(exchange, user);
 				IOHelper.Redirect("/", exchange);
 			}
-			return; // TODO: Only show tag when needed
+			return;
 		}
 		IOHelper.SendPage(200, this, exchange);
 	}
