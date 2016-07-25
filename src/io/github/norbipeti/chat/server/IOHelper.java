@@ -13,10 +13,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.function.Function;
 
 import org.apache.commons.io.IOUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 import com.sun.net.httpserver.HttpExchange;
 
+import io.github.norbipeti.chat.server.db.DataProvider;
 import io.github.norbipeti.chat.server.db.domain.User;
 import io.github.norbipeti.chat.server.page.Page;
 
@@ -70,12 +75,14 @@ public class IOHelper {
 		}
 	}
 
-	public static boolean SendModifiedPage(int code, Page page, String replace, String with, HttpExchange exchange)
-			throws IOException {
+	public static boolean SendModifiedPage(int code, Page page, Function<Document, Document> modifyfunc,
+			HttpExchange exchange) throws IOException {
 		String content = GetPage(page, exchange);
 		if (content == null)
 			return false;
-		SendResponse(200, content.replace(replace, with), exchange);
+		Document doc = Jsoup.parse(content);
+		doc = modifyfunc.apply(doc);
+		SendResponse(200, doc.html(), exchange);
 		return true;
 	}
 
@@ -105,12 +112,27 @@ public class IOHelper {
 			return new HashMap<>();
 		HashMap<String, String> map = new HashMap<>(); // TODO
 		for (String cheader : exchange.getRequestHeaders().get("Cookie")) {
-			String[] spl = cheader.split("\\;");
+			String[] spl = cheader.split("\\;\\S");
 			for (String s : spl) {
 				String[] kv = s.split("\\=");
 				if (kv.length < 2)
 					continue;
+				map.put(kv[0], kv[1]);
 			}
 		}
+		return map;
+	}
+
+	public static User GetLoggedInUser(HttpExchange exchange) {
+		HashMap<String, String> cookies = GetCookies(exchange);
+		if (!cookies.containsKey("user_id") || !cookies.containsKey("session_id"))
+			return null;
+		try (DataProvider provider = new DataProvider()) {
+			User user = provider.getUser(Long.parseLong(cookies.get("user_id")));
+			if (user != null && cookies.get("session_id") != null
+					&& cookies.get("session_id").equals(user.getSessionid()))
+				return user;
+		}
+		return null;
 	}
 }

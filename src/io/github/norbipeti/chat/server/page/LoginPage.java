@@ -3,6 +3,7 @@ package io.github.norbipeti.chat.server.page;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.jsoup.nodes.Element;
 import org.mindrot.jbcrypt.BCrypt;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -29,8 +30,13 @@ public class LoginPage extends Page {
 				}
 			}
 			if (loginuser == null || !BCrypt.checkpw(post.get("pass"), loginuser.getPassword())) {
-				IOHelper.SendModifiedPage(200, this, "<errormsg />", "<p>The E-mail or password is incorrect</p>",
-						exchange);
+				IOHelper.SendModifiedPage(200, this, (doc) -> {
+					Element errorelement = doc.getElementById("errormsg");
+					errorelement.appendElement("p").text("The username or password is invalid.");
+					errorelement.attr("style", "display: block");
+					return doc; // TODO: Automatically redirect on every
+								// request, load HTML file directly for login
+				}, exchange);
 				return;
 			}
 			IOHelper.LoginUser(exchange, loginuser);

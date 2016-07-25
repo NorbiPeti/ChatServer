@@ -18,7 +18,9 @@ public class RegisterPage extends Page {
 		if (post.size() > 0) {
 			String errormsg = CheckValues(post, "name", "email", "pass", "pass2");
 			if (errormsg.length() > 0) {
-				IOHelper.SendModifiedPage(200, this, "<errormsg />", errormsg, exchange);
+				final String msg = errormsg;
+				IOHelper.SendModifiedPage(200, this, (doc) -> doc.getElementById("errormsg").text(msg).ownerDocument(),
+						exchange);
 				return; // TODO: Use JavaScript too, for error checks
 			}
 			try (DataProvider provider = new DataProvider()) {
@@ -31,7 +33,9 @@ public class RegisterPage extends Page {
 				if (!post.get("pass").equals(post.get("pass2")))
 					errormsg += "<p>The passwords don't match</p>";
 				if (errormsg.length() > 0) {
-					IOHelper.SendModifiedPage(200, this, "<errormsg />", errormsg, exchange);
+					final String msg = errormsg;
+					IOHelper.SendModifiedPage(200, this,
+							(doc) -> doc.getElementById("errormsg").text(msg).ownerDocument(), exchange);
 					return;
 				}
 				User user = new User();

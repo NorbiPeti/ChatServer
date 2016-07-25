@@ -57,6 +57,13 @@ public class DataProvider implements AutoCloseable {
 		em.close();
 	}
 
+	public User getUser(Long id) {
+		EntityManager em = emf.createEntityManager();
+		User managedUser = em.find(User.class, id);
+		em.close();
+		return managedUser;
+	}
+
 	@Override
 	public void close() {
 		if (emf != null)
