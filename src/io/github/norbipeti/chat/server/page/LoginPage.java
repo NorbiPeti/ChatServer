@@ -18,7 +18,7 @@ public class LoginPage extends Page {
 	public void handlePage(HttpExchange exchange) throws IOException {
 		HashMap<String, String> post = IOHelper.GetPOST(exchange);
 		if (post.size() == 0 || !post.containsKey("email") || !post.containsKey("pass")) {
-			IOHelper.SendPage(200, this, exchange);
+			IOHelper.Redirect("/", exchange);
 			return;
 		}
 		try (DataProvider provider = new DataProvider()) {
@@ -30,10 +30,9 @@ public class LoginPage extends Page {
 				}
 			}
 			if (loginuser == null || !BCrypt.checkpw(post.get("pass"), loginuser.getPassword())) {
-				IOHelper.SendModifiedPage(200, this, (doc) -> {
-					Element errorelement = doc.getElementById("errormsg");
-					errorelement.appendElement("p").text("The username or password is invalid.");
-					errorelement.attr("style", "display: block");
+				IOHelper.SendResponse(200, this, (doc) -> {
+					doc.appendElement("p").text("The username or password is invalid.");
+					doc.attr("style", "display: block");
 					return doc; // TODO: Automatically redirect on every
 								// request, load HTML file directly for login
 				}, exchange);

@@ -155,4 +155,11 @@ public class IOHelper {
 		}
 		return null;
 	}
+
+	public static void SendResponse(int code, Page page, Function<Document, Document> action, HttpExchange exchange)
+			throws IOException {
+		Document doc = new Document("");
+		doc = action.apply(doc);
+		SendResponse(200, doc.html(), exchange);
+	}
 }

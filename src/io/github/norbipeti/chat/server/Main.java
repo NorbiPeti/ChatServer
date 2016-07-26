@@ -42,9 +42,11 @@ public class Main {
 			try (DataProvider provider = new DataProvider()) {
 				User user = new User();
 				user.setName("asd");
+				user.setEmail("test@test.com");
 				provider.addUser(user);
 				User user2 = new User();
 				user2.setName("Teszt");
+				user2.setEmail("test2@test.com");
 				user2.getContacts().add(user);
 				user.getContacts().add(user2);
 				provider.addUser(user2);
