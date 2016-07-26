@@ -19,8 +19,9 @@ public class User {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private List<User> contacts;
 	private String salt;
+	@Column(columnDefinition = "CHAR(16) FOR BIT DATA")
 	private UUID sessionid;
-
+	
 	public List<User> getContacts() {
 		if (contacts == null)
 			contacts = new ArrayList<>();
@@ -52,7 +53,8 @@ public class User {
 				c.add(u.name);
 		}
 		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", contacts=" + c
-				+ ", sessionid=" + sessionid + "]"; //TODO: SessionID null after getting from db
+				+ ", sessionid=" + sessionid + "]"; // TODO: SessionID null
+													// after getting from db
 	}
 
 	public void setEmail(String email) {

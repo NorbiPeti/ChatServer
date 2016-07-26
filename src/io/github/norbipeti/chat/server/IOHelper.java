@@ -98,6 +98,10 @@ public class IOHelper {
 
 	public static void LogoutUser(HttpExchange exchange, User user) {
 		user.setSessionid(new UUID(0, 0));
+		SendLogoutHeaders(exchange);
+	}
+
+	private static void SendLogoutHeaders(HttpExchange exchange) {
 		String expiretime = "Sat, 19 Mar 2016 23:33:00 GMT";
 		exchange.getResponseHeaders().add("Set-Cookie", "user_id=del; expires=" + expiretime);
 		exchange.getResponseHeaders().add("Set-Cookie", "session_id=del; expires=" + expiretime);
@@ -146,6 +150,8 @@ public class IOHelper {
 			if (user != null && cookies.get("session_id") != null
 					&& UUID.fromString(cookies.get("session_id")).equals(user.getSessionid()))
 				return user;
+			else
+				SendLogoutHeaders(exchange);
 		}
 		return null;
 	}

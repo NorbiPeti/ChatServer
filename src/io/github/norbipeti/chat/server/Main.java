@@ -5,12 +5,20 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Set;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.DefaultConfiguration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import com.sun.net.httpserver.HttpServer;
+import com.sun.org.apache.xerces.internal.parsers.BasicParserConfiguration;
 
 import io.github.norbipeti.chat.server.db.*;
 import io.github.norbipeti.chat.server.db.domain.*;
@@ -24,6 +32,12 @@ public class Main {
 		try { // rt.jar Javadoc:
 				// https://docs.oracle.com/javase/8/docs/jre/api/net/httpserver/spec/
 				// https://docs.oracle.com/javase/8/docs/api/
+			System.out.println(System.getProperty("java.class.path")); //TODO: log4j
+			LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+			Configuration config = ctx.getConfiguration();
+			LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+			loggerConfig.setLevel(Level.DEBUG);
+			ctx.updateLoggers();  // This causes all Loggers to refetch information from their LoggerConfig.
 			System.out.println("Loading database...");
 			try (DataProvider provider = new DataProvider()) {
 				User user = new User();
