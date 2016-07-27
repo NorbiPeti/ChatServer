@@ -3,6 +3,9 @@ package io.github.norbipeti.chat.server;
 import java.lang.reflect.Modifier;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.logging.log4j.Level;
@@ -28,27 +31,47 @@ public class Main {
 		try { // rt.jar Javadoc:
 				// https://docs.oracle.com/javase/8/docs/jre/api/net/httpserver/spec/
 				// https://docs.oracle.com/javase/8/docs/api/
-			System.out.println(System.getProperty("java.class.path")); //TODO: log4j
+			System.out.println(System.getProperty("java.class.path")); // TODO:
+																		// log4j
 			LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 			Configuration config = ctx.getConfiguration();
 			LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
 			loggerConfig.setLevel(Level.WARN);
-			ctx.updateLoggers();  // This causes all Loggers to refetch information from their LoggerConfig.
+			ctx.updateLoggers(); // This causes all Loggers to refetch
+									// information from their LoggerConfig.
 			System.out.println("Loading database...");
 			try (DataProvider provider = new DataProvider()) {
 				User user = new User();
 				user.setName("asd");
 				user.setEmail("test@test.com");
-				provider.addUser(user);
 				User user2 = new User();
 				user2.setName("Teszt");
 				user2.setEmail("test2@test.com");
 				user2.getContacts().add(user);
+				provider.addUser(user);
+				List<User> users = provider.getUsers();
+				user = users.get(0);
 				user.getContacts().add(user2);
 				provider.addUser(user2);
-				System.out.println(provider.getUsers());
+				users = provider.getUsers();
+				user2 = users.get(1);
+				System.out.println(users);
 				System.out.println("1st's contact: " + user.getContacts().get(0));
 				System.out.println("2nd's contact: " + user2.getContacts().get(0));
+				Conversation convo = new Conversation();
+				convo.getUsers().add(user);
+				convo.getUsers().add(user2);
+				Message msg = new Message();
+				msg.setSender(user);
+				msg.setTime(new Date());
+				msg.setMessage("Teszt 1");
+				convo.getMesssages().add(msg);
+				Message msg2 = new Message();
+				msg2.setSender(user2);
+				msg2.setTime(new Date());
+				msg2.setMessage("Teszt 2");
+				convo.getMesssages().add(msg2);
+				provider.addConversation(convo);
 			}
 			System.out.println("Starting webserver...");
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), 8080), 10);

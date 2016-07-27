@@ -1,7 +1,44 @@
 body {
-	background-color: #EEE;
+    background-color: #EEE;
 }
 
 #errormsg, #successmsg {
-	display: none;
+    display: none;
+}
+
+#errormsg {
+    background-color: #8c0000;
+    border-color: #ff0000;
+    border-style: solid;
+    border-width: 2px;
+    color: #ff0000;
+}
+
+#successmsg {
+    background-color: #188c00;
+    border-color: #00ff00;
+    border-style: solid;
+    border-width: 2px;
+    color: #00ff00;
+}
+
+#sidebar {
+    float: right;
+    width: 300px;
+}
+
+#loginregisterbox {
+    margin: auto;
+    width: 300px;
+}
+
+#usercontent {
+    margin: auto;
+    width: 75%;
+}
+
+#msginput {
+    width: 100%;
+    height: 30px;
+    max-width: 100%;
 }

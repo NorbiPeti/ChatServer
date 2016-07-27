@@ -21,7 +21,13 @@ public class User {
 	private String salt;
 	@Column(columnDefinition = "CHAR(16) FOR BIT DATA")
 	private UUID sessionid;
-	
+	@Version
+	@GeneratedValue
+	private int Version;
+	@ElementCollection(fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL)
+	public List<Conversation> conversations;
+
 	public List<User> getContacts() {
 		if (contacts == null)
 			contacts = new ArrayList<>();
@@ -91,6 +97,16 @@ public class User {
 
 	public void setSessionid(UUID sessionid) {
 		this.sessionid = sessionid;
+	}
+
+	public List<Conversation> getConversations() {
+		if (conversations == null)
+			conversations = new ArrayList<>();
+		return conversations;
+	}
+
+	public void setConversations(List<Conversation> conversations) {
+		this.conversations = conversations;
 	}
 
 	public User() {

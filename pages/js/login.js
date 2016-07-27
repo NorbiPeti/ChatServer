@@ -1,7 +1,7 @@
 /**
  * Created by Norbi on 2016-07-26.
  */
-function login(form) {
+function login(form) { //TODO: Detect Enter
     var json = JSON.stringify(getFormData($(form)));
     $.ajax({
         url: "/login", data: json, method: "POST", success: function (result) {

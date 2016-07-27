@@ -10,12 +10,15 @@ public class Message {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
 	private User sender;
 	private Date time;
 	private String message;
-	@ManyToOne
+	@ManyToOne(cascade=CascadeType.ALL)
 	private Conversation conversation;
+	@Version
+	@GeneratedValue
+	private int Version;
 
 	public User getSender() {
 		return sender;

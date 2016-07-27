@@ -19,6 +19,10 @@ public class DataProvider implements AutoCloseable {
 		save(user);
 	}
 
+	public void addConversation(Conversation convo) {
+		save(convo);
+	}
+
 	private void save(Object object) {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
