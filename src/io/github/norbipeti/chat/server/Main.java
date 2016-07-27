@@ -7,10 +7,8 @@ import java.util.Set;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
-import org.apache.logging.log4j.core.config.DefaultConfiguration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
@@ -18,8 +16,6 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import com.sun.net.httpserver.HttpServer;
-import com.sun.org.apache.xerces.internal.parsers.BasicParserConfiguration;
-
 import io.github.norbipeti.chat.server.db.*;
 import io.github.norbipeti.chat.server.db.domain.*;
 import io.github.norbipeti.chat.server.page.*;
@@ -36,7 +32,7 @@ public class Main {
 			LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
 			Configuration config = ctx.getConfiguration();
 			LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
-			loggerConfig.setLevel(Level.DEBUG);
+			loggerConfig.setLevel(Level.WARN);
 			ctx.updateLoggers();  // This causes all Loggers to refetch information from their LoggerConfig.
 			System.out.println("Loading database...");
 			try (DataProvider provider = new DataProvider()) {

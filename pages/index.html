@@ -2,8 +2,10 @@
 <head>
     <title>ChatServer</title>
     <script src="js/jquery-3.1.0.js"></script>
+    <script src="js/utils.js"></script>
     <script src="js/message.js"></script>
     <script src="js/login.js"></script>
+    <script src="js/register.js"></script>
     <link rel="stylesheet" href="css/style.css"/>
 </head>
 <body>
@@ -15,10 +17,57 @@
 <div id="errormsg">
 </div>
 <div id="loginbox">
-    <form action="login" method="POST">
-        E-mail: <input type="email" name="email">
-        Password: <input type="password" name="pass">
-        <input type="button" value="Login" onclick="check(this.form)">
+    <form>
+        <table>
+            <tr>
+                <td>E-mail:</td>
+                <td>
+                    <input type="email" name="email">
+                </td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td>
+                    <input type="password" name="pass">
+                </td>
+            </tr>
+            <input type="button" value="Login" onclick="login(this.form)">
+        </table>
+    </form>
+</div>
+<div id="registerbox">
+    <form>
+        <table>
+            <tr>
+                <td>Name:</td>
+                <td>
+                    <input type="text" name="name"/>
+                </td>
+            </tr>
+            <tr>
+                <td>E-mail:</td>
+                <td>
+                    <input type="email" name="email"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Password</td>
+                <td>
+                    <input type="password" name="pass"/>
+                </td>
+            </tr>
+            <tr>
+                <td>Password confirm</td>
+                <td>
+                    <input type="password" name="pass2"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="button" value="Register" onclick="register(this.form)"/>
+                </td>
+            </tr>
+        </table>
     </form>
 </div>
 <input id="msginput" value=""/>

@@ -1,8 +1,7 @@
 package io.github.norbipeti.chat.server.page;
 
 import java.io.IOException;
-import java.util.HashMap;
-
+import org.json.JSONObject;
 import org.mindrot.jbcrypt.BCrypt;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -14,13 +13,12 @@ import io.github.norbipeti.chat.server.db.domain.User;
 public class RegisterPage extends Page {
 	@Override
 	public void handlePage(HttpExchange exchange) throws IOException {
-		HashMap<String, String> post = IOHelper.GetPOST(exchange);
-		if (post.size() > 0) {
+		JSONObject post = IOHelper.GetPOSTJSON(exchange);
+		if (post != null) {
 			String errormsg = CheckValues(post, "name", "email", "pass", "pass2");
 			if (errormsg.length() > 0) {
 				final String msg = errormsg;
-				IOHelper.SendModifiedPage(200, this, (doc) -> doc.getElementById("errormsg").text(msg).ownerDocument(),
-						exchange);
+				IOHelper.SendResponse(200, (doc) -> doc.html(msg).ownerDocument(), exchange);
 				return; // TODO: Use JavaScript too, for error checks
 			}
 			try (DataProvider provider = new DataProvider()) {
@@ -34,31 +32,30 @@ public class RegisterPage extends Page {
 					errormsg += "<p>The passwords don't match</p>";
 				if (errormsg.length() > 0) {
 					final String msg = errormsg;
-					IOHelper.SendModifiedPage(200, this,
-							(doc) -> doc.getElementById("errormsg").text(msg).ownerDocument(), exchange);
+					IOHelper.SendResponse(200, (doc) -> doc.html(msg).ownerDocument(), exchange);
 					return;
 				}
 				User user = new User();
-				user.setName(post.get("name"));
-				user.setEmail(post.get("email"));
+				user.setName(post.getString("name"));
+				user.setEmail(post.getString("email"));
 				user.setSalt(BCrypt.gensalt()); // http://www.mindrot.org/projects/jBCrypt/
-				user.setPassword(BCrypt.hashpw(post.get("pass"), user.getSalt()));
+				user.setPassword(BCrypt.hashpw(post.getString("pass"), user.getSalt()));
 				provider.addUser(user);
 				User managedUser = provider.getUser(user.getId());
 				IOHelper.LoginUser(exchange, managedUser, provider);
-				IOHelper.Redirect("/", exchange);
+				IOHelper.SendResponse(200, "Success", exchange);
 			} catch (Exception e) {
 				throw e;
 			}
 			return;
 		}
-		IOHelper.SendPage(200, this, exchange);
+		IOHelper.Redirect("/", exchange);
 	}
 
-	private String CheckValues(HashMap<String, String> post, String... values) {
+	private String CheckValues(JSONObject post, String... values) {
 		String errormsg = "";
 		for (String value : values)
-			if (!CheckValue(post.get(value)))
+			if (!CheckValue(post.getString(value)))
 				errormsg += "<p>" + value + " can't be empty</p>";
 		return errormsg;
 	}

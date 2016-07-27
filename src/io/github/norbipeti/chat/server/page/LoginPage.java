@@ -1,10 +1,7 @@
 package io.github.norbipeti.chat.server.page;
 
 import java.io.IOException;
-import java.util.HashMap;
-
 import org.json.JSONObject;
-import org.jsoup.nodes.Element;
 import org.mindrot.jbcrypt.BCrypt;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -33,13 +30,12 @@ public class LoginPage extends Page {
 			if (loginuser == null || !BCrypt.checkpw(post.getString("pass"), loginuser.getPassword())) {
 				IOHelper.SendResponse(200, (doc) -> {
 					doc.appendElement("p").text("The username or password is invalid.");
-					doc.attr("style", "display: block");
 					return doc;
 				}, exchange);
 				return;
 			}
 			IOHelper.LoginUser(exchange, loginuser, provider);
-			IOHelper.Redirect("/", exchange);
+			IOHelper.SendResponse(200, "Success", exchange);
 		} catch (Exception e) {
 			throw e;
 		}

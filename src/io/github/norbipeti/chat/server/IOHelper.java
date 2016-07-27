@@ -10,8 +10,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -56,6 +54,7 @@ public class IOHelper {
 		return content;
 	}
 
+	@Deprecated
 	public static HashMap<String, String> GetPOST(HttpExchange exchange) throws IOException {
 		if (exchange.getRequestBody().available() == 0)
 			return new HashMap<>();
@@ -81,7 +80,6 @@ public class IOHelper {
 			return null;
 		try {
 			String content = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.ISO_8859_1);
-			HashMap<String, String> vars = new HashMap<>();
 			JSONObject obj = new JSONObject(content);
 			return obj;
 		} catch (Exception e) {

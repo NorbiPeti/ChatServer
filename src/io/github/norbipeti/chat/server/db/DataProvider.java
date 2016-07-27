@@ -1,8 +1,6 @@
 package io.github.norbipeti.chat.server.db;
 
 import java.util.List;
-import java.util.function.Consumer;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
