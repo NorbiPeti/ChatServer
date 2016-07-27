@@ -3,6 +3,7 @@ package io.github.norbipeti.chat.server.page;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.json.JSONObject;
 import org.jsoup.nodes.Element;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -16,8 +17,8 @@ public class LoginPage extends Page {
 
 	@Override
 	public void handlePage(HttpExchange exchange) throws IOException {
-		HashMap<String, String> post = IOHelper.GetPOST(exchange);
-		if (post.size() == 0 || !post.containsKey("email") || !post.containsKey("pass")) {
+		JSONObject post = IOHelper.GetPOSTJSON(exchange);
+		if (post == null || !post.has("email") || !post.has("pass")) {
 			IOHelper.Redirect("/", exchange);
 			return;
 		}
@@ -29,12 +30,11 @@ public class LoginPage extends Page {
 					break;
 				}
 			}
-			if (loginuser == null || !BCrypt.checkpw(post.get("pass"), loginuser.getPassword())) {
-				IOHelper.SendResponse(200, this, (doc) -> {
+			if (loginuser == null || !BCrypt.checkpw(post.getString("pass"), loginuser.getPassword())) {
+				IOHelper.SendResponse(200, (doc) -> {
 					doc.appendElement("p").text("The username or password is invalid.");
 					doc.attr("style", "display: block");
-					return doc; // TODO: Automatically redirect on every
-								// request, load HTML file directly for login
+					return doc;
 				}, exchange);
 				return;
 			}

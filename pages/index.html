@@ -12,11 +12,13 @@
     Logged in as
     <username/>
 </div>
+<div id="errormsg">
+</div>
 <div id="loginbox">
-    <form action="login" method="POST" onsubmit="check(this)">
+    <form action="login" method="POST">
         E-mail: <input type="email" name="email">
         Password: <input type="password" name="pass">
-        <input type="submit" value="Login">
+        <input type="button" value="Login" onclick="check(this.form)">
     </form>
 </div>
 <input id="msginput" value=""/>

@@ -16,6 +16,7 @@ import java.util.UUID;
 import java.util.function.Function;
 
 import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -72,6 +73,20 @@ public class IOHelper {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new HashMap<>();
+		}
+	}
+
+	public static JSONObject GetPOSTJSON(HttpExchange exchange) throws IOException {
+		if (exchange.getRequestBody().available() == 0)
+			return null;
+		try {
+			String content = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.ISO_8859_1);
+			HashMap<String, String> vars = new HashMap<>();
+			JSONObject obj = new JSONObject(content);
+			return obj;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -156,7 +171,7 @@ public class IOHelper {
 		return null;
 	}
 
-	public static void SendResponse(int code, Page page, Function<Document, Document> action, HttpExchange exchange)
+	public static void SendResponse(int code, Function<Document, Document> action, HttpExchange exchange)
 			throws IOException {
 		Document doc = new Document("");
 		doc = action.apply(doc);
