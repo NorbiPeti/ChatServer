@@ -30,14 +30,6 @@ public class Main {
 		try { // rt.jar Javadoc:
 				// https://docs.oracle.com/javase/8/docs/jre/api/net/httpserver/spec/
 				// https://docs.oracle.com/javase/8/docs/api/
-			System.out.println(System.getProperty("java.class.path")); // TODO:
-																		// log4j
-			LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
-			Configuration config = ctx.getConfiguration();
-			LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
-			loggerConfig.setLevel(Level.WARN);
-			ctx.updateLoggers(); // This causes all Loggers to refetch
-									// information from their LoggerConfig.
 			System.out.println("Loading database...");
 			try (DataProvider provider = new DataProvider()) {
 				User user = new User();

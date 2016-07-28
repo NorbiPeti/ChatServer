@@ -7,6 +7,8 @@ import org.jsoup.nodes.Element;
 import com.sun.net.httpserver.HttpExchange;
 import io.github.norbipeti.chat.server.IOHelper;
 import io.github.norbipeti.chat.server.db.DataProvider;
+import io.github.norbipeti.chat.server.db.domain.Conversation;
+import io.github.norbipeti.chat.server.db.domain.Message;
 import io.github.norbipeti.chat.server.db.domain.User;
 
 public class IndexPage extends Page {
@@ -32,14 +34,14 @@ public class IndexPage extends Page {
 				userbox.html(userbox.html().replace("<username />", user.getName()));
 				Element channelmessages = doc.getElementById("channelmessages");
 				try (DataProvider provider = new DataProvider()) {
-					/*Conversation convo = provider.getConversations().get(0); // TODO
+					Conversation convo = provider.getConversations().get(0);
 					for (Message message : convo.getMesssages()) {
 						Element msgelement = channelmessages.appendElement("div");
 						Element header = msgelement.appendElement("p");
 						header.text(message.getSender().getName() + " - " + message.getTime());
 						Element body = msgelement.appendElement("p");
 						body.text(message.getMessage());
-					}*/
+					}
 				}
 				return doc;
 			}, exchange);
