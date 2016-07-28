@@ -6,6 +6,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 
 import io.github.norbipeti.chat.server.db.domain.*;
@@ -51,6 +52,7 @@ public class DataProvider implements AutoCloseable {
 		EntityManager em = emf.createEntityManager();
 		TypedQuery<T> query = em.createQuery("SELECT x FROM " + cl.getSimpleName() + " x", cl);
 		List<T> results = query.getResultList();
+		Hibernate.initialize(results);
 		em.close();
 		return results;
 	}
