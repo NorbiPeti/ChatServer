@@ -10,7 +10,7 @@ import io.github.norbipeti.chat.server.IOHelper;
 import io.github.norbipeti.chat.server.db.DataProvider;
 import io.github.norbipeti.chat.server.db.domain.User;
 
-public class RegisterPage extends Page {
+public class RegisterAjaxPage extends Page {
 	@Override
 	public void handlePage(HttpExchange exchange) throws IOException {
 		JSONObject post = IOHelper.GetPOSTJSON(exchange);

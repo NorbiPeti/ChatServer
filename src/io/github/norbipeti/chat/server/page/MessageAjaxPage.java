@@ -13,8 +13,7 @@ public class MessageAjaxPage extends Page {
 
 	@Override
 	public void handlePage(HttpExchange exchange) throws IOException {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 }
