@@ -3,7 +3,6 @@ package io.github.norbipeti.chat.server;
 import java.lang.reflect.Modifier;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -48,11 +47,11 @@ public class Main {
 				user2.setName("Teszt");
 				user2.setEmail("test2@test.com");
 				user2.getContacts().add(user);
-				provider.addUser(user);
+				provider.saveUser(user);
 				List<User> users = provider.getUsers();
 				user = users.get(0);
 				user.getContacts().add(user2);
-				provider.addUser(user2);
+				provider.saveUser(user2);
 				users = provider.getUsers();
 				user2 = users.get(1);
 				System.out.println(users);
@@ -71,7 +70,7 @@ public class Main {
 				msg2.setTime(new Date());
 				msg2.setMessage("Teszt 2");
 				convo.getMesssages().add(msg2);
-				provider.addConversation(convo);
+				provider.saveConversation(convo);
 			}
 			System.out.println("Starting webserver...");
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), 8080), 10);

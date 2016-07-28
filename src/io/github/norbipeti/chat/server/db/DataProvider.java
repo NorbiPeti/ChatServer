@@ -6,6 +6,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
+import org.hibernate.Session;
+
 import io.github.norbipeti.chat.server.db.domain.*;
 
 public class DataProvider implements AutoCloseable {
@@ -15,17 +17,19 @@ public class DataProvider implements AutoCloseable {
 		emf = Persistence.createEntityManagerFactory("ChatServerPU");
 	}
 
-	public void addUser(User user) {
+	public void saveUser(User user) {
 		save(user);
 	}
 
-	public void addConversation(Conversation convo) {
+	public void saveConversation(Conversation convo) {
 		save(convo);
 	}
 
 	private void save(Object object) {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
+		Session s = em.unwrap(Session.class);
+		s.saveOrUpdate(object);
 		em.persist(object);
 		em.getTransaction().commit();
 		em.close();
@@ -71,10 +75,12 @@ public class DataProvider implements AutoCloseable {
 		return result;
 	}
 
+	@Deprecated
 	public void SetValues(Runnable action) {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
 		action.run();
+		em.flush();
 		em.getTransaction().commit();
 		em.close();
 	}
@@ -83,5 +89,12 @@ public class DataProvider implements AutoCloseable {
 	public void close() {
 		if (emf != null)
 			emf.close();
+	}
+
+	public boolean isEntityManaged(Object entity) {
+		EntityManager em = emf.createEntityManager();
+		boolean ret = em.contains(entity);
+		em.close();
+		return ret;
 	}
 }

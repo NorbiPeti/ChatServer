@@ -40,7 +40,7 @@ public class RegisterPage extends Page {
 				user.setEmail(post.getString("email"));
 				user.setSalt(BCrypt.gensalt()); // http://www.mindrot.org/projects/jBCrypt/
 				user.setPassword(BCrypt.hashpw(post.getString("pass"), user.getSalt()));
-				provider.addUser(user);
+				provider.saveUser(user);
 				User managedUser = provider.getUser(user.getId());
 				IOHelper.LoginUser(exchange, managedUser, provider);
 				IOHelper.SendResponse(200, "Success", exchange);

@@ -248,3 +248,4 @@ paket-files/
 
 
 target/classes/*
+/target/

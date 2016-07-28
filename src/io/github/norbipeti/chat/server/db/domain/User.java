@@ -2,8 +2,6 @@ package io.github.norbipeti.chat.server.db.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 import javax.persistence.*;
 
 @Entity
@@ -19,8 +17,9 @@ public class User {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private List<User> contacts;
 	private String salt;
-	@Column(columnDefinition = "CHAR(16) FOR BIT DATA")
-	private UUID sessionid;
+	//@Column(columnDefinition = "CHAR(16) FOR BIT DATA")
+	@Column(columnDefinition="VARCHAR(64)")
+	private String sessionid;
 	@Version
 	@GeneratedValue
 	private int Version;
@@ -59,8 +58,7 @@ public class User {
 				c.add(u.name);
 		}
 		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", contacts=" + c
-				+ ", sessionid=" + sessionid + "]"; // TODO: SessionID null
-													// after getting from db
+				+ ", sessionid=" + sessionid + "]";
 	}
 
 	public void setEmail(String email) {
@@ -91,11 +89,11 @@ public class User {
 		this.salt = salt;
 	}
 
-	public UUID getSessionid() {
+	public String getSessionid() {
 		return sessionid;
 	}
 
-	public void setSessionid(UUID sessionid) {
+	public void setSessionid(String sessionid) {
 		this.sessionid = sessionid;
 	}
 

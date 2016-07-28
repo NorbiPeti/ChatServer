@@ -100,8 +100,12 @@ public class IOHelper {
 	}
 
 	public static void LoginUser(HttpExchange exchange, User user, DataProvider provider) {
-		provider.SetValues(() -> user.setSessionid(UUID.randomUUID()));
 		System.out.println("Logging in user: " + user);
+		// provider.SetValues(() ->
+		// user.setSessionid(UUID.randomUUID().toString()));
+		user.setSessionid(UUID.randomUUID().toString());
+		provider.saveUser(user);
+		System.out.println("Session ID set to " + user.getSessionid());
 		ZonedDateTime expiretime = ZonedDateTime.now(ZoneId.of("GMT")).plus(Period.of(2, 0, 0));
 		exchange.getResponseHeaders().add("Set-Cookie",
 				"user_id=" + user.getId() + "; expires=" + expiretime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
@@ -110,7 +114,7 @@ public class IOHelper {
 	}
 
 	public static void LogoutUser(HttpExchange exchange, User user) {
-		user.setSessionid(new UUID(0, 0));
+		user.setSessionid(new UUID(0, 0).toString());
 		SendLogoutHeaders(exchange);
 	}
 
@@ -159,9 +163,9 @@ public class IOHelper {
 			System.out.println("User: " + user);
 			System.out.println("session_id: " + cookies.get("session_id"));
 			if (user != null)
-				System.out.println("Equals: " + UUID.fromString(cookies.get("session_id")).equals(user.getSessionid()));
+				System.out.println("Equals: " + cookies.get("session_id").equals(user.getSessionid()));
 			if (user != null && cookies.get("session_id") != null
-					&& UUID.fromString(cookies.get("session_id")).equals(user.getSessionid()))
+					&& cookies.get("session_id").equals(user.getSessionid()))
 				return user;
 			else
 				SendLogoutHeaders(exchange);
