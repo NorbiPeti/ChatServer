@@ -11,14 +11,13 @@ public class Message {
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 	@ManyToOne(cascade=CascadeType.ALL)
+	//@JoinTable(name="user_message")
 	private User sender;
 	private Date time;
 	private String message;
 	@ManyToOne(cascade=CascadeType.ALL)
+	//@JoinTable(name="conversation_message")
 	private Conversation conversation;
-	@Version
-	@GeneratedValue
-	private int Version;
 
 	public User getSender() {
 		return sender;

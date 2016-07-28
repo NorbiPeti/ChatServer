@@ -17,9 +17,6 @@ public class Conversation {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@ManyToMany(cascade = CascadeType.ALL)
 	private List<User> users;
-	@Version
-	@GeneratedValue
-	private int Version;
 
 	public List<Message> getMesssages() {
 		if (messsages == null)

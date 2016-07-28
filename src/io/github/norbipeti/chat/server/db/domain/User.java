@@ -2,6 +2,8 @@ package io.github.norbipeti.chat.server.db.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Generated;
 import javax.persistence.*;
 
 @Entity
@@ -20,9 +22,6 @@ public class User {
 	//@Column(columnDefinition = "CHAR(16) FOR BIT DATA")
 	@Column(columnDefinition="VARCHAR(64)")
 	private String sessionid;
-	@Version
-	@GeneratedValue
-	private int Version;
 	@ElementCollection(fetch = FetchType.EAGER)
 	@ManyToMany(cascade = CascadeType.ALL)
 	public List<Conversation> conversations;
