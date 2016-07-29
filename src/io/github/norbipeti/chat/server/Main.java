@@ -16,6 +16,8 @@ import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.sun.net.httpserver.HttpServer;
 import io.github.norbipeti.chat.server.db.*;
@@ -23,9 +25,6 @@ import io.github.norbipeti.chat.server.db.domain.*;
 import io.github.norbipeti.chat.server.page.*;
 
 public class Main {
-	// public static final HashMap<String, Page> Pages = new HashMap<String,
-	// Page>();
-
 	public static void main(String[] args) { // http://stackoverflow.com/questions/9266632/access-restriction-is-not-accessible-due-to-restriction-on-required-library/10642163#10642163
 		try { // rt.jar Javadoc:
 				// https://docs.oracle.com/javase/8/docs/jre/api/net/httpserver/spec/
@@ -36,7 +35,7 @@ public class Main {
 				user.setName("asd");
 				user.setEmail("test@test.com");
 				User user2 = new User();
-				user2.setName("Teszt");
+				user2.setName("Teszt"); //TODO: http://www.journaldev.com/3524/spring-hibernate-integration-example-tutorial
 				user2.setEmail("test2@test.com");
 				user2.getContacts().add(user);
 				provider.save(user);
@@ -51,7 +50,7 @@ public class Main {
 				LogManager.getLogger().log(Level.DEBUG, "2nd's contact: " + user2.getContacts().get(0));
 				Conversation convo = new Conversation();
 				convo.getUsers().add(user);
-				//user.getConversations().add(convo);
+				// user.getConversations().add(convo);
 				convo.getUsers().add(user2);
 				// user2.getConversations().add(convo); - TODO: Fix duplicate
 				// key constraint
