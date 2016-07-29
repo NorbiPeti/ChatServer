@@ -16,10 +16,10 @@ public class IndexPage extends Page {
 	@Override
 	public void handlePage(HttpExchange exchange) throws IOException {
 		final User user = IOHelper.GetLoggedInUser(exchange);
-		/*final User user = new User();
-		user.setEmail("test@test.com");
-		user.setName("Norbi");
-		user.setId(3L);*/
+		/*
+		 * final User user = new User(); user.setEmail("test@test.com");
+		 * user.setName("Norbi"); user.setId(3L);
+		 */
 		if (user == null)
 			IOHelper.SendModifiedPage(200, this, (doc) -> {
 				doc.getElementById("userbox").remove();
@@ -34,7 +34,9 @@ public class IndexPage extends Page {
 				userbox.html(userbox.html().replace("<username />", user.getName()));
 				Element channelmessages = doc.getElementById("channelmessages");
 				try (DataProvider provider = new DataProvider()) {
+					System.out.println("Conversations: " + provider.getConversations().size());
 					Conversation convo = provider.getConversations().get(0);
+					System.out.println("Messages: " + convo.getMesssages().size());
 					for (Message message : convo.getMesssages()) {
 						Element msgelement = channelmessages.appendElement("div");
 						Element header = msgelement.appendElement("p");

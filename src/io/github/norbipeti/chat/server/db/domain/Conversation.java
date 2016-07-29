@@ -1,7 +1,9 @@
 package io.github.norbipeti.chat.server.db.domain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -11,12 +13,13 @@ public class Conversation {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
-	@ElementCollection(fetch=FetchType.EAGER)
-	@OneToMany(cascade = CascadeType.ALL)
+	@ElementCollection(fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "conversation")
 	private List<Message> messsages;
 	@ElementCollection(fetch = FetchType.EAGER)
 	@ManyToMany(cascade = CascadeType.ALL)
-	private List<User> users;
+	@JoinTable(name = "User_Conversation", joinColumns = @JoinColumn(name = "conversation_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+	private Set<User> users;
 
 	public List<Message> getMesssages() {
 		if (messsages == null)
@@ -28,13 +31,13 @@ public class Conversation {
 		this.messsages = messsages;
 	}
 
-	public List<User> getUsers() {
+	public Set<User> getUsers() {
 		if (users == null)
-			users = new ArrayList<>();
+			users = new HashSet<>();
 		return users;
 	}
 
-	public void setUsers(List<User> users) {
+	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
 

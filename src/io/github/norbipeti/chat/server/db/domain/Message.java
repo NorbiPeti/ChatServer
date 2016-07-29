@@ -15,7 +15,7 @@ public class Message {
 	private User sender;
 	private Date time;
 	private String message;
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	//@JoinTable(name="conversation_message")
 	private Conversation conversation;
 

@@ -1,9 +1,10 @@
 package io.github.norbipeti.chat.server.db.domain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import javax.annotation.Generated;
 import javax.persistence.*;
 
 @Entity
@@ -19,12 +20,13 @@ public class User {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private List<User> contacts;
 	private String salt;
-	//@Column(columnDefinition = "CHAR(16) FOR BIT DATA")
-	@Column(columnDefinition="VARCHAR(64)")
+	// @Column(columnDefinition = "CHAR(16) FOR BIT DATA")
+	@Column(columnDefinition = "VARCHAR(64)")
 	private String sessionid;
 	@ElementCollection(fetch = FetchType.EAGER)
-	@ManyToMany(cascade = CascadeType.ALL)
-	public List<Conversation> conversations;
+	// @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
+	@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+	private Set<Conversation> conversations;
 
 	public List<User> getContacts() {
 		if (contacts == null)
@@ -96,13 +98,13 @@ public class User {
 		this.sessionid = sessionid;
 	}
 
-	public List<Conversation> getConversations() {
+	public Set<Conversation> getConversations() {
 		if (conversations == null)
-			conversations = new ArrayList<>();
+			conversations = new HashSet<>();
 		return conversations;
 	}
 
-	public void setConversations(List<Conversation> conversations) {
+	public void setConversations(Set<Conversation> conversations) {
 		this.conversations = conversations;
 	}
 

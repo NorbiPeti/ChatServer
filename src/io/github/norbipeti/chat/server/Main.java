@@ -51,7 +51,10 @@ public class Main {
 				System.out.println("2nd's contact: " + user2.getContacts().get(0));
 				Conversation convo = new Conversation();
 				convo.getUsers().add(user);
+				//user.getConversations().add(convo);
 				convo.getUsers().add(user2);
+				// user2.getConversations().add(convo); - TODO: Fix duplicate
+				// key constraint
 				Message msg = new Message();
 				msg.setSender(user);
 				msg.setTime(new Date());
@@ -62,6 +65,16 @@ public class Main {
 				msg2.setTime(new Date());
 				msg2.setMessage("Teszt 2");
 				convo.getMesssages().add(msg2);
+				provider.saveConversation(convo);
+				provider.saveUser(user);
+				provider.saveUser(user2);
+				User loggedinuser = new User();
+				loggedinuser.setName("NorbiPeti");
+				loggedinuser.setSessionid("2ed6e2cd-33ad-416e-92c2-7365510b8b31");
+				loggedinuser.setEmail("sznp@asd.com");
+				convo.getUsers().add(loggedinuser);
+				loggedinuser.getConversations().add(convo);
+				provider.saveUser(loggedinuser);
 				provider.saveConversation(convo);
 			}
 			System.out.println("Starting webserver...");
