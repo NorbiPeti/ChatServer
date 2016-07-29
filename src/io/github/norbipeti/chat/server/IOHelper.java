@@ -14,6 +14,8 @@ import java.util.UUID;
 import java.util.function.Function;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -100,11 +102,11 @@ public class IOHelper {
 	}
 
 	public static void LoginUser(HttpExchange exchange, User user, DataProvider provider) {
-		System.out.println("Logging in user: " + user);
+		LogManager.getLogger().log(Level.DEBUG, "Logging in user: " + user);
 		// provider.SetValues(() ->
 		// user.setSessionid(UUID.randomUUID().toString()));
 		user.setSessionid(UUID.randomUUID().toString());
-		provider.saveUser(user);
+		provider.save(user);
 		ZonedDateTime expiretime = ZonedDateTime.now(ZoneId.of("GMT")).plus(Period.of(2, 0, 0));
 		exchange.getResponseHeaders().add("Set-Cookie",
 				"user_id=" + user.getId() + "; expires=" + expiretime.format(DateTimeFormatter.RFC_1123_DATE_TIME));

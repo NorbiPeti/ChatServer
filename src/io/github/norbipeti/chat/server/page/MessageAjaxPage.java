@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -39,9 +42,9 @@ public class MessageAjaxPage extends Page {
 		int conversation = obj.getInt("conversation");
 		Set<Conversation> convos = user.getConversations();
 		Conversation conv = null;
-		System.out.println("Len: " + convos.size());
+		LogManager.getLogger().log(Level.DEBUG, "Len: " + convos.size());
 		for (Conversation con : convos) {
-			System.out.println(con.getId());
+			LogManager.getLogger().log(Level.DEBUG, con.getId());
 			if (con.getId() == conversation) {
 				conv = con;
 				break;
@@ -57,9 +60,10 @@ public class MessageAjaxPage extends Page {
 			msg.setSender(user);
 			msg.setMessage(message);
 			msg.setTime(new Date());
+			provider.save(msg);
 			conv.getMesssages().add(msg);
-			provider.saveConversation(conv);
-			System.out.println(conv.getMesssages().size());
+			provider.save(conv);
+			LogManager.getLogger().log(Level.DEBUG, "Added conversation's message count: " + conv.getMesssages().size());
 		} catch (Exception e) {
 			throw e;
 		}

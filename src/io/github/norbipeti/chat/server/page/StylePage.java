@@ -3,6 +3,9 @@ package io.github.norbipeti.chat.server.page;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+
 import com.sun.net.httpserver.HttpExchange;
 
 import io.github.norbipeti.chat.server.IOHelper;
@@ -30,6 +33,6 @@ public class StylePage extends Page {
 				IOHelper.SendResponse(200, IOHelper.ReadFile(cssfile), exchange);
 			}
 		} else
-			System.out.println(exchange.getRequestURI().getPath());
+			LogManager.getLogger().log(Level.DEBUG, exchange.getRequestURI().getPath());
 	}
 }

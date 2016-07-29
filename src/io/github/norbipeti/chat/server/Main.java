@@ -30,7 +30,7 @@ public class Main {
 		try { // rt.jar Javadoc:
 				// https://docs.oracle.com/javase/8/docs/jre/api/net/httpserver/spec/
 				// https://docs.oracle.com/javase/8/docs/api/
-			System.out.println("Loading database...");
+			LogManager.getLogger().log(Level.DEBUG, "Loading database...");
 			try (DataProvider provider = new DataProvider()) {
 				User user = new User();
 				user.setName("asd");
@@ -39,16 +39,16 @@ public class Main {
 				user2.setName("Teszt");
 				user2.setEmail("test2@test.com");
 				user2.getContacts().add(user);
-				provider.saveUser(user);
+				provider.save(user);
 				List<User> users = provider.getUsers();
 				user = users.get(0);
 				user.getContacts().add(user2);
-				provider.saveUser(user2);
+				provider.save(user2);
 				users = provider.getUsers();
 				user2 = users.get(1);
-				System.out.println(users);
-				System.out.println("1st's contact: " + user.getContacts().get(0));
-				System.out.println("2nd's contact: " + user2.getContacts().get(0));
+				LogManager.getLogger().log(Level.DEBUG, users);
+				LogManager.getLogger().log(Level.DEBUG, "1st's contact: " + user.getContacts().get(0));
+				LogManager.getLogger().log(Level.DEBUG, "2nd's contact: " + user2.getContacts().get(0));
 				Conversation convo = new Conversation();
 				convo.getUsers().add(user);
 				//user.getConversations().add(convo);
@@ -65,19 +65,19 @@ public class Main {
 				msg2.setTime(new Date());
 				msg2.setMessage("Teszt 2");
 				convo.getMesssages().add(msg2);
-				provider.saveConversation(convo);
-				provider.saveUser(user);
-				provider.saveUser(user2);
+				provider.save(convo);
+				provider.save(user);
+				provider.save(user2);
 				User loggedinuser = new User();
 				loggedinuser.setName("NorbiPeti");
 				loggedinuser.setSessionid("2ed6e2cd-33ad-416e-92c2-7365510b8b31");
 				loggedinuser.setEmail("sznp@asd.com");
 				convo.getUsers().add(loggedinuser);
 				loggedinuser.getConversations().add(convo);
-				provider.saveUser(loggedinuser);
-				provider.saveConversation(convo);
+				provider.save(loggedinuser);
+				provider.save(convo);
 			}
-			System.out.println("Starting webserver...");
+			LogManager.getLogger().log(Level.DEBUG, "Starting webserver...");
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), 8080), 10);
 			Reflections rf = new Reflections(
 					new ConfigurationBuilder().setUrls(ClasspathHelper.forClassLoader(Page.class.getClassLoader()))
@@ -97,14 +97,14 @@ public class Main {
 				}
 			}
 			server.start();
-			System.out.println("Ready... Press Enter to stop.");
+			LogManager.getLogger().log(Level.DEBUG, "Ready... Press Enter to stop.");
 			System.in.read();
-			System.out.println("Stopping...");
+			LogManager.getLogger().log(Level.DEBUG, "Stopping...");
 			server.stop(1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("Stopped");
+		LogManager.getLogger().log(Level.DEBUG, "Stopped");
 	}
 
 	private static void addPage(HttpServer server, Page page) {

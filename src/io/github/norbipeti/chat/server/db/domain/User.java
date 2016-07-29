@@ -9,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "\"User\"")
-public class User {
+public class User extends ChatDatabaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)

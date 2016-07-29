@@ -18,22 +18,19 @@ public class DataProvider implements AutoCloseable {
 		emf = Persistence.createEntityManagerFactory("ChatServerPU");
 	}
 
-	public void saveUser(User user) {
-		save(user);
-	}
+	public <T extends ChatDatabaseEntity> void save(T object) {
+		EntityManager em = null;
+		try {
+			em = emf.createEntityManager();
+			em.getTransaction().begin();
+			Session s = em.unwrap(Session.class);
+			s.saveOrUpdate(object);
+			em.persist(object);
+			em.getTransaction().commit();
+		} finally {
+			em.close();
+		}
 
-	public void saveConversation(Conversation convo) {
-		save(convo);
-	}
-
-	private void save(Object object) {
-		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
-		Session s = em.unwrap(Session.class);
-		s.saveOrUpdate(object);
-		em.persist(object);
-		em.getTransaction().commit();
-		em.close();
 	}
 
 	public List<User> getUsers() {

@@ -2,6 +2,8 @@ package io.github.norbipeti.chat.server.page;
 
 import java.io.IOException;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 import org.jsoup.nodes.Element;
 
 import com.sun.net.httpserver.HttpExchange;
@@ -34,9 +36,9 @@ public class IndexPage extends Page {
 				userbox.html(userbox.html().replace("<username />", user.getName()));
 				Element channelmessages = doc.getElementById("channelmessages");
 				try (DataProvider provider = new DataProvider()) {
-					System.out.println("Conversations: " + provider.getConversations().size());
+					LogManager.getLogger().log(Level.DEBUG, "Conversations: " + provider.getConversations().size());
 					Conversation convo = provider.getConversations().get(0);
-					System.out.println("Messages: " + convo.getMesssages().size());
+					LogManager.getLogger().log(Level.DEBUG, "Messages: " + convo.getMesssages().size());
 					for (Message message : convo.getMesssages()) {
 						Element msgelement = channelmessages.appendElement("div");
 						Element header = msgelement.appendElement("p");
