@@ -1,5 +1,8 @@
 package io.github.norbipeti.chat.server.db.domain;
 
-public abstract class ChatDatabaseEntity {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public abstract class ChatDatabaseEntity implements Serializable {
 
 }

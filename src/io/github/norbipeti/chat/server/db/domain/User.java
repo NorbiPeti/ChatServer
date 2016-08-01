@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "\"User\"")
 public class User extends ChatDatabaseEntity {
+	private static final long serialVersionUID = 2862762084164225666L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
@@ -26,7 +27,7 @@ public class User extends ChatDatabaseEntity {
 	private String sessionid;
 	@ElementCollection(fetch = FetchType.EAGER)
 	// @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
-	@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	// @ManyToMany(mappedBy = "users")
 	// @JoinTable(name = "User_Conversation", joinColumns =
 	// @JoinColumn(referencedColumnName = "id", unique = false),

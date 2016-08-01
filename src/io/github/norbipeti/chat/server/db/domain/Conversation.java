@@ -9,6 +9,7 @@ import javax.persistence.*;
 
 @Entity
 public class Conversation extends ChatDatabaseEntity {
+	private static final long serialVersionUID = 5058682475353799722L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)

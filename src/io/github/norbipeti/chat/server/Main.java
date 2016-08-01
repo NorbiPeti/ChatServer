@@ -35,11 +35,10 @@ public class Main {
 				user.setName("asd");
 				user.setEmail("test@test.com");
 				User user2 = new User();
-				user2.setName("Teszt"); // TODO:
-										// http://www.journaldev.com/3524/spring-hibernate-integration-example-tutorial
+				user2.setName("Teszt");
 				user2.setEmail("test2@test.com");
-				user = provider.save(user);
-				user2 = provider.save(user2);
+				// user = provider.save(user);
+				// user2 = provider.save(user2);
 				user.getContacts().add(user2);
 				user2.getContacts().add(user);
 				LogManager.getLogger().log(Level.DEBUG, "1st's contact: " + user.getContacts().get(0));
@@ -50,7 +49,9 @@ public class Main {
 				user.getConversations().add(conversation);
 				LogManager.getLogger().debug("User: " + user);
 				conversation.getUsers().add(user2);
-				LogManager.getLogger().debug("User2: " + user2);
+				LogManager.getLogger().debug("User2: " + user2); // TODO: Switch
+																	// to JSON
+																	// files?
 				user2.getConversations().add(conversation); // TODO: Fix
 															// duplicate
 				// key constraint
