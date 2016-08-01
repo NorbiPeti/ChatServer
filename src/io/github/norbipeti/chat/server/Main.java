@@ -29,13 +29,14 @@ public class Main {
 		try { // rt.jar Javadoc:
 				// https://docs.oracle.com/javase/8/docs/jre/api/net/httpserver/spec/
 				// https://docs.oracle.com/javase/8/docs/api/
-			LogManager.getLogger().log(Level.DEBUG, "Loading database...");
+			LogManager.getLogger().log(Level.INFO, "Loading database...");
 			try (DataProvider provider = new DataProvider()) {
 				User user = new User();
 				user.setName("asd");
 				user.setEmail("test@test.com");
 				User user2 = new User();
-				user2.setName("Teszt"); //TODO: http://www.journaldev.com/3524/spring-hibernate-integration-example-tutorial
+				user2.setName("Teszt"); // TODO:
+										// http://www.journaldev.com/3524/spring-hibernate-integration-example-tutorial
 				user2.setEmail("test2@test.com");
 				user2.getContacts().add(user);
 				provider.save(user);
@@ -69,14 +70,14 @@ public class Main {
 				provider.save(user2);
 				User loggedinuser = new User();
 				loggedinuser.setName("NorbiPeti");
-				loggedinuser.setSessionid("2ed6e2cd-33ad-416e-92c2-7365510b8b31");
+				loggedinuser.setSessionid("8b148304-5dd6-48dd-a1a3-c8e47bcfc44b");
 				loggedinuser.setEmail("sznp@asd.com");
 				convo.getUsers().add(loggedinuser);
 				loggedinuser.getConversations().add(convo);
 				provider.save(loggedinuser);
 				provider.save(convo);
 			}
-			LogManager.getLogger().log(Level.DEBUG, "Starting webserver...");
+			LogManager.getLogger().log(Level.INFO, "Starting webserver...");
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), 8080), 10);
 			Reflections rf = new Reflections(
 					new ConfigurationBuilder().setUrls(ClasspathHelper.forClassLoader(Page.class.getClassLoader()))
@@ -96,14 +97,14 @@ public class Main {
 				}
 			}
 			server.start();
-			LogManager.getLogger().log(Level.DEBUG, "Ready... Press Enter to stop.");
+			LogManager.getLogger().log(Level.INFO, "Ready... Press Enter to stop.");
 			System.in.read();
-			LogManager.getLogger().log(Level.DEBUG, "Stopping...");
+			LogManager.getLogger().log(Level.INFO, "Stopping...");
 			server.stop(1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		LogManager.getLogger().log(Level.DEBUG, "Stopped");
+		LogManager.getLogger().log(Level.INFO, "Stopped");
 	}
 
 	private static void addPage(HttpServer server, Page page) {

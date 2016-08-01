@@ -36,9 +36,10 @@ public class IndexPage extends Page {
 				userbox.html(userbox.html().replace("<username />", user.getName()));
 				Element channelmessages = doc.getElementById("channelmessages");
 				try (DataProvider provider = new DataProvider()) {
-					LogManager.getLogger().log(Level.DEBUG, "Conversations: " + provider.getConversations().size());
-					Conversation convo = provider.getConversations().get(0);
-					LogManager.getLogger().log(Level.DEBUG, "Messages: " + convo.getMesssages().size());
+					LogManager.getLogger().log(Level.INFO, "Conversations: " + provider.getConversations().size());
+					LogManager.getLogger().log(Level.INFO, "User conversations: " + user.getConversations().size());
+					Conversation convo = user.getConversations().iterator().next();
+					LogManager.getLogger().log(Level.INFO, "Messages: " + convo.getMesssages().size());
 					for (Message message : convo.getMesssages()) {
 						Element msgelement = channelmessages.appendElement("div");
 						Element header = msgelement.appendElement("p");

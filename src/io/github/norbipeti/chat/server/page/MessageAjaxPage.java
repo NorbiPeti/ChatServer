@@ -60,6 +60,7 @@ public class MessageAjaxPage extends Page {
 			msg.setSender(user);
 			msg.setMessage(message);
 			msg.setTime(new Date());
+			msg.setConversation(conv);
 			provider.save(msg);
 			conv.getMesssages().add(msg);
 			provider.save(conv);

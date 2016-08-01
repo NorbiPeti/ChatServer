@@ -35,10 +35,23 @@ body {
 #usercontent {
     margin: auto;
     width: 75%;
+    height: 100%;
 }
 
 #msginput {
     width: 100%;
     height: 30px;
     max-width: 100%;
+}
+
+#channelmessages {
+    width: 100%;
+    height: -moz-calc(100% - 50px);
+    height: -webkit-calc(100% - 50px);
+    height: calc(100% - 50px);
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
 }

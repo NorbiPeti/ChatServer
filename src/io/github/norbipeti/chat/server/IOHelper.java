@@ -81,7 +81,7 @@ public class IOHelper {
 		if (exchange.getRequestBody().available() == 0)
 			return null;
 		try {
-			String content = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.ISO_8859_1);
+			String content = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.ISO_8859_1).trim();
 			JSONObject obj = new JSONObject(content);
 			return obj;
 		} catch (Exception e) {
