@@ -35,11 +35,24 @@ public class MessageAjaxPage extends Page {
 		}
 		JSONObject obj = IOHelper.GetPOSTJSON(exchange);
 		if (obj == null) {
-			IOHelper.SendResponse(400, "<h1>400 Bad request</h1><p>Not a JSON string!</p>", exchange);
+			IOHelper.SendResponse(400,
+					"<h1>400 Bad request</h1><p>Not a JSON string!</p><p>" + IOHelper.GetPOST(exchange) + "</p>",
+					exchange);
+			return;
+		}
+		if (!obj.has("message") || !obj.has("conversation")) {
+			IOHelper.SendResponse(400,
+					"<h1>400 Bad request</h1><p>Message or conversation not found in JSON response.</p><p>"
+							+ IOHelper.GetPOST(exchange) + "</p>",
+					exchange);
 			return;
 		}
 		String message = obj.getString("message");
 		int conversation = obj.getInt("conversation");
+		if (message.trim().length() == 0) {
+			IOHelper.SendResponse(400, "<h1>400 Bad request</h1><p>The message cannot be empty,</p>", exchange);
+			return;
+		}
 		Set<Conversation> convos = user.getConversations();
 		Conversation conv = null;
 		LogManager.getLogger().log(Level.DEBUG, "Len: " + convos.size());
@@ -64,7 +77,8 @@ public class MessageAjaxPage extends Page {
 			provider.save(msg);
 			conv.getMesssages().add(msg);
 			provider.save(conv);
-			LogManager.getLogger().log(Level.DEBUG, "Added conversation's message count: " + conv.getMesssages().size());
+			LogManager.getLogger().log(Level.DEBUG,
+					"Added conversation's message count: " + conv.getMesssages().size());
 		} catch (Exception e) {
 			throw e;
 		}

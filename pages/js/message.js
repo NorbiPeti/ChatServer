@@ -10,10 +10,14 @@ var respfunc = function respfunc(result) {
 
 var sendmsgonenter = function sendmsgonenter(e) { //TODO: Detect Enter
     var code = e.keyCode || e.which;
-    if (code != 13) { //Enter keycode
+    if (code != 13 || e.shiftKey) { //Enter keycode
         return;
     }
+    e.preventDefault();
     var textarea = event.target;
+    if (textarea.value.trim().length == 0)
+        return;
+    textarea.disabled = true;
     window.convid = 1;
     var json = JSON.stringify({"message": textarea.value, "conversation": window.convid});
     $.ajax({
@@ -22,7 +26,5 @@ var sendmsgonenter = function sendmsgonenter(e) { //TODO: Detect Enter
 };
 
 $(document).ready(function () {
-    $('#msginput').on("keypress", sendmsgonenter);
+    $('#msginput').on("keydown", sendmsgonenter);
 });
-
-$('#msginput').on("keypress", sendmsgonenter);

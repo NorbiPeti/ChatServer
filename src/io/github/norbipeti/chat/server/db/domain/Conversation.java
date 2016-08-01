@@ -17,7 +17,12 @@ public class Conversation extends ChatDatabaseEntity {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "conversation")
 	private List<Message> messsages;
 	@ElementCollection(fetch = FetchType.EAGER)
-	@ManyToMany(cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	// @JoinTable(name = "User_Conversation", joinColumns = @JoinColumn(name =
+	// "conversation_id", referencedColumnName = "id", unique = false),
+	// inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName =
+	// "id", unique = false), uniqueConstraints = @UniqueConstraint(name =
+	// "USER_CONV_UN", columnNames = {"user_id", "conversation_id" }))
 	@JoinTable(name = "User_Conversation", joinColumns = @JoinColumn(name = "conversation_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
 	private Set<User> users;
 

@@ -50,10 +50,10 @@ public class Main {
 				LogManager.getLogger().log(Level.DEBUG, "1st's contact: " + user.getContacts().get(0));
 				LogManager.getLogger().log(Level.DEBUG, "2nd's contact: " + user2.getContacts().get(0));
 				Conversation convo = new Conversation();
-				convo.getUsers().add(user);
-				// user.getConversations().add(convo);
-				convo.getUsers().add(user2);
-				// user2.getConversations().add(convo); - TODO: Fix duplicate
+				//convo.getUsers().add(user);
+				//user.getConversations().add(convo);
+				//convo.getUsers().add(user2);
+				//user2.getConversations().add(convo); //TODO: Fix duplicate
 				// key constraint
 				Message msg = new Message();
 				msg.setSender(user);

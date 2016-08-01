@@ -1,5 +1,7 @@
 package io.github.norbipeti.chat.server;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,7 +31,15 @@ import io.github.norbipeti.chat.server.page.Page;
 public class IOHelper {
 	public static void SendResponse(int code, String content, HttpExchange exchange) throws IOException {
 		exchange.sendResponseHeaders(code, content.length());
-		IOUtils.write(content, exchange.getResponseBody(), StandardCharsets.UTF_8);
+		try (BufferedOutputStream out = new BufferedOutputStream(exchange.getResponseBody())) {
+			try (ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
+				byte[] buffer = new byte[512];
+				int count;
+				while ((count = bis.read(buffer)) != -1) {
+					out.write(buffer, 0, count);
+				}
+			}
+		}
 		exchange.getResponseBody().close();
 	}
 

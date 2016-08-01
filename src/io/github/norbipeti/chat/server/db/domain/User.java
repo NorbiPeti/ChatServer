@@ -25,7 +25,9 @@ public class User extends ChatDatabaseEntity {
 	private String sessionid;
 	@ElementCollection(fetch = FetchType.EAGER)
 	// @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
-	@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	// @ManyToMany(mappedBy = "users")
+	//@JoinTable(name = "User_Conversation", joinColumns = @JoinColumn(referencedColumnName = "id", unique = false), inverseJoinColumns = @JoinColumn(referencedColumnName = "id", unique = false))
 	private Set<Conversation> conversations;
 
 	public List<User> getContacts() {

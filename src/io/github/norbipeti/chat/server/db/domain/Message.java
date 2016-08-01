@@ -10,12 +10,12 @@ public class Message extends ChatDatabaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne
 	//@JoinTable(name="user_message")
 	private User sender;
 	private Date time;
 	private String message;
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	//@JoinTable(name="conversation_message")
 	private Conversation conversation;
 
