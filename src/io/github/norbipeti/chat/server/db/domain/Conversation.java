@@ -23,7 +23,10 @@ public class Conversation extends ChatDatabaseEntity {
 	// inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName =
 	// "id", unique = false), uniqueConstraints = @UniqueConstraint(name =
 	// "USER_CONV_UN", columnNames = {"user_id", "conversation_id" }))
-	@JoinTable(name = "User_Conversation", joinColumns = @JoinColumn(name = "conversation_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+	// @JoinTable(name = "User_Conversation", joinColumns = @JoinColumn(name =
+	// "conversation_id", referencedColumnName = "id"), inverseJoinColumns =
+	// @JoinColumn(name = "user_id", referencedColumnName = "id"))
+	@JoinTable(name = "User_Conversation")
 	private Set<User> users;
 
 	public List<Message> getMesssages() {

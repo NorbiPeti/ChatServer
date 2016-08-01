@@ -40,9 +40,8 @@ public class RegisterAjaxPage extends Page {
 				user.setEmail(post.getString("email"));
 				user.setSalt(BCrypt.gensalt()); // http://www.mindrot.org/projects/jBCrypt/
 				user.setPassword(BCrypt.hashpw(post.getString("pass"), user.getSalt()));
-				provider.save(user);
-				User managedUser = provider.getUser(user.getId());
-				IOHelper.LoginUser(exchange, managedUser, provider);
+				user = provider.save(user);
+				IOHelper.LoginUser(exchange, user, provider);
 				IOHelper.SendResponse(200, "Success", exchange);
 			} catch (Exception e) {
 				throw e;

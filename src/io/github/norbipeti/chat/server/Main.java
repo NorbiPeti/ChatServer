@@ -38,44 +38,42 @@ public class Main {
 				user2.setName("Teszt"); // TODO:
 										// http://www.journaldev.com/3524/spring-hibernate-integration-example-tutorial
 				user2.setEmail("test2@test.com");
-				user2.getContacts().add(user);
-				provider.save(user);
-				List<User> users = provider.getUsers();
-				user = users.get(0);
+				user = provider.save(user);
+				user2 = provider.save(user2);
 				user.getContacts().add(user2);
-				provider.save(user2);
-				users = provider.getUsers();
-				user2 = users.get(1);
-				LogManager.getLogger().log(Level.DEBUG, users);
+				user2.getContacts().add(user);
 				LogManager.getLogger().log(Level.DEBUG, "1st's contact: " + user.getContacts().get(0));
 				LogManager.getLogger().log(Level.DEBUG, "2nd's contact: " + user2.getContacts().get(0));
-				Conversation convo = new Conversation();
-				//convo.getUsers().add(user);
-				//user.getConversations().add(convo);
-				//convo.getUsers().add(user2);
-				//user2.getConversations().add(convo); //TODO: Fix duplicate
+				Conversation conversation = new Conversation();
+				conversation = provider.save(conversation);
+				conversation.getUsers().add(user);
+				user.getConversations().add(conversation);
+				LogManager.getLogger().debug("User: " + user);
+				conversation.getUsers().add(user2);
+				LogManager.getLogger().debug("User2: " + user2);
+				user2.getConversations().add(conversation); // TODO: Fix
+															// duplicate
 				// key constraint
 				Message msg = new Message();
 				msg.setSender(user);
 				msg.setTime(new Date());
 				msg.setMessage("Teszt 1");
-				convo.getMesssages().add(msg);
+				conversation.getMesssages().add(msg);
 				Message msg2 = new Message();
 				msg2.setSender(user2);
 				msg2.setTime(new Date());
 				msg2.setMessage("Teszt 2");
-				convo.getMesssages().add(msg2);
-				provider.save(convo);
-				provider.save(user);
-				provider.save(user2);
-				User loggedinuser = new User();
-				loggedinuser.setName("NorbiPeti");
-				loggedinuser.setSessionid("093b1395-8c31-4f3b-ba67-828a755af92e");
-				loggedinuser.setEmail("sznp@asd.com");
-				convo.getUsers().add(loggedinuser);
-				loggedinuser.getConversations().add(convo);
-				provider.save(loggedinuser);
-				provider.save(convo);
+				conversation.getMesssages().add(msg2);
+				// provider.save(user);
+				// provider.save(user2);
+				/*
+				 * User loggedinuser = new User(); provider.save(loggedinuser);
+				 * loggedinuser.setName("NorbiPeti"); loggedinuser.setSessionid(
+				 * "093b1395-8c31-4f3b-ba67-828a755af92e");
+				 * loggedinuser.setEmail("sznp@asd.com");
+				 * conversation.getUsers().add(loggedinuser);
+				 * loggedinuser.getConversations().add(conversation);
+				 */
 			}
 			LogManager.getLogger().log(Level.INFO, "Starting webserver...");
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), 8080), 10);

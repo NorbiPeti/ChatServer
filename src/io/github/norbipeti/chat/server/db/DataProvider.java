@@ -13,24 +13,17 @@ import io.github.norbipeti.chat.server.db.domain.*;
 
 public class DataProvider implements AutoCloseable {
 	private EntityManagerFactory emf;
+	private EntityManager em;
 
 	public DataProvider() {
 		emf = Persistence.createEntityManagerFactory("ChatServerPU");
+		em = emf.createEntityManager();
+		em.getTransaction().begin();
 	}
 
-	public <T extends ChatDatabaseEntity> void save(T object) {
-		EntityManager em = null;
-		try {
-			em = emf.createEntityManager();
-			em.getTransaction().begin();
-			Session s = em.unwrap(Session.class);
-			s.saveOrUpdate(object);
-			em.persist(object);
-			em.getTransaction().commit();
-		} finally {
-			em.close();
-		}
-
+	public <T extends ChatDatabaseEntity> T save(T object) {
+		T obj = em.merge(object);
+		return obj;
 	}
 
 	public List<User> getUsers() {
@@ -46,21 +39,15 @@ public class DataProvider implements AutoCloseable {
 	}
 
 	private <T> List<T> get(Class<T> cl) {
-		EntityManager em = emf.createEntityManager();
 		TypedQuery<T> query = em.createQuery("SELECT x FROM " + cl.getSimpleName() + " x", cl);
 		List<T> results = query.getResultList();
 		Hibernate.initialize(results);
-		em.close();
 		return results;
 	}
 
 	public void removeUser(User user) {
-		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
 		User managedUser = em.find(User.class, user.getId());
 		em.remove(managedUser);
-		em.getTransaction().commit();
-		em.close();
 	}
 
 	public User getUser(Long id) {
@@ -68,32 +55,28 @@ public class DataProvider implements AutoCloseable {
 	}
 
 	private <T> T get(Class<T> cl, Long id) {
-		EntityManager em = emf.createEntityManager();
 		T result = em.find(cl, id);
-		em.close();
 		return result;
 	}
 
 	@Deprecated
 	public void SetValues(Runnable action) {
-		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
 		action.run();
 		em.flush();
-		em.getTransaction().commit();
-		em.close();
 	}
 
 	@Override
 	public void close() {
+		if (em != null) {
+			em.flush();
+			em.close();
+		}
 		if (emf != null)
 			emf.close();
 	}
 
 	public boolean isEntityManaged(Object entity) {
-		EntityManager em = emf.createEntityManager();
 		boolean ret = em.contains(entity);
-		em.close();
 		return ret;
 	}
 }

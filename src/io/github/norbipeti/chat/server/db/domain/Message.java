@@ -11,12 +11,12 @@ public class Message extends ChatDatabaseEntity {
 	@Column(name = "id", unique = true, nullable = false)
 	private Long id;
 	@ManyToOne
-	//@JoinTable(name="user_message")
+	// @JoinTable(name="user_message")
 	private User sender;
 	private Date time;
 	private String message;
 	@ManyToOne(fetch = FetchType.EAGER)
-	//@JoinTable(name="conversation_message")
+	// @JoinTable(name="conversation_message")
 	private Conversation conversation;
 
 	public User getSender() {

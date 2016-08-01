@@ -49,6 +49,7 @@ body {
     height: -moz-calc(100% - 50px);
     height: -webkit-calc(100% - 50px);
     height: calc(100% - 50px);
+    overflow: auto;
 }
 
 html, body {

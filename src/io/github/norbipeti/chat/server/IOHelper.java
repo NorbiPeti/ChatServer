@@ -116,7 +116,7 @@ public class IOHelper {
 		// provider.SetValues(() ->
 		// user.setSessionid(UUID.randomUUID().toString()));
 		user.setSessionid(UUID.randomUUID().toString());
-		provider.save(user);
+		user = provider.save(user);
 		ZonedDateTime expiretime = ZonedDateTime.now(ZoneId.of("GMT")).plus(Period.of(2, 0, 0));
 		exchange.getResponseHeaders().add("Set-Cookie",
 				"user_id=" + user.getId() + "; expires=" + expiretime.format(DateTimeFormatter.RFC_1123_DATE_TIME));

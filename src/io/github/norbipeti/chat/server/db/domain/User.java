@@ -18,6 +18,7 @@ public class User extends ChatDatabaseEntity {
 	private String email;
 	private String password;
 	@ElementCollection(fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL)
 	private List<User> contacts;
 	private String salt;
 	// @Column(columnDefinition = "CHAR(16) FOR BIT DATA")
@@ -27,7 +28,10 @@ public class User extends ChatDatabaseEntity {
 	// @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
 	@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	// @ManyToMany(mappedBy = "users")
-	//@JoinTable(name = "User_Conversation", joinColumns = @JoinColumn(referencedColumnName = "id", unique = false), inverseJoinColumns = @JoinColumn(referencedColumnName = "id", unique = false))
+	// @JoinTable(name = "User_Conversation", joinColumns =
+	// @JoinColumn(referencedColumnName = "id", unique = false),
+	// inverseJoinColumns = @JoinColumn(referencedColumnName = "id", unique =
+	// false))
 	private Set<Conversation> conversations;
 
 	public List<User> getContacts() {
