@@ -120,8 +120,8 @@ public class IOHelper {
 		ZonedDateTime expiretime = ZonedDateTime.now(ZoneId.of("GMT")).plus(Period.of(2, 0, 0));
 		exchange.getResponseHeaders().add("Set-Cookie",
 				"user_id=" + user.getId() + "; expires=" + expiretime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
-		exchange.getResponseHeaders().add("Set-Cookie",
-				"session_id=" + user.getSessionid() + "; expires=" + expiretime);
+		exchange.getResponseHeaders().add("Set-Cookie", "session_id=" + user.getSessionid() + "; expires="
+				+ expiretime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
 	}
 
 	public static void LogoutUser(HttpExchange exchange, User user) {

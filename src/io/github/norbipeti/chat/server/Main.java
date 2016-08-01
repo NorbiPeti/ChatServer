@@ -70,7 +70,7 @@ public class Main {
 				provider.save(user2);
 				User loggedinuser = new User();
 				loggedinuser.setName("NorbiPeti");
-				loggedinuser.setSessionid("8b148304-5dd6-48dd-a1a3-c8e47bcfc44b");
+				loggedinuser.setSessionid("093b1395-8c31-4f3b-ba67-828a755af92e");
 				loggedinuser.setEmail("sznp@asd.com");
 				convo.getUsers().add(loggedinuser);
 				loggedinuser.getConversations().add(convo);
