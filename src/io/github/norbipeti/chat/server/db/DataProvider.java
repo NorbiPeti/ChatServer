@@ -7,10 +7,9 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import org.hibernate.Hibernate;
-import org.hibernate.Session;
-
 import io.github.norbipeti.chat.server.db.domain.*;
 
+@Deprecated
 public class DataProvider implements AutoCloseable {
 	private EntityManagerFactory emf;
 	private EntityManager em;

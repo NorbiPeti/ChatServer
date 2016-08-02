@@ -18,13 +18,14 @@ import java.util.function.Function;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
-import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
 
-import io.github.norbipeti.chat.server.db.DataProvider;
+import io.github.norbipeti.chat.server.data.DataManager;
 import io.github.norbipeti.chat.server.db.domain.User;
 import io.github.norbipeti.chat.server.page.Page;
 
@@ -66,7 +67,6 @@ public class IOHelper {
 		return content;
 	}
 
-	@Deprecated
 	public static HashMap<String, String> GetPOST(HttpExchange exchange) throws IOException {
 		if (exchange.getRequestBody().available() == 0)
 			return new HashMap<>();
@@ -87,12 +87,12 @@ public class IOHelper {
 		}
 	}
 
-	public static JSONObject GetPOSTJSON(HttpExchange exchange) throws IOException {
+	public static JsonObject GetPOSTJSON(HttpExchange exchange) throws IOException {
 		if (exchange.getRequestBody().available() == 0)
 			return null;
 		try {
 			String content = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.ISO_8859_1).trim();
-			JSONObject obj = new JSONObject(content);
+			JsonObject obj = new JsonParser().parse(content).getAsJsonObject();
 			return obj;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -111,12 +111,17 @@ public class IOHelper {
 		return true;
 	}
 
-	public static void LoginUser(HttpExchange exchange, User user, DataProvider provider) {
+	/**
+	 * Sends login headers and sets the session id on the user
+	 * 
+	 * @param exchange
+	 * @param user
+	 */
+	public static void LoginUser(HttpExchange exchange, User user) {
 		LogManager.getLogger().log(Level.DEBUG, "Logging in user: " + user);
 		// provider.SetValues(() ->
 		// user.setSessionid(UUID.randomUUID().toString()));
 		user.setSessionid(UUID.randomUUID().toString());
-		user = provider.save(user);
 		ZonedDateTime expiretime = ZonedDateTime.now(ZoneId.of("GMT")).plus(Period.of(2, 0, 0));
 		exchange.getResponseHeaders().add("Set-Cookie",
 				"user_id=" + user.getId() + "; expires=" + expiretime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
@@ -162,19 +167,17 @@ public class IOHelper {
 	 * 
 	 * @param exchange
 	 * @return The logged in user or null if not logged in.
+	 * @throws IOException
 	 */
-	public static User GetLoggedInUser(HttpExchange exchange) {
+	public static User GetLoggedInUser(HttpExchange exchange) throws IOException {
 		HashMap<String, String> cookies = GetCookies(exchange);
 		if (!cookies.containsKey("user_id") || !cookies.containsKey("session_id"))
 			return null;
-		try (DataProvider provider = new DataProvider()) {
-			User user = provider.getUser(Long.parseLong(cookies.get("user_id")));
-			if (user != null && cookies.get("session_id") != null
-					&& cookies.get("session_id").equals(user.getSessionid()))
-				return user;
-			else
-				SendLogoutHeaders(exchange);
-		}
+		User user = DataManager.load(User.class, Long.parseLong(cookies.get("user_id")));
+		if (user != null && cookies.get("session_id") != null && cookies.get("session_id").equals(user.getSessionid()))
+			return user;
+		else
+			SendLogoutHeaders(exchange);
 		return null;
 	}
 

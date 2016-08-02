@@ -8,7 +8,7 @@ import org.jsoup.nodes.Element;
 
 import com.sun.net.httpserver.HttpExchange;
 import io.github.norbipeti.chat.server.IOHelper;
-import io.github.norbipeti.chat.server.db.DataProvider;
+import io.github.norbipeti.chat.server.data.DataManager;
 import io.github.norbipeti.chat.server.db.domain.Conversation;
 import io.github.norbipeti.chat.server.db.domain.Message;
 import io.github.norbipeti.chat.server.db.domain.User;
@@ -35,18 +35,16 @@ public class IndexPage extends Page {
 				Element userbox = doc.getElementById("userbox");
 				userbox.html(userbox.html().replace("<username />", user.getName()));
 				Element channelmessages = doc.getElementById("channelmessages");
-				try (DataProvider provider = new DataProvider()) {
-					LogManager.getLogger().log(Level.INFO, "Conversations: " + provider.getConversations().size());
-					LogManager.getLogger().log(Level.INFO, "User conversations: " + user.getConversations().size());
-					Conversation convo = user.getConversations().iterator().next();
-					LogManager.getLogger().log(Level.INFO, "Messages: " + convo.getMesssages().size());
-					for (Message message : convo.getMesssages()) {
-						Element msgelement = channelmessages.appendElement("div");
-						Element header = msgelement.appendElement("p");
-						header.text(message.getSender().getName() + " - " + message.getTime());
-						Element body = msgelement.appendElement("p");
-						body.text(message.getMessage());
-					}
+				LogManager.getLogger().log(Level.INFO, "Conversations: " + DataManager.load(Conversation.class).size());
+				LogManager.getLogger().log(Level.INFO, "User conversations: " + user.getConversations().size());
+				Conversation convo = user.getConversations().iterator().next();
+				LogManager.getLogger().log(Level.INFO, "Messages: " + convo.getMesssages().size());
+				for (Message message : convo.getMesssages()) {
+					Element msgelement = channelmessages.appendElement("div");
+					Element header = msgelement.appendElement("p");
+					header.text(message.getSender().getName() + " - " + message.getTime());
+					Element body = msgelement.appendElement("p");
+					body.text(message.getMessage());
 				}
 				return doc;
 			}, exchange);

@@ -1,5 +1,6 @@
 package io.github.norbipeti.chat.server.db.domain;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -7,27 +8,30 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import io.github.norbipeti.chat.server.data.DataManager;
+import io.github.norbipeti.chat.server.data.LoaderCollection;
+
 @Entity
-@Table(name = "\"User\"")
+@Table(name = "\"USER\"")
 public class User extends ChatDatabaseEntity {
 	private static final long serialVersionUID = 2862762084164225666L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private Long id;
+	// @Id
+	// @GeneratedValue(strategy = GenerationType.IDENTITY)
+	// @Column(name = "ID", unique = true, nullable = false)
+	// private Long id;
 	private String name;
 	private String email;
 	private String password;
 	@ElementCollection(fetch = FetchType.EAGER)
-	@ManyToMany(cascade = CascadeType.ALL)
-	private List<User> contacts;
+	@OneToOne(cascade = CascadeType.ALL)
+	private LoaderCollection<User> contacts;
 	private String salt;
 	// @Column(columnDefinition = "CHAR(16) FOR BIT DATA")
 	@Column(columnDefinition = "VARCHAR(64)")
 	private String sessionid;
 	@ElementCollection(fetch = FetchType.EAGER)
 	// @ManyToMany(fetch = FetchType.EAGER, mappedBy = "users")
-	@ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+	@ManyToMany(mappedBy = "USER", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	// @ManyToMany(mappedBy = "users")
 	// @JoinTable(name = "User_Conversation", joinColumns =
 	// @JoinColumn(referencedColumnName = "id", unique = false),
@@ -35,14 +39,16 @@ public class User extends ChatDatabaseEntity {
 	// false))
 	private Set<Conversation> conversations;
 
-	public List<User> getContacts() {
+	/**
+	 * Loads all contact data
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	public List<User> getContacts() throws IOException {
 		if (contacts == null)
-			contacts = new ArrayList<>();
+			contacts = new LoaderCollection<User>(User.class);
 		return contacts;
-	}
-
-	public void setContacts(List<User> contacts) {
-		this.contacts = contacts;
 	}
 
 	public String getName() {
@@ -59,14 +65,8 @@ public class User extends ChatDatabaseEntity {
 
 	@Override
 	public String toString() {
-		List<String> c = null;
-		if (contacts != null) {
-			c = new ArrayList<>();
-			for (User u : contacts)
-				c.add(u.name);
-		}
-		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", contacts=" + c
-				+ ", sessionid=" + sessionid + "]";
+		return "User [id=" + getId() + ", name=" + name + ", email=" + email + ", password=" + password + ", contacts="
+				+ contacts + ", sessionid=" + sessionid + "]";
 	}
 
 	public void setEmail(String email) {
@@ -79,14 +79,6 @@ public class User extends ChatDatabaseEntity {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getSalt() {
@@ -116,6 +108,9 @@ public class User extends ChatDatabaseEntity {
 	}
 
 	public User() {
+	}
 
+	public static LoaderCollection<User> getUsers() {
+		return DataManager.load(User.class);
 	}
 }

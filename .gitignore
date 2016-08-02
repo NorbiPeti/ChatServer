@@ -249,3 +249,5 @@ paket-files/
 
 target/classes/*
 /target/
+
+chatdb/

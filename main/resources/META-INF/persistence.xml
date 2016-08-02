@@ -5,7 +5,7 @@
 	<persistence-unit name="ChatServerPU">
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
-			<property name="javax.persistence.jdbc.url" value="jdbc:derby:memory:chatserver;create=true" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:derby:chatdb;create=true" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
 
 			<!-- c3p0 config http://www.hibernate.org/214.html -->

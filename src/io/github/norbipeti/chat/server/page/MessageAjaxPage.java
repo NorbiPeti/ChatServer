@@ -2,19 +2,15 @@ package io.github.norbipeti.chat.server.page;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.JSONObject;
-
+import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 
 import io.github.norbipeti.chat.server.IOHelper;
-import io.github.norbipeti.chat.server.db.DataProvider;
+import io.github.norbipeti.chat.server.data.DataManager;
 import io.github.norbipeti.chat.server.db.domain.Conversation;
 import io.github.norbipeti.chat.server.db.domain.Message;
 import io.github.norbipeti.chat.server.db.domain.User;
@@ -33,7 +29,7 @@ public class MessageAjaxPage extends Page {
 			IOHelper.SendResponse(403, "<p>Please log in to send messages</p>", exchange);
 			return; // TODO: Fix sending messages
 		}
-		JSONObject obj = IOHelper.GetPOSTJSON(exchange);
+		JsonObject obj = IOHelper.GetPOSTJSON(exchange);
 		if (obj == null) {
 			IOHelper.SendResponse(400,
 					"<h1>400 Bad request</h1><p>Not a JSON string!</p><p>" + IOHelper.GetPOST(exchange) + "</p>",
@@ -47,8 +43,8 @@ public class MessageAjaxPage extends Page {
 					exchange);
 			return;
 		}
-		String message = obj.getString("message");
-		int conversation = obj.getInt("conversation");
+		String message = obj.get("message").getAsString();
+		int conversation = obj.get("conversation").getAsInt();
 		if (message.trim().length() == 0) {
 			IOHelper.SendResponse(400, "<h1>400 Bad request</h1><p>The message cannot be empty,</p>", exchange);
 			return;
@@ -68,20 +64,15 @@ public class MessageAjaxPage extends Page {
 					+ conversation + " is not found.</p>", exchange);
 			return;
 		}
-		try (DataProvider provider = new DataProvider()) {
-			Message msg = new Message();
-			msg.setSender(user);
-			msg.setMessage(message);
-			msg.setTime(new Date());
-			msg.setConversation(conv);
-			provider.save(msg);
-			conv.getMesssages().add(msg);
-			provider.save(conv);
-			LogManager.getLogger().log(Level.DEBUG,
-					"Added conversation's message count: " + conv.getMesssages().size());
-		} catch (Exception e) {
-			throw e;
-		}
+		Message msg = new Message();
+		msg.setSender(user);
+		msg.setMessage(message);
+		msg.setTime(new Date());
+		msg.setConversation(conv); // TODO: Store relations at one side or both
+		DataManager.save(msg);
+		conv.getMesssages().add(msg);
+		DataManager.save(conv);
+		LogManager.getLogger().log(Level.DEBUG, "Added conversation's message count: " + conv.getMesssages().size());
 
 		IOHelper.SendResponse(200, "Success", exchange);
 	}

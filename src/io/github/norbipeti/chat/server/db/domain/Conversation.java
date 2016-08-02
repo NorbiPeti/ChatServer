@@ -8,12 +8,13 @@ import java.util.Set;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "CONVERSATION")
 public class Conversation extends ChatDatabaseEntity {
 	private static final long serialVersionUID = 5058682475353799722L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private Long id;
+	//@Id
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@Column(name = "ID", unique = true, nullable = false)
+	//private Long id;
 	@ElementCollection(fetch = FetchType.EAGER)
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "conversation")
 	private List<Message> messsages;
@@ -27,7 +28,7 @@ public class Conversation extends ChatDatabaseEntity {
 	// @JoinTable(name = "User_Conversation", joinColumns = @JoinColumn(name =
 	// "conversation_id", referencedColumnName = "id"), inverseJoinColumns =
 	// @JoinColumn(name = "user_id", referencedColumnName = "id"))
-	@JoinTable(name = "User_Conversation")
+	// @JoinTable(name = "User_Conversation")
 	private Set<User> users;
 
 	public List<Message> getMesssages() {
@@ -50,11 +51,11 @@ public class Conversation extends ChatDatabaseEntity {
 		this.users = users;
 	}
 
-	public Long getId() {
+	/*public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
+	}*/
 }

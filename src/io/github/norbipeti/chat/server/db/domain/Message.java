@@ -5,12 +5,13 @@ import java.util.Date;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "MESSAGE")
 public class Message extends ChatDatabaseEntity {
 	private static final long serialVersionUID = 6345941601716826570L;
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id", unique = true, nullable = false)
-	private Long id;
+	//@Id
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@Column(name = "ID", unique = true, nullable = false)
+	//private Long id;
 	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	// @JoinTable(name="user_message")
 	private User sender;
@@ -52,11 +53,11 @@ public class Message extends ChatDatabaseEntity {
 		this.conversation = conversation;
 	}
 
-	public Long getId() {
+	/*public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
+	}*/
 }
