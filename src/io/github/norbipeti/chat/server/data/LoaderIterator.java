@@ -1,8 +1,6 @@
 package io.github.norbipeti.chat.server.data;
 
 import java.util.Iterator;
-import java.util.ListIterator;
-
 import io.github.norbipeti.chat.server.db.domain.ChatDatabaseEntity;
 
 public final class LoaderIterator<T extends ChatDatabaseEntity> implements Iterator<T> {

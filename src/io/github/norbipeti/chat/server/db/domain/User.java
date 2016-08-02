@@ -1,7 +1,6 @@
 package io.github.norbipeti.chat.server.db.domain;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

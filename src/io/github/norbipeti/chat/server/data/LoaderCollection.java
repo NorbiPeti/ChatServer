@@ -14,6 +14,7 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 	private static final long serialVersionUID = 5426152406394894301L;
 	private List<Long> contacts;
 	private Class<T> cl;
+	private transient boolean forsave = false;
 
 	/**
 	 * Only used for serialization
@@ -39,7 +40,10 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 
 	@Override
 	public Iterator<T> iterator() {
-		return new LoaderIterator<T>(contacts.iterator(), cl);
+		if (forsave)
+			return contacts.iterator(); // TODO: Fix
+		else
+			return new LoaderIterator<T>(contacts.iterator(), cl);
 	}
 
 	@Override
@@ -204,5 +208,13 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 		}
 		sb.append("]");
 		return sb.toString();
+	}
+
+	public boolean isForsave() {
+		return forsave;
+	}
+
+	public void setForsave(boolean forsave) {
+		this.forsave = forsave;
 	}
 }
