@@ -45,7 +45,7 @@ public class MessageAjaxPage extends Page {
 		String message = obj.get("message").getAsString();
 		int conversation = obj.get("conversation").getAsInt();
 		if (message.trim().length() == 0) {
-			IOHelper.SendResponse(400, "<h1>400 Bad request</h1><p>The message cannot be empty,</p>", exchange);
+			IOHelper.SendResponse(400, "<h1>400 Bad request</h1><p>The message cannot be empty.</p>", exchange);
 			return;
 		}
 		LoaderCollection<Conversation> convos = user.getConversations();

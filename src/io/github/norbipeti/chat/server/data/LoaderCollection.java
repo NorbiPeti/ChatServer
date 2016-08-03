@@ -44,28 +44,38 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 
 	@Override
 	public boolean add(T e) {
+		DataManager.save(e);
 		return idlist.add(e.getId());
 	}
 
 	@Override
 	public void add(int index, T element) {
+		DataManager.save(element);
 		idlist.add(index, element.getId());
 	}
 
 	@Override
 	public boolean addAll(Collection<? extends T> c) {
-		return idlist
-				.addAll(c.stream().map((data) -> ((ChatDatabaseEntity) data).getId()).collect(Collectors.toList()));
+		return idlist.addAll(c.stream().map((data) -> {
+			ChatDatabaseEntity cde = ((ChatDatabaseEntity) data);
+			DataManager.save(cde);
+			return cde.getId();
+		}).collect(Collectors.toList()));
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends T> c) {
-		return idlist.addAll(index,
-				c.stream().map((data) -> ((ChatDatabaseEntity) data).getId()).collect(Collectors.toList()));
+		return idlist.addAll(index, c.stream().map((data) -> {
+			ChatDatabaseEntity cde = ((ChatDatabaseEntity) data);
+			DataManager.save(cde);
+			return cde.getId();
+		}).collect(Collectors.toList()));
 	}
 
 	@Override
 	public void clear() {
+		for (Long id : idlist)
+			DataManager.remove(cl, id); //TODO: Move out to a main list
 		idlist.clear();
 	}
 
@@ -117,8 +127,12 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 	 */
 	@Override
 	public boolean remove(Object o) {
-		if (ChatDatabaseEntity.class.isAssignableFrom(o.getClass()))
+		if (ChatDatabaseEntity.class.isAssignableFrom(o.getClass())) {
+			DataManager.remove((ChatDatabaseEntity) o);
 			return idlist.remove(((ChatDatabaseEntity) o).getId());
+		}
+		if (Long.class.isAssignableFrom(o.getClass()))
+			DataManager.remove(cl, (Long) o);
 		return idlist.remove(o);
 	}
 

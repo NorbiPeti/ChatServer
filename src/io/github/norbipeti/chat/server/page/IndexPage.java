@@ -37,9 +37,16 @@ public class IndexPage extends Page {
 				Element channelmessages = doc.getElementById("channelmessages");
 				LogManager.getLogger().log(Level.INFO, "Conversations: " + DataManager.load(Conversation.class).size());
 				LogManager.getLogger().log(Level.INFO, "User conversations: " + user.getConversations().size());
-				Conversation convo = user.getConversations().get(0);
-				LogManager.getLogger().log(Level.INFO, "Messages: " + convo.getMesssages().size());
-				for (Message message : convo.getMesssages()) {
+				LogManager.getLogger().log(Level.INFO, "Username: " + user.getName());
+				if (user.getConversations().size() == 0)
+					user.getConversations().add(DataManager.load(Conversation.class).get(0));
+				Conversation conv = user.getConversations().get(0);
+				Element cide = channelmessages.appendElement("p");
+				cide.attr("style", "display: none");
+				cide.attr("id", "convidp");
+				cide.text(Long.toString(conv.getId()));
+				LogManager.getLogger().log(Level.INFO, "Messages: " + conv.getMesssages().size());
+				for (Message message : conv.getMesssages()) {
 					Element msgelement = channelmessages.appendElement("div");
 					Element header = msgelement.appendElement("p");
 					header.text(message.getSender().getName() + " - " + message.getTime());
@@ -48,7 +55,14 @@ public class IndexPage extends Page {
 				}
 				return doc;
 			}, exchange);
-	} // TODO: Validation at registration (no special chars, etc.)
+	} // TODO:
+		// Validation
+		// at
+		// registration
+		// (no
+		// special
+		// chars,
+		// etc.)
 
 	@Override
 	public String GetName() {

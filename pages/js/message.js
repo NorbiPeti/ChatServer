@@ -18,7 +18,7 @@ var sendmsgonenter = function sendmsgonenter(e) { //TODO: Detect Enter
     if (textarea.value.trim().length == 0)
         return;
     textarea.disabled = true;
-    window.convid = 1;
+    window.convid = document.getElementById("convidp").innerText * 1;
     var json = JSON.stringify({"message": textarea.value, "conversation": window.convid});
     $.ajax({
         url: "/message", data: json, method: "POST", success: respfunc, error: respfunc

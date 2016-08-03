@@ -4,7 +4,6 @@ import java.lang.reflect.Modifier;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.logging.log4j.Level;
@@ -19,9 +18,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpServer;
 
-import io.github.norbipeti.chat.server.data.DataManager;
-import io.github.norbipeti.chat.server.data.LoaderCollection;
-import io.github.norbipeti.chat.server.data.LoaderCollectionSerializer;
+import io.github.norbipeti.chat.server.data.*;
 import io.github.norbipeti.chat.server.db.domain.*;
 import io.github.norbipeti.chat.server.page.*;
 
@@ -57,13 +54,9 @@ public class Main {
 			conversation.getUsers().add(user);
 			user.getConversations().add(conversation);
 			LogManager.getLogger().debug("User: " + user);
-			// conversation.getUsers().add(user2); - TODO
-			LogManager.getLogger().debug("User2: " + user2); // TODO: Switch
-																// to JSON
-																// files?
-			// user2.getConversations().add(conversation); // TODO: Fix
-			// duplicate
-			// key constraint
+			conversation.getUsers().add(user2);
+			LogManager.getLogger().debug("User2: " + user2);
+			user2.getConversations().add(conversation);
 			Message msg = new Message();
 			msg.setSender(user);
 			msg.setTime(new Date());
