@@ -1,10 +1,7 @@
 package io.github.norbipeti.chat.server.db.domain;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import javax.persistence.*;
 
 import io.github.norbipeti.chat.server.data.DataManager;
@@ -23,7 +20,7 @@ public class User extends ChatDatabaseEntity {
 	private String password;
 	@ElementCollection(fetch = FetchType.EAGER)
 	@OneToOne(cascade = CascadeType.ALL)
-	private LoaderCollection<User> contacts;
+	private LoaderCollection<User> contacts = new LoaderCollection<User>(User.class);
 	private String salt;
 	// @Column(columnDefinition = "CHAR(16) FOR BIT DATA")
 	@Column(columnDefinition = "VARCHAR(64)")
@@ -36,7 +33,7 @@ public class User extends ChatDatabaseEntity {
 	// @JoinColumn(referencedColumnName = "id", unique = false),
 	// inverseJoinColumns = @JoinColumn(referencedColumnName = "id", unique =
 	// false))
-	private Set<Conversation> conversations;
+	private LoaderCollection<Conversation> conversations = new LoaderCollection<>(Conversation.class);
 
 	/**
 	 * Loads all contact data
@@ -45,8 +42,6 @@ public class User extends ChatDatabaseEntity {
 	 * @throws IOException
 	 */
 	public List<User> getContacts() throws IOException {
-		if (contacts == null)
-			contacts = new LoaderCollection<User>(User.class);
 		return contacts;
 	}
 
@@ -96,14 +91,8 @@ public class User extends ChatDatabaseEntity {
 		this.sessionid = sessionid;
 	}
 
-	public Set<Conversation> getConversations() {
-		if (conversations == null)
-			conversations = new HashSet<>();
+	public LoaderCollection<Conversation> getConversations() {
 		return conversations;
-	}
-
-	public void setConversations(Set<Conversation> conversations) {
-		this.conversations = conversations;
 	}
 
 	public User() {

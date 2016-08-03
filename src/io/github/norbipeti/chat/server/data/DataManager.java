@@ -6,7 +6,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import com.google.common.io.Files;
-import com.google.gson.Gson;
+import io.github.norbipeti.chat.server.Main;
 import io.github.norbipeti.chat.server.db.domain.ChatDatabaseEntity;
 
 public final class DataManager {
@@ -14,8 +14,7 @@ public final class DataManager {
 	}
 
 	public static <T extends ChatDatabaseEntity> void save(T object) throws IOException {
-		Gson gson = new Gson();
-		Files.write(gson.toJson(object), new File(object.getClass().getName() + "-" + object.getId()),
+		Files.write(Main.gson.toJson(object), new File(object.getClass().getName() + "-" + object.getId()),
 				StandardCharsets.UTF_8);
 	}
 
@@ -47,8 +46,7 @@ public final class DataManager {
 			String line;
 			while ((line = reader.readLine()) != null)
 				objstr += line;
-			Gson gson = new Gson();
-			return gson.fromJson(objstr, cl);
+			return Main.gson.fromJson(objstr, cl);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

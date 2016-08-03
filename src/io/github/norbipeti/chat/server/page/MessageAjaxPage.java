@@ -2,8 +2,6 @@ package io.github.norbipeti.chat.server.page;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.Set;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import com.google.gson.JsonObject;
@@ -11,6 +9,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import io.github.norbipeti.chat.server.IOHelper;
 import io.github.norbipeti.chat.server.data.DataManager;
+import io.github.norbipeti.chat.server.data.LoaderCollection;
 import io.github.norbipeti.chat.server.db.domain.Conversation;
 import io.github.norbipeti.chat.server.db.domain.Message;
 import io.github.norbipeti.chat.server.db.domain.User;
@@ -49,7 +48,7 @@ public class MessageAjaxPage extends Page {
 			IOHelper.SendResponse(400, "<h1>400 Bad request</h1><p>The message cannot be empty,</p>", exchange);
 			return;
 		}
-		Set<Conversation> convos = user.getConversations();
+		LoaderCollection<Conversation> convos = user.getConversations();
 		Conversation conv = null;
 		LogManager.getLogger().log(Level.DEBUG, "Len: " + convos.size());
 		for (Conversation con : convos) {

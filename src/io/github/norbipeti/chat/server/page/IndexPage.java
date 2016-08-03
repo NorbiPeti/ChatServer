@@ -37,7 +37,7 @@ public class IndexPage extends Page {
 				Element channelmessages = doc.getElementById("channelmessages");
 				LogManager.getLogger().log(Level.INFO, "Conversations: " + DataManager.load(Conversation.class).size());
 				LogManager.getLogger().log(Level.INFO, "User conversations: " + user.getConversations().size());
-				Conversation convo = user.getConversations().iterator().next();
+				Conversation convo = user.getConversations().get(0);
 				LogManager.getLogger().log(Level.INFO, "Messages: " + convo.getMesssages().size());
 				for (Message message : convo.getMesssages()) {
 					Element msgelement = channelmessages.appendElement("div");

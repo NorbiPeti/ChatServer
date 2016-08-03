@@ -4,6 +4,7 @@ import java.lang.reflect.Modifier;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.logging.log4j.Level;
@@ -12,18 +13,34 @@ import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpServer;
 
 import io.github.norbipeti.chat.server.data.DataManager;
+import io.github.norbipeti.chat.server.data.LoaderCollection;
+import io.github.norbipeti.chat.server.data.LoaderCollectionSerializer;
 import io.github.norbipeti.chat.server.db.domain.*;
 import io.github.norbipeti.chat.server.page.*;
 
 public class Main {
+	public static Gson gson;
+
 	public static void main(String[] args) { // http://stackoverflow.com/questions/9266632/access-restriction-is-not-accessible-due-to-restriction-on-required-library/10642163#10642163
 		try { // rt.jar Javadoc:
 				// https://docs.oracle.com/javase/8/docs/jre/api/net/httpserver/spec/
 				// https://docs.oracle.com/javase/8/docs/api/
-			LogManager.getLogger().log(Level.INFO, "Loading database...");
+			LogManager.getLogger().log(Level.INFO, "Loading files...");
+			final GsonBuilder gsonBuilder = new GsonBuilder();
+			gsonBuilder.registerTypeAdapter(new TypeToken<LoaderCollection<Conversation>>() {
+			}.getType(), new LoaderCollectionSerializer<Conversation>());
+			gsonBuilder.registerTypeAdapter(new TypeToken<LoaderCollection<Message>>() {
+			}.getType(), new LoaderCollectionSerializer<Message>());
+			gsonBuilder.registerTypeAdapter(new TypeToken<LoaderCollection<User>>() {
+			}.getType(), new LoaderCollectionSerializer<User>());
+			gson = gsonBuilder.create();
 			User user = new User();
 			user.setName("asd");
 			user.setEmail("test@test.com");

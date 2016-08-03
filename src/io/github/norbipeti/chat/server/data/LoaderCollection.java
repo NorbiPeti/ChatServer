@@ -12,9 +12,8 @@ import io.github.norbipeti.chat.server.db.domain.ChatDatabaseEntity;
 
 public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, Serializable {
 	private static final long serialVersionUID = 5426152406394894301L;
-	private List<Long> contacts;
-	private Class<T> cl;
-	private transient boolean forsave = false;
+	List<Long> idlist;
+	Class<T> cl;
 
 	/**
 	 * Only used for serialization
@@ -25,92 +24,89 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 
 	public LoaderCollection(Class<T> cl) {
 		this.cl = cl;
-		contacts = new ArrayList<>();
+		idlist = new ArrayList<>();
 	}
 
 	public LoaderCollection(LoaderCollection<T> parentofsub, int fromIndex, int toIndex) {
 		this.cl = parentofsub.cl;
-		contacts = parentofsub.contacts.subList(fromIndex, toIndex);
+		idlist = parentofsub.idlist.subList(fromIndex, toIndex);
 	}
 
 	public LoaderCollection(Class<T> cl, int capacity) {
 		this.cl = cl;
-		contacts = new ArrayList<>(capacity);
+		idlist = new ArrayList<>(capacity);
 	}
 
 	@Override
 	public Iterator<T> iterator() {
-		if (forsave)
-			return contacts.iterator(); // TODO: Fix
-		else
-			return new LoaderIterator<T>(contacts.iterator(), cl);
+		return new LoaderIterator<T>(idlist.iterator(), cl);
 	}
 
 	@Override
 	public boolean add(T e) {
-		return contacts.add(e.getId());
+		return idlist.add(e.getId());
 	}
 
 	@Override
 	public void add(int index, T element) {
-		contacts.add(index, element.getId());
+		idlist.add(index, element.getId());
 	}
 
 	@Override
 	public boolean addAll(Collection<? extends T> c) {
-		return contacts
+		return idlist
 				.addAll(c.stream().map((data) -> ((ChatDatabaseEntity) data).getId()).collect(Collectors.toList()));
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends T> c) {
-		return contacts.addAll(index,
+		return idlist.addAll(index,
 				c.stream().map((data) -> ((ChatDatabaseEntity) data).getId()).collect(Collectors.toList()));
 	}
 
 	@Override
 	public void clear() {
-		contacts.clear();
+		idlist.clear();
 	}
 
 	@Override
 	public boolean contains(Object o) {
-		return contacts.contains(o);
+		return idlist.contains(o);
 	}
 
 	@Override
 	public boolean containsAll(Collection<?> c) {
-		return contacts.containsAll(c);
+		return idlist.containsAll(c);
 	}
 
 	@Override
 	public T get(int index) {
-		return DataManager.load(cl, contacts.get(index));
+		return DataManager.load(cl, idlist.get(index));
 	}
 
 	@Override
 	public int indexOf(Object o) {
-		return contacts.indexOf(o);
+		return idlist.indexOf(o);
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return contacts.isEmpty();
+		return idlist.isEmpty();
 	}
 
 	@Override
 	public int lastIndexOf(Object o) {
-		return contacts.lastIndexOf(o);
+		return idlist.lastIndexOf(o);
 	}
 
 	@Override
 	public ListIterator<T> listIterator() {
-		return new LoaderListIterator<T>(contacts.listIterator(), cl);
+		return new LoaderListIterator<T>(idlist.listIterator(), cl);
 	}
 
 	@Override
 	public ListIterator<T> listIterator(int index) {
-		return new LoaderListIterator<T>(contacts.listIterator(index), cl);
+		return new LoaderListIterator<T>(idlist.listIterator(index), cl);
 	}
 
 	/**
@@ -122,13 +118,13 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 	@Override
 	public boolean remove(Object o) {
 		if (ChatDatabaseEntity.class.isAssignableFrom(o.getClass()))
-			return contacts.remove(((ChatDatabaseEntity) o).getId());
-		return contacts.remove(o);
+			return idlist.remove(((ChatDatabaseEntity) o).getId());
+		return idlist.remove(o);
 	}
 
 	@Override
 	public T remove(int index) {
-		return DataManager.load(cl, contacts.remove(index));
+		return DataManager.load(cl, idlist.remove(index));
 	}
 
 	@Override
@@ -136,12 +132,12 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 		boolean success = false;
 		for (Object item : c) {
 			if (ChatDatabaseEntity.class.isAssignableFrom(item.getClass())) {
-				if (contacts.remove(((ChatDatabaseEntity) item).getId())) {
+				if (idlist.remove(((ChatDatabaseEntity) item).getId())) {
 					success = true;
 					break;
 				}
 			} else {
-				if (contacts.remove(item)) {
+				if (idlist.remove(item)) {
 					success = true;
 					break;
 				}
@@ -160,17 +156,17 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 				list.add((Long) item);
 			}
 		}
-		return contacts.retainAll(list);
+		return idlist.retainAll(list);
 	}
 
 	@Override
 	public T set(int index, T element) {
-		return DataManager.load(cl, contacts.set(index, element.getId()));
+		return DataManager.load(cl, idlist.set(index, element.getId()));
 	}
 
 	@Override
 	public int size() {
-		return contacts.size();
+		return idlist.size();
 	}
 
 	@Override
@@ -181,14 +177,14 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 
 	@Override
 	public Object[] toArray() {
-		return contacts.stream().map((data) -> {
+		return idlist.stream().map((data) -> {
 			return DataManager.load(cl, data);
 		}).collect(Collectors.toList()).toArray();
 	}
 
 	@Override
 	public <U> U[] toArray(U[] a) {
-		return contacts.stream().map((data) -> {
+		return idlist.stream().map((data) -> {
 			return DataManager.load(cl, data);
 		}).collect(Collectors.toList()).toArray(a);
 	}
@@ -200,7 +196,7 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 
 	public String toString(boolean loaditems) {
 		StringBuilder sb = new StringBuilder("[");
-		for (Long item : contacts) {
+		for (Long item : idlist) {
 			if (loaditems)
 				sb.append(DataManager.load(cl, item));
 			else
@@ -208,13 +204,5 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 		}
 		sb.append("]");
 		return sb.toString();
-	}
-
-	public boolean isForsave() {
-		return forsave;
-	}
-
-	public void setForsave(boolean forsave) {
-		this.forsave = forsave;
 	}
 }
