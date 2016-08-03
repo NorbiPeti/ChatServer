@@ -12,6 +12,10 @@ body {
     border-style: solid;
     border-width: 2px;
     color: #ff0000;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
 }
 
 #successmsg {
@@ -24,7 +28,7 @@ body {
 
 #sidebar {
     float: right;
-    width: 300px;
+    width: 20%;
 }
 
 #loginregisterbox {
@@ -34,9 +38,10 @@ body {
 
 #usercontent {
     margin: auto;
-    width: -moz-calc(100% - 600px);
+    /*width: -moz-calc(100% - 600px);
     width: -webkit-calc(100% - 600px);
-    width: calc(100% - 600px);
+    width: calc(100% - 600px);*/
+    width: 60%;
     height: 100%;
 }
 

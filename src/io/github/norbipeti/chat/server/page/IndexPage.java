@@ -47,7 +47,7 @@ public class IndexPage extends Page {
 				cide.text(Long.toString(conv.getId()));
 				LogManager.getLogger().log(Level.INFO, "Messages: " + conv.getMesssages().size());
 				for (Message message : conv.getMesssages()) {
-					Element msgelement = channelmessages.appendElement("div");
+					Element msgelement = channelmessages.appendElement("div"); //TODO: Save messages in conversation files
 					Element header = msgelement.appendElement("p");
 					header.text(message.getSender().getName() + " - " + message.getTime());
 					Element body = msgelement.appendElement("p");

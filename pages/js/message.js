@@ -1,14 +1,30 @@
+var sendmsg = function sendmsg(msginputta) {
+    window.jsonobj = JSON.stringify({"message": msginputta.value, "conversation": window.convid});
+    console.log(window.jsonobj);
+    $.ajax({
+        url: "/message", data: window.jsonobj, method: "POST", success: respfunc, error: respfunc
+    });
+};
+
 var respfunc = function respfunc(result) {
     if (result != "Success") { //on success result is string
-        var errormsg = document.getElementById("errormsg");
-        errormsg.innerHTML = result.responseText;
-        errormsg.style = "display: block";
+        var msginput = document.getElementById("msginput");
+        if (result.responseText == "JSONERROR") {
+            console.log("Got JSON error. Retrying...");
+            sendmsg(msginput);
+        }
+        else {
+            var errormsg = document.getElementById("errormsg");
+            errormsg.innerHTML = result.responseText;
+            errormsg.style = "display: block";
+            msginput.disabled = false;
+        }
     }
     else
         location.reload(true);
 };
 
-var sendmsgonenter = function sendmsgonenter(e) { //TODO: Detect Enter
+var sendmsgonenter = function sendmsgonenter(e) {
     var code = e.keyCode || e.which;
     if (code != 13 || e.shiftKey) { //Enter keycode
         return;
@@ -17,12 +33,9 @@ var sendmsgonenter = function sendmsgonenter(e) { //TODO: Detect Enter
     var textarea = event.target;
     if (textarea.value.trim().length == 0)
         return;
-    textarea.disabled = true;
+    textarea.disabled = true; //msginput
     window.convid = document.getElementById("convidp").innerText * 1;
-    var json = JSON.stringify({"message": textarea.value, "conversation": window.convid});
-    $.ajax({
-        url: "/message", data: json, method: "POST", success: respfunc, error: respfunc
-    });
+    sendmsg(textarea);
 };
 
 $(document).ready(function () {

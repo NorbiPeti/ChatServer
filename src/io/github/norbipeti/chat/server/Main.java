@@ -38,7 +38,7 @@ public class Main {
 			gsonBuilder.registerTypeAdapter(new TypeToken<LoaderCollection<User>>() {
 			}.getType(), new LoaderCollectionSerializer<User>());
 			gson = gsonBuilder.create();
-			User user = new User();
+			/*User user = new User();
 			user.setName("asd");
 			user.setEmail("test@test.com");
 			User user2 = new User();
@@ -79,9 +79,9 @@ public class Main {
 			DataManager.save(user);
 			DataManager.save(user2);
 			DataManager.save(loggedinuser);
-			DataManager.save(conversation);
+			DataManager.save(conversation);*/
 
-			LogManager.getLogger().log(Level.INFO, "Starting webserver...");
+			LogManager.getLogger().log(Level.INFO, "Starting webserver..."); //TODO: Separate IDs for conversations and users
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), 8080), 10);
 			Reflections rf = new Reflections(
 					new ConfigurationBuilder().setUrls(ClasspathHelper.forClassLoader(Page.class.getClassLoader()))
