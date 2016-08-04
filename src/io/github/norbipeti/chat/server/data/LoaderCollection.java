@@ -8,9 +8,21 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
 
-import io.github.norbipeti.chat.server.db.domain.ChatDatabaseEntity;
+import io.github.norbipeti.chat.server.db.domain.SavedData;
 
-public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, Serializable {
+/**
+ * <p>
+ * This list wil only load it's items when directly accessed
+ * </p>
+ * <p>
+ * And it will only save IDs of it's items
+ * </p>
+ * 
+ * @author Norbi
+ *
+ * @param <T>
+ */
+public class LoaderCollection<T extends SavedData> implements List<T>, Serializable {
 	private static final long serialVersionUID = 5426152406394894301L;
 	List<Long> idlist;
 	Class<T> cl;
@@ -57,7 +69,7 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 	@Override
 	public boolean addAll(Collection<? extends T> c) {
 		return idlist.addAll(c.stream().map((data) -> {
-			ChatDatabaseEntity cde = ((ChatDatabaseEntity) data);
+			SavedData cde = ((SavedData) data);
 			DataManager.save(cde);
 			return cde.getId();
 		}).collect(Collectors.toList()));
@@ -66,7 +78,7 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 	@Override
 	public boolean addAll(int index, Collection<? extends T> c) {
 		return idlist.addAll(index, c.stream().map((data) -> {
-			ChatDatabaseEntity cde = ((ChatDatabaseEntity) data);
+			SavedData cde = ((SavedData) data);
 			DataManager.save(cde);
 			return cde.getId();
 		}).collect(Collectors.toList()));
@@ -75,7 +87,7 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 	@Override
 	public void clear() {
 		for (Long id : idlist)
-			DataManager.remove(cl, id); //TODO: Move out to a main list
+			DataManager.remove(cl, id); // TODO: Move out to a main list
 		idlist.clear();
 	}
 
@@ -127,9 +139,9 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 	 */
 	@Override
 	public boolean remove(Object o) {
-		if (ChatDatabaseEntity.class.isAssignableFrom(o.getClass())) {
-			DataManager.remove((ChatDatabaseEntity) o);
-			return idlist.remove(((ChatDatabaseEntity) o).getId());
+		if (SavedData.class.isAssignableFrom(o.getClass())) {
+			DataManager.remove((SavedData) o);
+			return idlist.remove(((SavedData) o).getId());
 		}
 		if (Long.class.isAssignableFrom(o.getClass()))
 			DataManager.remove(cl, (Long) o);
@@ -145,8 +157,8 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 	public boolean removeAll(Collection<?> c) {
 		boolean success = false;
 		for (Object item : c) {
-			if (ChatDatabaseEntity.class.isAssignableFrom(item.getClass())) {
-				if (idlist.remove(((ChatDatabaseEntity) item).getId())) {
+			if (SavedData.class.isAssignableFrom(item.getClass())) {
+				if (idlist.remove(((SavedData) item).getId())) {
 					success = true;
 					break;
 				}
@@ -164,8 +176,8 @@ public class LoaderCollection<T extends ChatDatabaseEntity> implements List<T>, 
 	public boolean retainAll(Collection<?> c) {
 		List<Long> list = new ArrayList<Long>();
 		for (Object item : c) {
-			if (ChatDatabaseEntity.class.isAssignableFrom(item.getClass())) {
-				list.add(((ChatDatabaseEntity) item).getId());
+			if (SavedData.class.isAssignableFrom(item.getClass())) {
+				list.add(((SavedData) item).getId());
 			} else if (Long.class.isAssignableFrom(item.getClass())) {
 				list.add((Long) item);
 			}

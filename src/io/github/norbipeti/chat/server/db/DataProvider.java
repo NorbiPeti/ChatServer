@@ -20,7 +20,7 @@ public class DataProvider implements AutoCloseable {
 		em.getTransaction().begin();
 	}
 
-	public <T extends ChatDatabaseEntity> T save(T object) {
+	public <T extends SavedData> T save(T object) {
 		T obj = em.merge(object);
 		return obj;
 	}

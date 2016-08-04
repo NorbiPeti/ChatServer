@@ -1,17 +1,20 @@
 package io.github.norbipeti.chat.server.db.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.*;
 
+import io.github.norbipeti.chat.server.data.LoaderRef;
+
 @Entity
 @Table(name = "MESSAGE")
-public class Message extends ChatDatabaseEntity {
+public class Message implements Serializable {
 	private static final long serialVersionUID = 6345941601716826570L;
-	//@Id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
-	//@Column(name = "ID", unique = true, nullable = false)
-	//private Long id;
+	// @Id
+	// @GeneratedValue(strategy = GenerationType.IDENTITY)
+	// @Column(name = "ID", unique = true, nullable = false)
+	// private Long id;
 	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	// @JoinTable(name="user_message")
 	private User sender;
@@ -19,7 +22,7 @@ public class Message extends ChatDatabaseEntity {
 	private String message;
 	@ManyToOne(fetch = FetchType.EAGER)
 	// @JoinTable(name="conversation_message")
-	private Conversation conversation;
+	private LoaderRef<MessageChunk> messagechunk;
 
 	public User getSender() {
 		return sender;
@@ -45,19 +48,17 @@ public class Message extends ChatDatabaseEntity {
 		this.message = message;
 	}
 
-	public Conversation getConversation() {
-		return conversation;
+	public LoaderRef<MessageChunk> getMessageChunk() {
+		return messagechunk;
 	}
 
-	public void setConversation(Conversation conversation) {
-		this.conversation = conversation;
+	public void setMessageChunk(LoaderRef<MessageChunk> messagechunk) {
+		this.messagechunk = messagechunk;
 	}
 
-	/*public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}*/
+	/*
+	 * public Long getId() { return id; }
+	 * 
+	 * public void setId(Long id) { this.id = id; }
+	 */
 }

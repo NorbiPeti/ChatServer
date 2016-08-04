@@ -9,7 +9,7 @@ import io.github.norbipeti.chat.server.data.LoaderCollection;
 
 @Entity
 @Table(name = "\"USER\"")
-public class User extends ChatDatabaseEntity {
+public class User extends SavedData {
 	private static final long serialVersionUID = 2862762084164225666L;
 	// @Id
 	// @GeneratedValue(strategy = GenerationType.IDENTITY)

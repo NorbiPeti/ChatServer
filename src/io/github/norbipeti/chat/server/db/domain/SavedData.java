@@ -3,7 +3,7 @@ package io.github.norbipeti.chat.server.db.domain;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
-public abstract class ChatDatabaseEntity implements Serializable {
+public abstract class SavedData implements Serializable {
 	private static long nextID = 0;
 
 	private long id;
@@ -12,7 +12,7 @@ public abstract class ChatDatabaseEntity implements Serializable {
 		return id;
 	}
 
-	protected ChatDatabaseEntity() {
+	protected SavedData() {
 		id = nextID++;
 	}
 }

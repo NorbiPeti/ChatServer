@@ -12,13 +12,13 @@ import com.google.gson.stream.JsonWriter;
 import io.github.norbipeti.chat.server.db.domain.SavedData;
 
 //@SuppressWarnings("rawtypes")
-public class LoaderCollectionSerializer extends TypeAdapter<LoaderCollection<? extends SavedData>> {
+public class LoaderRefSerializer extends TypeAdapter<LoaderRef<? extends SavedData>> {
 
 	@Override
-	public void write(JsonWriter out, LoaderCollection<? extends SavedData> value) throws IOException {
+	public void write(JsonWriter out, LoaderRef<? extends SavedData> value) throws IOException {
 		out.beginObject();
 		out.name("items");
-		new Gson().toJson(value.idlist, new TypeToken<List<Long>>() {
+		new Gson().toJson(value.id, new TypeToken<List<Long>>() {
 		}.getType(), out);
 		out.name("class").value(value.cl.getName());
 		out.endObject();
@@ -27,10 +27,10 @@ public class LoaderCollectionSerializer extends TypeAdapter<LoaderCollection<? e
 	// @SuppressWarnings("unchecked")
 	@SuppressWarnings("unchecked")
 	@Override
-	public LoaderCollection<? extends SavedData> read(JsonReader in) throws IOException {
+	public LoaderRef<? extends SavedData> read(JsonReader in) throws IOException {
 		in.beginObject();
 		in.nextName();
-		List<Long> list = new Gson().fromJson(in, new TypeToken<List<Long>>() {
+		Long id = new Gson().fromJson(in, new TypeToken<Long>() {
 		}.getType());
 		if (!in.nextName().equals("class")) {
 			new Exception("Error: Next isn't \"class\"").printStackTrace();
@@ -43,9 +43,8 @@ public class LoaderCollectionSerializer extends TypeAdapter<LoaderCollection<? e
 			e.printStackTrace();
 			return null;
 		}
-		LoaderCollection<? extends SavedData> col = new LoaderCollection<SavedData>(
-				(Class<SavedData>) cl); // TODO
-		col.idlist.addAll(list);
+		LoaderRef<? extends SavedData> col = new LoaderRef<SavedData>(
+				(Class<SavedData>) cl, id); // TODO
 		in.endObject();
 		return col;
 	}

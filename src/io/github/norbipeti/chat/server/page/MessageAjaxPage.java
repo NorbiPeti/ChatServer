@@ -72,9 +72,9 @@ public class MessageAjaxPage extends Page {
 		msg.setTime(new Date());
 		msg.setConversation(conv); // TODO: Store relations at one side or both
 		DataManager.save(msg);
-		conv.getMesssages().add(msg);
+		conv.getMesssageChunks().add(msg);
 		DataManager.save(conv);
-		LogManager.getLogger().log(Level.DEBUG, "Added conversation's message count: " + conv.getMesssages().size());
+		LogManager.getLogger().log(Level.DEBUG, "Added conversation's message count: " + conv.getMesssageChunks().size());
 
 		IOHelper.SendResponse(200, "Success", exchange);
 	}

@@ -10,13 +10,13 @@ import java.util.Map;
 
 import com.google.common.io.Files;
 import io.github.norbipeti.chat.server.Main;
-import io.github.norbipeti.chat.server.db.domain.ChatDatabaseEntity;
+import io.github.norbipeti.chat.server.db.domain.SavedData;
 
 public final class DataManager {
 	private DataManager() {
 	}
 
-	public static <T extends ChatDatabaseEntity> void save(T object) {
+	public static <T extends SavedData> void save(T object) {
 		try {
 			Files.write(Main.gson.toJson(object), new File(object.getClass().getName() + "-" + object.getId()),
 					StandardCharsets.UTF_8);
@@ -25,11 +25,11 @@ public final class DataManager {
 		}
 	}
 
-	public static <T extends ChatDatabaseEntity> T load(Class<T> cl, long id) {
+	public static <T extends SavedData> T load(Class<T> cl, long id) {
 		return loadFromFile(new File(cl.getName() + "-" + id), cl);
 	}
 
-	public static <T extends ChatDatabaseEntity> LoaderCollection<T> load(Class<T> cl) {
+	public static <T extends SavedData> LoaderCollection<T> load(Class<T> cl) {
 		String[] filenames = new File(".").list(new FilenameFilter() {
 
 			@Override
@@ -46,9 +46,10 @@ public final class DataManager {
 
 	private static Map<File, Object> cache = new HashMap<>();
 	// TODO: Remove objects from the cache over time
+	// TODO: Save the object when it happens
 
 	@SuppressWarnings("unchecked")
-	private static <T extends ChatDatabaseEntity> T loadFromFile(File file, Class<T> cl) {
+	private static <T extends SavedData> T loadFromFile(File file, Class<T> cl) {
 		try {
 			if (!file.exists())
 				return cl.newInstance();
@@ -68,13 +69,13 @@ public final class DataManager {
 		return null;
 	}
 
-	public static <T extends ChatDatabaseEntity> boolean remove(T obj) {
+	public static <T extends SavedData> boolean remove(T obj) {
 		if (cache.containsValue(obj))
 			cache.values().remove(obj);
 		return new File(obj.getClass().getName() + "-" + obj.getId()).delete();
 	}
 
-	public static <T extends ChatDatabaseEntity> boolean remove(Class<T> cl, Long id) {
+	public static <T extends SavedData> boolean remove(Class<T> cl, Long id) {
 		return new File(cl.getName() + "-" + id).delete();
 	}
 }
