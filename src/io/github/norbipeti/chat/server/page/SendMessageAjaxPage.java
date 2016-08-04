@@ -15,7 +15,7 @@ import io.github.norbipeti.chat.server.db.domain.Message;
 import io.github.norbipeti.chat.server.db.domain.MessageChunk;
 import io.github.norbipeti.chat.server.db.domain.User;
 
-public class MessageAjaxPage extends Page {
+public class SendMessageAjaxPage extends Page {
 
 	@Override
 	public String GetName() {
