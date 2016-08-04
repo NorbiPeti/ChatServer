@@ -10,8 +10,10 @@
     <link rel="stylesheet" href="css/style.css"/>
     <script>
         $(document).ready(function () {
-            document.getElementById("channelmessages").lastElementChild.scrollIntoView(false);
-        });
+            var cmsgs = document.getElementById("channelmessages");
+            if (cmsgs.elements.length > 0)
+                cmsgs.lastElementChild.scrollIntoView(false);
+        }); //TODO: Move to an index.js
     </script>
 </head>
 <body>

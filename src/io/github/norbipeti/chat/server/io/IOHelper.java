@@ -7,11 +7,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -67,11 +70,22 @@ public class IOHelper {
 		return content;
 	}
 
-	public static HashMap<String, String> GetPOST(HttpExchange exchange) throws IOException {
-		if (exchange.getRequestBody().available() == 0)
-			return new HashMap<>();
+	public static String GetPOST(HttpExchange exchange) {
 		try {
-			String[] content = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.ISO_8859_1).split("\\&");
+			if (exchange.getRequestBody().available() == 0)
+				return "";
+			String content = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.ISO_8859_1);
+			return content;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "";
+		}
+	}
+
+	@Deprecated
+	public static HashMap<String, String> GetPOSTKeyValues(HttpExchange exchange) {
+		try {
+			String[] content = GetPOST(exchange).split("\\&");
 			HashMap<String, String> vars = new HashMap<>();
 			for (String var : content) {
 				String[] spl = var.split("\\=");
@@ -87,11 +101,9 @@ public class IOHelper {
 		}
 	}
 
-	public static JsonObject GetPOSTJSON(HttpExchange exchange) throws IOException {
-		if (exchange.getRequestBody().available() == 0)
-			return null;
+	public static JsonObject GetPOSTJSON(HttpExchange exchange) {
 		try {
-			String content = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.ISO_8859_1);
+			String content = GetPOST(exchange);
 			JsonObject obj = new JsonParser().parse(content).getAsJsonObject();
 			return obj;
 		} catch (Exception e) {
@@ -122,11 +134,8 @@ public class IOHelper {
 		// provider.SetValues(() ->
 		// user.setSessionid(UUID.randomUUID().toString()));
 		user.setSessionid(UUID.randomUUID().toString());
-		ZonedDateTime expiretime = ZonedDateTime.now(ZoneId.of("GMT")).plus(Period.of(2, 0, 0));
-		exchange.getResponseHeaders().add("Set-Cookie",
-				"user_id=" + user.getId() + "; expires=" + expiretime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
-		exchange.getResponseHeaders().add("Set-Cookie", "session_id=" + user.getSessionid() + "; expires="
-				+ expiretime.format(DateTimeFormatter.RFC_1123_DATE_TIME));
+		new Cookies(2).add(new Cookie("user_id", user.getId() + "")).add(new Cookie("session_id", user.getSessionid()))
+				.SendHeaders(exchange);
 	}
 
 	public static void LogoutUser(HttpExchange exchange, User user) {
@@ -136,8 +145,8 @@ public class IOHelper {
 
 	private static void SendLogoutHeaders(HttpExchange exchange) {
 		String expiretime = "Sat, 19 Mar 2016 23:33:00 GMT";
-		exchange.getResponseHeaders().add("Set-Cookie", "user_id=del; expires=" + expiretime);
-		exchange.getResponseHeaders().add("Set-Cookie", "session_id=del; expires=" + expiretime);
+		new Cookies(expiretime).add(new Cookie("user_id", "del")).add(new Cookie("session_id", "del"))
+				.SendHeaders(exchange);
 	}
 
 	public static void Redirect(String url, HttpExchange exchange) throws IOException {
@@ -145,10 +154,10 @@ public class IOHelper {
 		IOHelper.SendResponse(303, "<a href=\"" + url + "\">If you can see this, click here to continue</a>", exchange);
 	}
 
-	public static HashMap<String, String> GetCookies(HttpExchange exchange) {
+	public static Cookies GetCookies(HttpExchange exchange) {
 		if (!exchange.getRequestHeaders().containsKey("Cookie"))
-			return new HashMap<>();
-		HashMap<String, String> map = new HashMap<>();
+			return new Cookies();
+		Map<String, String> map = new HashMap<>();
 		for (String cheader : exchange.getRequestHeaders().get("Cookie")) {
 			String[] spl = cheader.split("\\;\\s*");
 			for (String s : spl) {
@@ -158,25 +167,39 @@ public class IOHelper {
 				map.put(kv[0], kv[1]);
 			}
 		}
-		return map;
+		if (!map.containsKey("expiretime"))
+			return new Cookies();
+		Cookies cookies = null;
+		try {
+			cookies = new Cookies(map.get("expiretime"));
+			for (Entry<String, String> item : map.entrySet())
+				if (!item.getKey().equalsIgnoreCase("expiretime"))
+					cookies.put(item.getKey(), new Cookie(item.getKey(), item.getValue()));
+		} catch (Exception e) {
+			return new Cookies();
+		}
+		return cookies;
 	}
 
 	/**
 	 * Get logged in user. It may also send logout headers if the cookies are
-	 * invalid.
+	 * invalid, or login headers to keep the user logged in.
 	 * 
 	 * @param exchange
 	 * @return The logged in user or null if not logged in.
 	 * @throws IOException
 	 */
 	public static User GetLoggedInUser(HttpExchange exchange) throws IOException {
-		HashMap<String, String> cookies = GetCookies(exchange);
+		Cookies cookies = GetCookies(exchange);
 		if (!cookies.containsKey("user_id") || !cookies.containsKey("session_id"))
 			return null;
-		User user = DataManager.load(User.class, Long.parseLong(cookies.get("user_id")));
-		if (user != null && cookies.get("session_id") != null && cookies.get("session_id").equals(user.getSessionid()))
+		User user = DataManager.load(User.class, Long.parseLong(cookies.get("user_id").getValue()));
+		if (user != null && cookies.get("session_id") != null
+				&& cookies.get("session_id").getValue().equals(user.getSessionid())) {
+			if (cookies.getExpireTimeParsed().minusYears(1).isBefore(ZonedDateTime.now(ZoneId.of("GMT"))))
+				LoginUser(exchange, user);
 			return user;
-		else
+		} else
 			SendLogoutHeaders(exchange);
 		return null;
 	}

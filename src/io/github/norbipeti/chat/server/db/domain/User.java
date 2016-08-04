@@ -11,10 +11,8 @@ import io.github.norbipeti.chat.server.data.LoaderCollection;
 @Table(name = "\"USER\"")
 public class User extends SavedData {
 	private static final long serialVersionUID = 2862762084164225666L;
-	// @Id
-	// @GeneratedValue(strategy = GenerationType.IDENTITY)
-	// @Column(name = "ID", unique = true, nullable = false)
-	// private Long id;
+	private static Long nextid = 0L;
+	private Long id = nextid++;
 	private String name;
 	private String email;
 	private String password;
@@ -100,5 +98,15 @@ public class User extends SavedData {
 
 	public static LoaderCollection<User> getUsers() {
 		return DataManager.load(User.class);
+	}
+
+	@Override
+	public long getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(long id) {
+		this.id = id;
 	}
 }

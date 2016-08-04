@@ -21,7 +21,7 @@ public class LoginAjaxPage extends Page {
 		}
 		User loginuser = null;
 		for (User user : DataManager.load(User.class)) {
-			if (user.getEmail().equals(post.get("email"))) {
+			if (user.getEmail().equals(post.get("email").getAsString())) {
 				loginuser = user;
 				break;
 			}

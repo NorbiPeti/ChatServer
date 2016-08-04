@@ -7,6 +7,8 @@ import io.github.norbipeti.chat.server.data.LoaderRef;
 
 public class MessageChunk extends SavedData {
 	private static final long serialVersionUID = -1665300779209348467L;
+	private static Long nextid = 0L;
+	private Long id = nextid++;
 
 	private List<Message> messages = new ArrayList<>();
 	private LoaderRef<Conversation> conversation;
@@ -29,5 +31,15 @@ public class MessageChunk extends SavedData {
 
 	public void setConversation(Conversation conversation) {
 		this.conversation = new LoaderRef<Conversation>(conversation);
+	}
+
+	@Override
+	public long getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(long id) {
+		this.id = id;
 	}
 }

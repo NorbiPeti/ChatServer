@@ -76,7 +76,7 @@ public class SendMessageAjaxPage extends Page {
 		msg.setMessageChunk(chunk); // TODO: Store relations at one side or
 									// both);
 		chunk.getMessages().add(msg);
-		//DataManager.save(chunk); - TODO
+		// DataManager.save(chunk); - TODO
 		conv.getMesssageChunks().add(chunk);
 		DataManager.save(conv);
 		LogManager.getLogger().log(Level.DEBUG,

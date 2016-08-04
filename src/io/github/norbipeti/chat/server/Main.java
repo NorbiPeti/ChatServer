@@ -3,7 +3,6 @@ package io.github.norbipeti.chat.server;
 import java.lang.reflect.Modifier;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.util.Date;
 import java.util.Set;
 
 import org.apache.logging.log4j.Level;

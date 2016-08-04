@@ -16,12 +16,12 @@ var respfunc = function respfunc(result) {
         else {
             var errormsg = document.getElementById("errormsg");
             errormsg.innerHTML = result.responseText;
-            errormsg.style = "display: block";
+            errormsg.style = "display: block"; //TODO: Hide errormsg after a while (index.js)
             msginput.disabled = false;
         }
     }
     else
-        location.reload(true);
+        location.reload(true); //TODO: Don't referesh on message send
 };
 
 var sendmsgonenter = function sendmsgonenter(e) {
