@@ -6,9 +6,9 @@ import org.mindrot.jbcrypt.BCrypt;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 
-import io.github.norbipeti.chat.server.IOHelper;
 import io.github.norbipeti.chat.server.data.DataManager;
 import io.github.norbipeti.chat.server.db.domain.User;
+import io.github.norbipeti.chat.server.io.IOHelper;
 
 public class LoginAjaxPage extends Page {
 

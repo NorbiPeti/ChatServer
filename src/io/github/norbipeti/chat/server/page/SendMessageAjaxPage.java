@@ -7,13 +7,13 @@ import org.apache.logging.log4j.LogManager;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 
-import io.github.norbipeti.chat.server.IOHelper;
 import io.github.norbipeti.chat.server.data.DataManager;
 import io.github.norbipeti.chat.server.data.LoaderCollection;
 import io.github.norbipeti.chat.server.db.domain.Conversation;
 import io.github.norbipeti.chat.server.db.domain.Message;
 import io.github.norbipeti.chat.server.db.domain.MessageChunk;
 import io.github.norbipeti.chat.server.db.domain.User;
+import io.github.norbipeti.chat.server.io.IOHelper;
 
 public class SendMessageAjaxPage extends Page {
 

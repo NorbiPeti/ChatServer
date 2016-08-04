@@ -1,4 +1,4 @@
-package io.github.norbipeti.chat.server;
+package io.github.norbipeti.chat.server.io;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;

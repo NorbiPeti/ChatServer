@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import io.github.norbipeti.chat.server.IOHelper;
+import io.github.norbipeti.chat.server.io.IOHelper;
 
 public class StylePage extends Page {
 

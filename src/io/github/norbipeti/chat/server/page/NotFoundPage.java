@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.sun.net.httpserver.HttpExchange;
 
-import io.github.norbipeti.chat.server.IOHelper;
+import io.github.norbipeti.chat.server.io.IOHelper;
 
 public class NotFoundPage extends Page {
 

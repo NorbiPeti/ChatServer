@@ -8,8 +8,8 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import com.sun.net.httpserver.*;
 
-import io.github.norbipeti.chat.server.IOHelper;
 import io.github.norbipeti.chat.server.Main;
+import io.github.norbipeti.chat.server.io.IOHelper;
 
 /**
  * Add to {@link Main}.Pages
