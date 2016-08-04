@@ -12,6 +12,7 @@ import io.github.norbipeti.chat.server.data.DataManager;
 import io.github.norbipeti.chat.server.data.LoaderCollection;
 import io.github.norbipeti.chat.server.db.domain.Conversation;
 import io.github.norbipeti.chat.server.db.domain.Message;
+import io.github.norbipeti.chat.server.db.domain.MessageChunk;
 import io.github.norbipeti.chat.server.db.domain.User;
 
 public class MessageAjaxPage extends Page {
@@ -66,15 +67,20 @@ public class MessageAjaxPage extends Page {
 					+ conversation + " is not found.</p>", exchange);
 			return;
 		}
+		MessageChunk chunk = new MessageChunk(); // TODO: Automatize
+		chunk.setConversation(conv);
 		Message msg = new Message();
 		msg.setSender(user);
 		msg.setMessage(message);
 		msg.setTime(new Date());
-		msg.setConversation(conv); // TODO: Store relations at one side or both
-		DataManager.save(msg);
-		conv.getMesssageChunks().add(msg);
+		msg.setMessageChunk(chunk); // TODO: Store relations at one side or
+									// both);
+		chunk.getMessages().add(msg);
+		//DataManager.save(chunk); - TODO
+		conv.getMesssageChunks().add(chunk);
 		DataManager.save(conv);
-		LogManager.getLogger().log(Level.DEBUG, "Added conversation's message count: " + conv.getMesssageChunks().size());
+		LogManager.getLogger().log(Level.DEBUG,
+				"Added conversation's message count: " + conv.getMesssageChunks().size());
 
 		IOHelper.SendResponse(200, "Success", exchange);
 	}

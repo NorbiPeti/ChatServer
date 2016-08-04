@@ -12,14 +12,13 @@ import com.google.gson.stream.JsonWriter;
 import io.github.norbipeti.chat.server.db.domain.SavedData;
 
 //@SuppressWarnings("rawtypes")
-public class LoaderRefSerializer extends TypeAdapter<LoaderRef<? extends SavedData>> {
+public class LoaderRefSerializer<T extends SavedData> extends TypeAdapter<LoaderRef<T>> {
 
 	@Override
-	public void write(JsonWriter out, LoaderRef<? extends SavedData> value) throws IOException {
+	public void write(JsonWriter out, LoaderRef<T> value) throws IOException {
 		out.beginObject();
-		out.name("items");
-		new Gson().toJson(value.id, new TypeToken<List<Long>>() {
-		}.getType(), out);
+		out.name("id");
+		out.value(value.id);
 		out.name("class").value(value.cl.getName());
 		out.endObject();
 	}
@@ -27,24 +26,22 @@ public class LoaderRefSerializer extends TypeAdapter<LoaderRef<? extends SavedDa
 	// @SuppressWarnings("unchecked")
 	@SuppressWarnings("unchecked")
 	@Override
-	public LoaderRef<? extends SavedData> read(JsonReader in) throws IOException {
+	public LoaderRef<T> read(JsonReader in) throws IOException {
 		in.beginObject();
 		in.nextName();
-		Long id = new Gson().fromJson(in, new TypeToken<Long>() {
-		}.getType());
+		long id = in.nextLong();
 		if (!in.nextName().equals("class")) {
 			new Exception("Error: Next isn't \"class\"").printStackTrace();
 			return null;
 		}
-		Class<? extends SavedData> cl;
+		Class<T> cl;
 		try {
-			cl = (Class<? extends SavedData>) Class.forName(in.nextString());
+			cl = (Class<T>) Class.forName(in.nextString());
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			return null;
 		}
-		LoaderRef<? extends SavedData> col = new LoaderRef<SavedData>(
-				(Class<SavedData>) cl, id); // TODO
+		LoaderRef<T> col = new LoaderRef<T>(cl, id); // TODO
 		in.endObject();
 		return col;
 	}

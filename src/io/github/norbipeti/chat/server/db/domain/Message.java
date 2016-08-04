@@ -17,19 +17,23 @@ public class Message implements Serializable {
 	// private Long id;
 	@ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
 	// @JoinTable(name="user_message")
-	private User sender;
+	private LoaderRef<User> sender;
 	private Date time;
 	private String message;
 	@ManyToOne(fetch = FetchType.EAGER)
 	// @JoinTable(name="conversation_message")
 	private LoaderRef<MessageChunk> messagechunk;
 
-	public User getSender() {
+	public LoaderRef<User> getSender() {
 		return sender;
 	}
 
-	public void setSender(User sender) {
+	public void setSender(LoaderRef<User> sender) {
 		this.sender = sender;
+	}
+
+	public void setSender(User sender) {
+		this.sender = new LoaderRef<User>(sender);
 	}
 
 	public Date getTime() {
@@ -54,6 +58,10 @@ public class Message implements Serializable {
 
 	public void setMessageChunk(LoaderRef<MessageChunk> messagechunk) {
 		this.messagechunk = messagechunk;
+	}
+
+	public void setMessageChunk(MessageChunk messagechunk) {
+		this.messagechunk = new LoaderRef<MessageChunk>(messagechunk);
 	}
 
 	/*

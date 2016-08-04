@@ -11,6 +11,7 @@ import io.github.norbipeti.chat.server.IOHelper;
 import io.github.norbipeti.chat.server.data.DataManager;
 import io.github.norbipeti.chat.server.db.domain.Conversation;
 import io.github.norbipeti.chat.server.db.domain.Message;
+import io.github.norbipeti.chat.server.db.domain.MessageChunk;
 import io.github.norbipeti.chat.server.db.domain.User;
 
 public class IndexPage extends Page {
@@ -46,12 +47,15 @@ public class IndexPage extends Page {
 				cide.attr("id", "convidp");
 				cide.text(Long.toString(conv.getId()));
 				LogManager.getLogger().log(Level.INFO, "Messages: " + conv.getMesssageChunks().size());
-				for (Message message : conv.getMesssageChunks()) {
-					Element msgelement = channelmessages.appendElement("div"); //TODO: Save messages in conversation files
-					Element header = msgelement.appendElement("p");
-					header.text(message.getSender().getName() + " - " + message.getTime());
-					Element body = msgelement.appendElement("p");
-					body.text(message.getMessage());
+				for (MessageChunk chunk : conv.getMesssageChunks()) { // TODO:
+																		// Reverse
+					for (Message message : chunk.getMessages()) {
+						Element msgelement = channelmessages.appendElement("div");
+						Element header = msgelement.appendElement("p");
+						header.text(message.getSender().get().getName() + " - " + message.getTime());
+						Element body = msgelement.appendElement("p");
+						body.text(message.getMessage());
+					}
 				}
 				return doc;
 			}, exchange);

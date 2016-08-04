@@ -26,4 +26,8 @@ public class MessageChunk extends SavedData {
 	public void setConversation(LoaderRef<Conversation> conversation) {
 		this.conversation = conversation;
 	}
+
+	public void setConversation(Conversation conversation) {
+		this.conversation = new LoaderRef<Conversation>(conversation);
+	}
 }

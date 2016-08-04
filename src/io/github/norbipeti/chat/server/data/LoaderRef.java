@@ -1,5 +1,7 @@
 package io.github.norbipeti.chat.server.data;
 
+import java.io.Serializable;
+
 import io.github.norbipeti.chat.server.db.domain.SavedData;
 
 /**
@@ -16,7 +18,8 @@ import io.github.norbipeti.chat.server.db.domain.SavedData;
  * @param <T>
  *            The type of the stored object
  */
-public class LoaderRef<T extends SavedData> {
+public class LoaderRef<T extends SavedData> implements Serializable {
+	private static final long serialVersionUID = 8458570738734235320L;
 	Class<T> cl;
 	Long id;
 
