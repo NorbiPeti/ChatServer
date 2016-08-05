@@ -1,6 +1,7 @@
 package io.github.norbipeti.chat.server.data;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -13,10 +14,11 @@ import com.google.gson.stream.JsonWriter;
 import io.github.norbipeti.chat.server.db.domain.SavedData;
 
 // @SuppressWarnings("rawtypes")
-public class LoaderCollectionSerializer<T extends SavedData> extends TypeAdapter<LoaderCollection<T>> {
+public class LoaderCollectionSerializer extends TypeAdapter<LoaderCollection<?>> {
+	private static final Type returnType = getReturnType();
 
 	@Override
-	public void write(JsonWriter out, LoaderCollection<T> value) throws IOException {
+	public void write(JsonWriter out, LoaderCollection<?> value) throws IOException {
 		if (value == null) {
 			out.nullValue();
 			return;
@@ -57,4 +59,12 @@ public class LoaderCollectionSerializer<T extends SavedData> extends TypeAdapter
 		return col;
 	}
 
+	private static Type getReturnType() {
+		try {
+			return LoaderCollection.class.getDeclaredMethod("get", Integer.class).getGenericReturnType();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }
