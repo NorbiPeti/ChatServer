@@ -42,4 +42,7 @@ public class MessageChunk extends SavedData {
 	public void setId(long id) {
 		this.id = id;
 	}
+
+	private MessageChunk() {
+	}
 }

@@ -93,11 +93,11 @@ public class User extends SavedData {
 		return conversations;
 	}
 
-	public User() {
+	private User() {
 	}
 
 	public static LoaderCollection<User> getUsers() {
-		return DataManager.load(User.class);
+		return DataManager.getAll(User.class);
 	}
 
 	@Override

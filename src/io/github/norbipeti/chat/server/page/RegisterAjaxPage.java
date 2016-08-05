@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 
 import io.github.norbipeti.chat.server.data.DataManager;
+import io.github.norbipeti.chat.server.db.domain.SavedData;
 import io.github.norbipeti.chat.server.db.domain.User;
 import io.github.norbipeti.chat.server.io.IOHelper;
 
@@ -21,7 +22,7 @@ public class RegisterAjaxPage extends Page {
 				IOHelper.SendResponse(200, (doc) -> doc.html(msg).ownerDocument(), exchange);
 				return; // TODO: Use JavaScript too, for error checks
 			}
-			for (User user : DataManager.load(User.class)) { // TODO: Optimize
+			for (User user : DataManager.getAll(User.class)) { // TODO: Optimize
 				if (post.get("email").equals(user.getEmail())) {
 					errormsg += "<p>An user with this name already exists</p>";
 					break;
@@ -34,7 +35,7 @@ public class RegisterAjaxPage extends Page {
 				IOHelper.SendResponse(200, (doc) -> doc.html(msg).ownerDocument(), exchange);
 				return;
 			}
-			User user = new User();
+			User user = SavedData.create(User.class);
 			user.setName(post.get("name").getAsString());
 			user.setEmail(post.get("email").getAsString());
 			user.setSalt(BCrypt.gensalt()); // http://www.mindrot.org/projects/jBCrypt/

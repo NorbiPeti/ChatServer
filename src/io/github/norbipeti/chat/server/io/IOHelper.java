@@ -7,11 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -136,6 +133,7 @@ public class IOHelper {
 		user.setSessionid(UUID.randomUUID().toString());
 		new Cookies(2).add(new Cookie("user_id", user.getId() + "")).add(new Cookie("session_id", user.getSessionid()))
 				.SendHeaders(exchange);
+		LogManager.getLogger().debug("Logged in user.");
 	}
 
 	public static void LogoutUser(HttpExchange exchange, User user) {
@@ -182,8 +180,7 @@ public class IOHelper {
 	}
 
 	/**
-	 * Get logged in user. It may also send logout headers if the cookies are
-	 * invalid, or login headers to keep the user logged in.
+	 * Get logged in user. It may also send logout headers if the cookies are invalid, or login headers to keep the user logged in.
 	 * 
 	 * @param exchange
 	 * @return The logged in user or null if not logged in.

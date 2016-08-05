@@ -20,7 +20,7 @@ public class LoginAjaxPage extends Page {
 			return;
 		}
 		User loginuser = null;
-		for (User user : DataManager.load(User.class)) {
+		for (User user : DataManager.getAll(User.class)) {
 			if (user.getEmail().equals(post.get("email").getAsString())) {
 				loginuser = user;
 				break;

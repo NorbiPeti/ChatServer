@@ -86,8 +86,6 @@ public class LoaderCollection<T extends SavedData> implements List<T>, Serializa
 
 	@Override
 	public void clear() {
-		for (Long id : idlist)
-			DataManager.remove(cl, id); // TODO: Move out to a main list
 		idlist.clear();
 	}
 
@@ -197,7 +195,6 @@ public class LoaderCollection<T extends SavedData> implements List<T>, Serializa
 
 	@Override
 	public List<T> subList(int fromIndex, int toIndex) {
-		// TODO Auto-generated method stub
 		return new LoaderCollection<T>(this, fromIndex, toIndex);
 	}
 

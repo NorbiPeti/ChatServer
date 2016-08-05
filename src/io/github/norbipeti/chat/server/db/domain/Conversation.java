@@ -50,4 +50,7 @@ public class Conversation extends SavedData {
 	public void setId(long id) {
 		this.id = id;
 	}
+
+	private Conversation() {
+	}
 }
