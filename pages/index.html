@@ -11,7 +11,7 @@
     <script>
         $(document).ready(function () {
             var cmsgs = document.getElementById("channelmessages");
-            if (cmsgs.elements.length > 0)
+            if (cmsgs != null && cmsgs.childElementCount > 0)
                 cmsgs.lastElementChild.scrollIntoView(false);
         }); //TODO: Move to an index.js
     </script>

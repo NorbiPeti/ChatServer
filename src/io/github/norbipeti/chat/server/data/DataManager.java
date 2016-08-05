@@ -19,8 +19,10 @@ public final class DataManager {
 	public static <T extends SavedData> void save(T object) {
 		try {
 			File file = new File(object.getClass().getName() + "-" + object.getId());
-			while (file.exists())
+			while (file.exists()) {
 				object.setId(object.getId() + 1);
+				file = new File(object.getClass().getName() + "-" + object.getId());
+			}
 			Files.write(Main.gson.toJson(object), file, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			e.printStackTrace();
