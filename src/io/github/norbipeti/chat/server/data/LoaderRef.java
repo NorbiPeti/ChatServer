@@ -6,19 +6,16 @@ import io.github.norbipeti.chat.server.db.domain.SavedData;
 
 /**
  * <p>
- * This class will only store IDs and load the object when calling
- * {@link #get()}
+ * This class will only store IDs and load the object when calling {@link #get()}
  * </p>
  * <p>
  * And will also only save IDs when serialized with {@link LoaderRefSerializer}
  * </p>
  * 
  * @author Norbi
- *
- * @param <T>
- *            The type of the stored object
+ * @param <T> The type of the stored object
  */
-public class LoaderRef<T extends SavedData> implements Serializable {
+public class LoaderRef<T extends SavedData> extends Loader {
 	private static final long serialVersionUID = 8458570738734235320L;
 	Class<T> cl;
 	Long id;

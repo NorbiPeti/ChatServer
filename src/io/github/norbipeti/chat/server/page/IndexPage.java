@@ -61,9 +61,10 @@ public class IndexPage extends Page {
 					for (Message message : chunk.getMessages()) {
 						Element msgelement = channelmessages.appendElement("div");
 						Element header = msgelement.appendElement("p");
-						header.text(message.getSender().get().getName() + " - " + message.getTime());
+						header.text(message.getSender().get().getName() + " - <span id=\"converttime\">"
+								+ message.getTime().getTime() + "</span>");
 						Element body = msgelement.appendElement("p");
-						body.text(message.getMessage());
+						body.text(message.getMessage()); // TODO: Use JavaScript to convert time
 					}
 				}
 				return doc;

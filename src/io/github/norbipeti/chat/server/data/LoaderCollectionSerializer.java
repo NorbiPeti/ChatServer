@@ -1,6 +1,8 @@
 package io.github.norbipeti.chat.server.data;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -15,15 +17,16 @@ import io.github.norbipeti.chat.server.db.domain.SavedData;
 
 // @SuppressWarnings("rawtypes")
 public class LoaderCollectionSerializer extends TypeAdapter<LoaderCollection<?>> {
-	private static final Type returnType = getReturnType();
+	// private static final Type returnType = getReturnType();
 
+	// TODO: http://stackoverflow.com/a/17300227
 	@Override
 	public void write(JsonWriter out, LoaderCollection<?> value) throws IOException {
 		if (value == null) {
 			out.nullValue();
 			return;
 		}
-		out.beginObject(); // TODO: http://stackoverflow.com/a/17300227
+		out.beginObject();
 		out.name("items");
 		new Gson().toJson(value.idlist, new TypeToken<List<Long>>() {
 		}.getType(), out);
@@ -33,7 +36,7 @@ public class LoaderCollectionSerializer extends TypeAdapter<LoaderCollection<?>>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public LoaderCollection<T> read(JsonReader in) throws IOException {
+	public LoaderCollection<? extends SavedData> read(JsonReader in) throws IOException {
 		if (in.peek().equals(JsonToken.NULL)) {
 			in.nextNull();
 			return null;
@@ -46,25 +49,27 @@ public class LoaderCollectionSerializer extends TypeAdapter<LoaderCollection<?>>
 			new Exception("Error: Next isn't \"class\"").printStackTrace();
 			return null;
 		}
-		Class<T> cl;
+		Class<? extends SavedData> cl;
 		try {
-			cl = (Class<T>) Class.forName(DataManager.getPackageName() + "." + in.nextString());
+			cl = (Class<? extends SavedData>) Class.forName(DataManager.getPackageName() + "." + in.nextString());
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			return null;
 		}
-		LoaderCollection<T> col = new LoaderCollection<T>(cl);
+		LoaderCollection<? extends SavedData> col;
+		try {
+			col = LoaderCollection.class.getDeclaredConstructor(Class.class).newInstance(cl);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 		col.idlist.addAll(list);
 		in.endObject();
 		return col;
 	}
 
-	private static Type getReturnType() {
-		try {
-			return LoaderCollection.class.getDeclaredMethod("get", Integer.class).getGenericReturnType();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+	/*
+	 * private static Type getReturnType() { try { for (Method m : LoaderCollection.class.getDeclaredMethods()) System.out.println(m); return LoaderCollection.class.getDeclaredMethod("get",
+	 * int.class).getGenericReturnType(); } catch (Exception e) { e.printStackTrace(); } return null; }
+	 */
 }

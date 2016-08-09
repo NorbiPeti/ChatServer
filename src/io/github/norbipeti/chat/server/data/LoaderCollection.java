@@ -22,7 +22,7 @@ import io.github.norbipeti.chat.server.db.domain.SavedData;
  *
  * @param <T>
  */
-public class LoaderCollection<T extends SavedData> implements List<T>, Serializable {
+public class LoaderCollection<T extends SavedData> extends Loader implements List<T> {
 	private static final long serialVersionUID = 5426152406394894301L;
 	List<Long> idlist;
 	Class<T> cl;
@@ -32,6 +32,7 @@ public class LoaderCollection<T extends SavedData> implements List<T>, Serializa
 	 */
 	@Deprecated
 	public LoaderCollection() {
+		idlist = new ArrayList<>();
 	}
 
 	public LoaderCollection(Class<T> cl) {

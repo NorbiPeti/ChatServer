@@ -36,7 +36,7 @@ public class LoaderRefSerializer<T extends SavedData> extends TypeAdapter<Loader
 		in.nextName();
 		long id = in.nextLong();
 		if (!in.nextName().equals("class")) {
-			new Exception("Error: Next isn't \"class\"").printStackTrace();
+			new Exception("Error: Next isn't \"class\"").printStackTrace(); // TODO: Same as at LoaderCollectionSerializer
 			return null;
 		}
 		Class<T> cl;

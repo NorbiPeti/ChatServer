@@ -16,9 +16,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpServer;
-
 import io.github.norbipeti.chat.server.data.*;
 import io.github.norbipeti.chat.server.db.domain.*;
+import io.github.norbipeti.chat.server.io.DataType;
 import io.github.norbipeti.chat.server.page.*;
 
 public class Main {
@@ -31,12 +31,17 @@ public class Main {
 			LogManager.getLogger().log(Level.INFO, "Loading files...");
 			DataManager.init();
 			final GsonBuilder gsonBuilder = new GsonBuilder();
-			gsonBuilder.registerTypeAdapter(new TypeToken<LoaderCollection<Conversation>>() {
-			}.getType(), new LoaderCollectionSerializer<Conversation>());
-			gsonBuilder.registerTypeAdapter(new TypeToken<LoaderCollection<MessageChunk>>() {
-			}.getType(), new LoaderCollectionSerializer<MessageChunk>());
-			gsonBuilder.registerTypeAdapter(new TypeToken<LoaderCollection<User>>() {
-			}.getType(), new LoaderCollectionSerializer<User>());
+			Reflections rf = new Reflections(
+					new ConfigurationBuilder().setUrls(ClasspathHelper.forClassLoader(SavedData.class.getClassLoader()))
+							.addClassLoader(SavedData.class.getClassLoader()).addScanners(new SubTypesScanner())
+							.filterInputsBy((String pkg) -> pkg.contains(SavedData.class.getPackage().getName())));
+			Set<Class<? extends SavedData>> datas = rf.getSubTypesOf(SavedData.class);
+			for (Class<? extends SavedData> data : datas) {
+				if (Modifier.isAbstract(data.getModifiers()))
+					continue;
+				gsonBuilder.registerTypeAdapter(new DataType(LoaderCollection.class, data),
+						new LoaderCollectionSerializer()); // TODO: Test
+			}
 			gsonBuilder.registerTypeAdapter(new TypeToken<LoaderRef<Conversation>>() {
 			}.getType(), new LoaderRefSerializer<Conversation>());
 			gsonBuilder.registerTypeAdapter(new TypeToken<LoaderRef<MessageChunk>>() {
@@ -58,10 +63,10 @@ public class Main {
 			 */
 			LogManager.getLogger().log(Level.INFO, "Starting webserver..."); // TODO: Separate IDs for conversations and users
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), 8080), 10);
-			Reflections rf = new Reflections(
+			rf = new Reflections(
 					new ConfigurationBuilder().setUrls(ClasspathHelper.forClassLoader(Page.class.getClassLoader()))
 							.addClassLoader(Page.class.getClassLoader()).addScanners(new SubTypesScanner())
-							.filterInputsBy((String pkg) -> pkg.contains("io.github.norbipeti.chat.server.page")));
+							.filterInputsBy((String pkg) -> pkg.contains(Page.class.getPackage().getName())));
 			Set<Class<? extends Page>> pages = rf.getSubTypesOf(Page.class);
 			for (Class<? extends Page> page : pages) {
 				try {

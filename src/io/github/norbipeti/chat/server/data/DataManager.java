@@ -61,7 +61,7 @@ public final class DataManager {
 	private static <T extends SavedData> T loadFromFile(File file, Class<T> cl) {
 		try {
 			if (!file.exists()) {
-				T obj = cl.newInstance();
+				T obj = SavedData.create(cl);
 				return obj;
 			}
 			if (cache.containsKey(file))
@@ -146,7 +146,7 @@ public final class DataManager {
 			File file = new File("data", "idlist.ini");
 			String contents = "";
 			for (Entry<Class<? extends SavedData>, Long> item : ids.entrySet()) {
-				contents += item.getKey().getName() + "=" + item.getValue() + "\n";
+				contents += item.getKey().getSimpleName() + "=" + item.getValue() + "\n";
 			}
 			Files.write(contents, file, StandardCharsets.UTF_8);
 		} catch (Exception e) {

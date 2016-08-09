@@ -4,6 +4,11 @@
 
 $(document).ready(function () {
     var cmsgs = document.getElementById("channelmessages");
-    if (cmsgs != null && cmsgs.childElementCount > 0)
+    if (cmsgs != null && cmsgs.childElementCount > 0) {
+        cmsgs.forEach(function (item) {
+            var ctime = item.getElementById("converttime");
+            ctime.innerText = new Date(ctime.innerText * 1).toDateString();
+        });
         cmsgs.lastElementChild.scrollIntoView(false);
+    }
 });
