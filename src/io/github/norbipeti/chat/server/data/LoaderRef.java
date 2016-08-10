@@ -1,7 +1,5 @@
 package io.github.norbipeti.chat.server.data;
 
-import java.io.Serializable;
-
 import io.github.norbipeti.chat.server.db.domain.SavedData;
 
 /**

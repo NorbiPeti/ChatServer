@@ -56,6 +56,7 @@ public final class DataManager {
 	private static Map<File, Object> cache = new HashMap<>();
 	// TODO: Remove objects from the cache over time
 	// TODO: Save the object when it gets removed from cache and when the app stops
+	// TODO: Handle unloading of used objects (prevent detached objects)
 
 	@SuppressWarnings("unchecked")
 	private static <T extends SavedData> T loadFromFile(File file, Class<T> cl) {

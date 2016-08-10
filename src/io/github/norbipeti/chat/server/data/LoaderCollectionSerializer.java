@@ -19,7 +19,7 @@ import io.github.norbipeti.chat.server.db.domain.SavedData;
 public class LoaderCollectionSerializer extends TypeAdapter<LoaderCollection<?>> {
 	// private static final Type returnType = getReturnType();
 
-	// TODO: http://stackoverflow.com/a/17300227
+	// http://stackoverflow.com/a/17300227
 	@Override
 	public void write(JsonWriter out, LoaderCollection<?> value) throws IOException {
 		if (value == null) {

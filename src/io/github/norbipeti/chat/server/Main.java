@@ -40,14 +40,9 @@ public class Main {
 				if (Modifier.isAbstract(data.getModifiers()))
 					continue;
 				gsonBuilder.registerTypeAdapter(new DataType(LoaderCollection.class, data),
-						new LoaderCollectionSerializer()); // TODO: Test
+						new LoaderCollectionSerializer());
+				gsonBuilder.registerTypeAdapter(new DataType(LoaderRef.class, data), new LoaderRefSerializer());
 			}
-			gsonBuilder.registerTypeAdapter(new TypeToken<LoaderRef<Conversation>>() {
-			}.getType(), new LoaderRefSerializer<Conversation>());
-			gsonBuilder.registerTypeAdapter(new TypeToken<LoaderRef<MessageChunk>>() {
-			}.getType(), new LoaderRefSerializer<MessageChunk>());
-			gsonBuilder.registerTypeAdapter(new TypeToken<LoaderRef<User>>() {
-			}.getType(), new LoaderRefSerializer<User>());
 			gson = gsonBuilder.create();
 			/*
 			 * User user = new User(); user.setName("asd"); user.setEmail("test@test.com"); User user2 = new User(); user2.setName("Teszt"); user2.setEmail("test2@test.com"); // user =
