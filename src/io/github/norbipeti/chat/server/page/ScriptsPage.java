@@ -29,7 +29,10 @@ public class ScriptsPage extends Page {
 			if (!jsfile.exists())
 				IOHelper.SendResponse(404, "<h1>JavaScript file not found</h1>", exchange);
 			else
+			{
+				exchange.getResponseHeaders().add("Content-Type", "application/javascript; charset=UTF-8");
 				IOHelper.SendResponse(200, IOHelper.ReadFile(jsfile), exchange);
+			}
 		} else
 			LogManager.getLogger().log(Level.DEBUG, exchange.getRequestURI().getPath());
 	}

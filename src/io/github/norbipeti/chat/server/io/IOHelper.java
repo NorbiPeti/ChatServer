@@ -3,7 +3,6 @@ package io.github.norbipeti.chat.server.io;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -15,6 +14,7 @@ import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.function.Function;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -62,8 +62,8 @@ public class IOHelper {
 	}
 
 	public static String ReadFile(File file) throws FileNotFoundException, IOException {
-		FileInputStream inputStream = new FileInputStream(file);
-		String content = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
+		String content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+		LogManager.getLogger().debug(content); // TODO: FIx UTF-8 file reading
 		return content;
 	}
 

@@ -1,6 +1,5 @@
 package io.github.norbipeti.chat.server.data;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;

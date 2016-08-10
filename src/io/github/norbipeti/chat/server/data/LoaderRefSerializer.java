@@ -36,7 +36,7 @@ public class LoaderRefSerializer extends TypeAdapter<LoaderRef<?>> {
 		in.nextName();
 		long id = in.nextLong();
 		if (!in.nextName().equals("class")) {
-			new Exception("Error: Next isn't \"class\"").printStackTrace(); // TODO: Same as at LoaderCollectionSerializer
+			new Exception("Error: Next isn't \"class\"").printStackTrace();
 			return null;
 		}
 		Class<? extends SavedData> cl;
@@ -48,12 +48,11 @@ public class LoaderRefSerializer extends TypeAdapter<LoaderRef<?>> {
 		}
 		LoaderRef<? extends SavedData> ref;
 		try {
-			ref = LoaderRef.class.getDeclaredConstructor(Class.class).newInstance(cl);
+			ref = LoaderRef.class.getDeclaredConstructor(Class.class, Long.class).newInstance(cl, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
-		ref.id = id;
 		in.endObject();
 		return ref;
 	}

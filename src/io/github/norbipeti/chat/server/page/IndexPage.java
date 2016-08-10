@@ -1,6 +1,8 @@
 package io.github.norbipeti.chat.server.page;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -61,8 +63,10 @@ public class IndexPage extends Page {
 					for (Message message : chunk.getMessages()) {
 						Element msgelement = channelmessages.appendElement("div");
 						Element header = msgelement.appendElement("p");
-						header.text(message.getSender().get().getName() + " - <span id=\"converttime\">"
-								+ message.getTime().getTime() + "</span>");
+						header.text(message.getSender().get().getName() + " - ");
+						SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+						isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+						header.appendElement("span").addClass("converttime").text(isoFormat.format(message.getTime()));
 						Element body = msgelement.appendElement("p");
 						body.text(message.getMessage()); // TODO: Use JavaScript to convert time
 					}

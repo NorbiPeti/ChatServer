@@ -9,8 +9,9 @@ var sendmsg = function sendmsg(msginputta) {
 var respfunc = function respfunc(result) {
     if (result != "Success") { //on success result is string
         var msginput = document.getElementById("msginput");
-        if (result.responseText == "JSONERROR") {
+        if (result.responseText.indexOf("JSONERROR") != -1) {
             console.log("Got JSON error. Retrying...");
+            console.log(result.responseText);
             sendmsg(msginput);
         }
         else {

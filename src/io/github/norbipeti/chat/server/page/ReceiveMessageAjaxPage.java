@@ -17,10 +17,10 @@ import io.github.norbipeti.chat.server.db.domain.User;
 import io.github.norbipeti.chat.server.io.IOHelper;
 
 public class ReceiveMessageAjaxPage extends Page {
-
+	// http://stackoverflow.com/questions/9242404/javascript-listen-to-server
 	@Override
 	public String GetName() {
-		return "receivemessage"; // TODO: Update cookie every once in a while
+		return "receivemessage";
 	}
 
 	@Override
@@ -32,10 +32,7 @@ public class ReceiveMessageAjaxPage extends Page {
 		}
 		JsonObject obj = IOHelper.GetPOSTJSON(exchange);
 		if (obj == null) {
-			/*
-			 * IOHelper.SendResponse(400, "<h1>400 Bad request</h1><p>Not a JSON string!</p><p>" + IOHelper.GetPOST(exchange) + "</p>", exchange);
-			 */
-			IOHelper.SendResponse(400, "JSONERROR", exchange);
+			IOHelper.SendResponse(400, "JSONERROR: " + IOHelper.GetPOST(exchange), exchange);
 			return;
 		}
 		if (!obj.has("message") || !obj.has("conversation")) {
