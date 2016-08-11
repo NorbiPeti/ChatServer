@@ -7,11 +7,11 @@ import io.github.norbipeti.chat.server.data.LoaderRef;
 
 public class MessageChunk extends SavedData {
 	private static final long serialVersionUID = -1665300779209348467L;
-	private static Long nextid = 0L;
-	private Long id = nextid++;
-
+	
+	private Long id;
 	private List<Message> messages = new ArrayList<>();
 	private LoaderRef<Conversation> conversation;
+	private Long nextmsgid = 0L;
 
 	public List<Message> getMessages() {
 		return messages;

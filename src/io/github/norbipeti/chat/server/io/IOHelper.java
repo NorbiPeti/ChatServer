@@ -62,7 +62,7 @@ public class IOHelper {
 	}
 
 	public static String ReadFile(File file) throws FileNotFoundException, IOException {
-		String content = FileUtils.readFileToString(file, StandardCharsets.UTF_8); // TODO: FIx UTF-8 file reading
+		String content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
 		return content;
 	}
 

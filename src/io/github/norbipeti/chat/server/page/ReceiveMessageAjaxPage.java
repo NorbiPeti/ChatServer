@@ -27,21 +27,10 @@ public class ReceiveMessageAjaxPage extends Page {
 	public void handlePage(HttpExchange exchange) throws IOException {
 		User user = IOHelper.GetLoggedInUser(exchange);
 		if (user == null) {
-			IOHelper.SendResponse(403, "<p>Please log in to send messages</p>", exchange);
+			IOHelper.SendResponse(403, "<p>Please log in to receive messages</p>", exchange);
 			return;
 		}
-		JsonObject obj = IOHelper.GetPOSTJSON(exchange);
-		if (obj == null) {
-			IOHelper.SendResponse(400, "JSONERROR: " + IOHelper.GetPOST(exchange), exchange);
-			return;
-		}
-		if (!obj.has("message") || !obj.has("conversation")) {
-			IOHelper.SendResponse(400,
-					"<h1>400 Bad request</h1><p>Message or conversation not found in JSON response.</p><p>"
-							+ IOHelper.GetPOST(exchange) + "</p>",
-					exchange);
-			return;
-		}
+		JsonObject obj = new JsonObject();
 		String message = obj.get("message").getAsString().trim();
 		int conversation = obj.get("conversation").getAsInt();
 		if (message.trim().length() == 0) {

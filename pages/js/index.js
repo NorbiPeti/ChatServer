@@ -18,7 +18,6 @@ $(document).ready(function () {
                 console.log(ctime.innerText);
             if (ctime != null)
                 ctime.innerText = moment(ctime.innerText, "YYYY-MM-DDTHH:mm:ssZ").fromNow(); //.format("lll");
-            //ctime.innerText = new Date(ctime.innerText * 1).toDateString();
         }
         cmsgs.lastElementChild.scrollIntoView(false);
     }

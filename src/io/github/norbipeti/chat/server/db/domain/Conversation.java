@@ -8,11 +8,10 @@ import io.github.norbipeti.chat.server.data.LoaderCollection;
 @Table(name = "CONVERSATION")
 public class Conversation extends SavedData {
 	private static final long serialVersionUID = 5058682475353799722L;
-	private static Long nextid = 0L;
 	// @Id
 	// @GeneratedValue(strategy = GenerationType.IDENTITY)
 	// @Column(name = "ID", unique = true, nullable = false)
-	private Long id = nextid++;
+	private Long id;
 	@ElementCollection(fetch = FetchType.EAGER)
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "conversation")
 	private LoaderCollection<MessageChunk> messsagechunks = new LoaderCollection<>(MessageChunk.class);
@@ -52,5 +51,9 @@ public class Conversation extends SavedData {
 	}
 
 	private Conversation() {
+	}
+
+	@Override
+	protected void init() {
 	}
 }

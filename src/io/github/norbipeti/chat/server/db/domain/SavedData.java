@@ -11,10 +11,12 @@ public abstract class SavedData implements Serializable {
 
 	public abstract void setId(long id);
 
+	protected abstract void init();
+
 	protected SavedData() {
 	}
 
-	public static <T extends SavedData> T create(Class<T> cl) {
+	static <T extends SavedData> T create(Class<T> cl) {
 		T obj;
 		try {
 			Constructor<T> constructor = cl.getDeclaredConstructor(new Class<?>[0]);
@@ -27,6 +29,7 @@ public abstract class SavedData implements Serializable {
 		}
 		obj.setId(DataManager.getNextIDs().getOrDefault(obj.getClass(), 0L));
 		DataManager.setNextID(obj.getClass(), obj.getId() + 1);
+		obj.init();
 		DataManager.save(obj);
 		return obj;
 	}

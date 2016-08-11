@@ -11,8 +11,7 @@ import io.github.norbipeti.chat.server.data.LoaderCollection;
 @Table(name = "\"USER\"")
 public class User extends SavedData {
 	private static final long serialVersionUID = 2862762084164225666L;
-	private static Long nextid = 0L;
-	private Long id = nextid++;
+	private Long id;
 	private String name;
 	private String email;
 	private String password;
@@ -108,5 +107,9 @@ public class User extends SavedData {
 	@Override
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public static User createUser() {
+		return SavedData.create(User.class);
 	}
 }

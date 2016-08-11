@@ -15,9 +15,7 @@ var respfunc = function respfunc(result) {
             sendmsg(msginput);
         }
         else {
-            var errormsg = document.getElementById("errormsg");
-            errormsg.innerHTML = result.responseText;
-            errormsg.style = "display: block"; //TODO: Hide errormsg after a while (index.js)
+            showError.
             msginput.disabled = false;
         }
     }

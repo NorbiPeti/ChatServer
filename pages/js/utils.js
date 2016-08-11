@@ -11,3 +11,10 @@ function getFormData($form) {
 
     return indexed_array;
 }
+
+function showError(message) {
+    var errormsg = document.getElementById("errormsg");
+    errormsg.innerHTML = result.responseText;
+    errormsg.style = "display: block";
+    setTimeout(function(){errormsg.style.display="none";}, 2000);
+}
