@@ -64,16 +64,11 @@ public class SendMessageAjaxPage extends Page {
 					+ conversation + " is not found.</p>", exchange);
 			return;
 		}
-		MessageChunk chunk = ManagedData.create(MessageChunk.class); // TODO: Automatize
-		chunk.setConversation(conv);
-		Message msg = new Message();
+		Message msg = ManagedData.create(Message.class);
+		msg.setConversation(conv);
 		msg.setSender(user);
-		LogManager.getLogger().debug(message);
 		msg.setMessage(message);
 		msg.setTime(new Date());
-		msg.setMessageChunk(chunk); // TODO: Store relations at one side or both
-		chunk.getMessages().add(msg);
-		conv.getMesssageChunks().add(chunk);
 		DataManager.save(conv);
 		LogManager.getLogger().log(Level.DEBUG,
 				"Added conversation's message count: " + conv.getMesssageChunks().size());

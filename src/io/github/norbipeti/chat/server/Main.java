@@ -19,6 +19,8 @@ import io.github.norbipeti.chat.server.data.*;
 import io.github.norbipeti.chat.server.db.domain.*;
 import io.github.norbipeti.chat.server.io.DataType;
 import io.github.norbipeti.chat.server.page.*;
+import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpServerOptions;
 
 public class Main {
 	public static Gson gson;
@@ -30,10 +32,10 @@ public class Main {
 			LogManager.getLogger().log(Level.INFO, "Loading files...");
 			DataManager.init();
 			final GsonBuilder gsonBuilder = new GsonBuilder();
-			Reflections rf = new Reflections(
-					new ConfigurationBuilder().setUrls(ClasspathHelper.forClassLoader(ManagedData.class.getClassLoader()))
-							.addClassLoader(ManagedData.class.getClassLoader()).addScanners(new SubTypesScanner())
-							.filterInputsBy((String pkg) -> pkg.contains(ManagedData.class.getPackage().getName())));
+			Reflections rf = new Reflections(new ConfigurationBuilder()
+					.setUrls(ClasspathHelper.forClassLoader(ManagedData.class.getClassLoader()))
+					.addClassLoader(ManagedData.class.getClassLoader()).addScanners(new SubTypesScanner())
+					.filterInputsBy((String pkg) -> pkg.contains(ManagedData.class.getPackage().getName())));
 			Set<Class<? extends ManagedData>> datas = rf.getSubTypesOf(ManagedData.class);
 			for (Class<? extends ManagedData> data : datas) {
 				if (Modifier.isAbstract(data.getModifiers()))
@@ -75,6 +77,13 @@ public class Main {
 				}
 			}
 			server.start();
+			LogManager.getLogger().info("Starting websocket server...");
+			Vertx vertx = Vertx.vertx();
+			io.vertx.core.http.HttpServer socketserver = vertx.createHttpServer();
+			socketserver.websocketHandler(websocket -> {
+				websocket.writeFinalTextFrame("Hello"); // TODO
+			});
+			socketserver.listen(8180);
 			LogManager.getLogger().log(Level.INFO, "Ready... Press Enter to stop.");
 			System.in.read();
 			LogManager.getLogger().log(Level.INFO, "Stopping...");

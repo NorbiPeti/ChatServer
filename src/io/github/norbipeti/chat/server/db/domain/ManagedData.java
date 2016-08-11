@@ -9,14 +9,14 @@ import io.github.norbipeti.chat.server.data.DataManager;
 public abstract class ManagedData implements Serializable {
 	public abstract long getId();
 
-	public abstract void setId(long id);
+	protected abstract void setId(long id);
 
 	protected abstract void init();
 
 	protected ManagedData() {
 	}
 
-	static <T extends ManagedData> T create(Class<T> cl) {
+	public static <T extends ManagedData> T create(Class<T> cl) {
 		T obj;
 		try {
 			Constructor<T> constructor = cl.getDeclaredConstructor(new Class<?>[0]);

@@ -45,7 +45,7 @@ public class IndexPage extends Page {
 				if (user.getConversations().size() == 0) {
 					LoaderCollection<Conversation> convs = DataManager.getAll(Conversation.class);
 					if (convs.size() == 0) {
-						Conversation c = Conversation.create();
+						Conversation c = ManagedData.create(Conversation.class);
 						convs.add(c); // TODO: Handle no conversation open
 					}
 					user.getConversations().add(convs.get(0));

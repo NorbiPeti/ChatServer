@@ -6,7 +6,7 @@ import io.github.norbipeti.chat.server.data.LoaderCollection;
 
 @Entity
 @Table(name = "CONVERSATION")
-public class Conversation extends ManagedData {
+public class Conversation extends SavedData {
 	private static final long serialVersionUID = 5058682475353799722L;
 	// @Id
 	// @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +46,7 @@ public class Conversation extends ManagedData {
 	}
 
 	@Override
-	public void setId(long id) {
+	protected void setId(long id) {
 		this.id = id;
 	}
 

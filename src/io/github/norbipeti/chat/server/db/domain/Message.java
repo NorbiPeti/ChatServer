@@ -9,7 +9,7 @@ import io.github.norbipeti.chat.server.data.LoaderRef;
 
 @Entity
 @Table(name = "MESSAGE")
-public class Message implements Serializable {
+public class Message extends ManagedData {
 	private static final int MESSAGE_LIMIT_PER_CHUNK = 50;
 	private static final long serialVersionUID = 6345941601716826570L;
 	private static Long nextid = 0L;
@@ -58,27 +58,16 @@ public class Message implements Serializable {
 		return messagechunk;
 	}
 
-	public void setMessageChunk(LoaderRef<MessageChunk> messagechunk) {
-		this.messagechunk = messagechunk;
+	public void setConversation(LoaderRef<Conversation> conversation) {
+		setConv(conversation.get());
 	}
 
-	public void setMessageChunk(MessageChunk messagechunk) {
-		this.messagechunk = new LoaderRef<MessageChunk>(messagechunk);
+	public void setConversation(Conversation conversation) {
+		setConv(conversation);
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	private Message() {
-	}
-
-	public static Message create(Conversation parent) {
-		Message msg = new Message();
+	private void setConv(Conversation parent) {
+		Message msg = this;
 		int size = parent.getMesssageChunks().size();
 		MessageChunk chunk;
 		if (size == 0 || parent.getMesssageChunks().get(size - 1).getMessages().size() >= MESSAGE_LIMIT_PER_CHUNK) {
@@ -87,7 +76,21 @@ public class Message implements Serializable {
 			parent.getMesssageChunks().add(chunk);
 		} else
 			chunk = parent.getMesssageChunks().get(size - 1);
-		msg.setMessageChunk(chunk);
-		return msg;
+		msg.messagechunk = new LoaderRef<MessageChunk>(chunk);
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	protected void setId(long id) {
+		this.id = id;
+	}
+
+	private Message() {
+	}
+
+	@Override
+	protected void init() {
 	}
 }
