@@ -32,9 +32,7 @@ public class SendMessageAjaxPage extends Page {
 		}
 		JsonObject obj = IOHelper.GetPOSTJSON(exchange);
 		if (obj == null) {
-			IOHelper.SendResponse(400,
-					"<h1>400 Bad request</h1><p>Not a JSON string!</p><p>" + IOHelper.GetPOST(exchange) + "</p>",
-					exchange);
+			IOHelper.SendResponse(400, "JSONERROR: " + IOHelper.GetPOST(exchange), exchange);
 			// IOHelper.SendResponse(400, "JSONERROR", exchange);
 			return;
 		}
@@ -70,6 +68,7 @@ public class SendMessageAjaxPage extends Page {
 		chunk.setConversation(conv);
 		Message msg = new Message();
 		msg.setSender(user);
+		LogManager.getLogger().debug(message);
 		msg.setMessage(message);
 		msg.setTime(new Date());
 		msg.setMessageChunk(chunk); // TODO: Store relations at one side or both

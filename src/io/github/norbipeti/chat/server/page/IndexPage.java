@@ -24,9 +24,6 @@ public class IndexPage extends Page {
 	@Override
 	public void handlePage(HttpExchange exchange) throws IOException {
 		final User user = IOHelper.GetLoggedInUser(exchange);
-		/*
-		 * final User user = new User(); user.setEmail("test@test.com"); user.setName("Norbi"); user.setId(3L);
-		 */
 		LogManager.getLogger().debug("Logged in user: " + user);
 		if (user == null)
 			IOHelper.SendModifiedPage(200, this, (doc) -> {

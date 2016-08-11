@@ -31,9 +31,9 @@ import io.github.norbipeti.chat.server.page.Page;
 
 public class IOHelper {
 	public static void SendResponse(int code, String content, HttpExchange exchange) throws IOException {
-		exchange.sendResponseHeaders(code, content.length());
 		try (BufferedOutputStream out = new BufferedOutputStream(exchange.getResponseBody())) {
-			try (ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes())) {
+			try (ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8))) {
+				exchange.sendResponseHeaders(code, bis.available());
 				byte[] buffer = new byte[512];
 				int count;
 				while ((count = bis.read(buffer)) != -1) {
@@ -62,8 +62,7 @@ public class IOHelper {
 	}
 
 	public static String ReadFile(File file) throws FileNotFoundException, IOException {
-		String content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-		LogManager.getLogger().debug(content); // TODO: FIx UTF-8 file reading
+		String content = FileUtils.readFileToString(file, StandardCharsets.UTF_8); // TODO: FIx UTF-8 file reading
 		return content;
 	}
 
@@ -71,7 +70,7 @@ public class IOHelper {
 		try {
 			if (exchange.getRequestBody().available() == 0)
 				return "";
-			String content = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.ISO_8859_1);
+			String content = IOUtils.toString(exchange.getRequestBody(), StandardCharsets.UTF_8);
 			return content;
 		} catch (Exception e) {
 			e.printStackTrace();
