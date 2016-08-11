@@ -38,10 +38,10 @@ public class IndexPage extends Page {
 				Element userbox = doc.getElementById("userbox");
 				userbox.html(userbox.html().replace("<username />", user.getName()));
 				Element channelmessages = doc.getElementById("channelmessages");
-				LogManager.getLogger().log(Level.INFO,
+				LogManager.getLogger().log(Level.DEBUG,
 						"Conversations: " + DataManager.getAll(Conversation.class).size());
-				LogManager.getLogger().log(Level.INFO, "User conversations: " + user.getConversations().size());
-				LogManager.getLogger().log(Level.INFO, "Username: " + user.getName());
+				LogManager.getLogger().log(Level.DEBUG, "User conversations: " + user.getConversations().size());
+				LogManager.getLogger().log(Level.DEBUG, "Username: " + user.getName());
 				if (user.getConversations().size() == 0) {
 					LoaderCollection<Conversation> convs = DataManager.getAll(Conversation.class);
 					if (convs.size() == 0) {
@@ -55,7 +55,7 @@ public class IndexPage extends Page {
 				cide.attr("style", "display: none");
 				cide.attr("id", "convidp");
 				cide.text(Long.toString(conv.getId()));
-				LogManager.getLogger().log(Level.INFO, "Messages: " + conv.getMesssageChunks().size());
+				LogManager.getLogger().log(Level.DEBUG, "Messages: " + conv.getMesssageChunks().size());
 				for (MessageChunk chunk : conv.getMesssageChunks()) { // TODO: Reverse
 					for (Message message : chunk.getMessages()) {
 						Element msgelement = channelmessages.appendElement("div");
@@ -63,7 +63,8 @@ public class IndexPage extends Page {
 						header.text(message.getSender().get().getName() + " - ");
 						SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 						isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-						header.appendElement("span").addClass("converttime").text(isoFormat.format(message.getTime()));
+						header.appendElement("span").addClass("converttime")
+								.text(isoFormat.format(message.getTime()) + "+00:00");
 						Element body = msgelement.appendElement("p");
 						body.text(message.getMessage()); // TODO: Use JavaScript to convert time
 					}
