@@ -12,7 +12,7 @@ import io.github.norbipeti.chat.server.data.LoaderCollection;
 import io.github.norbipeti.chat.server.db.domain.Conversation;
 import io.github.norbipeti.chat.server.db.domain.Message;
 import io.github.norbipeti.chat.server.db.domain.MessageChunk;
-import io.github.norbipeti.chat.server.db.domain.SavedData;
+import io.github.norbipeti.chat.server.db.domain.ManagedData;
 import io.github.norbipeti.chat.server.db.domain.User;
 import io.github.norbipeti.chat.server.io.IOHelper;
 
@@ -64,7 +64,7 @@ public class SendMessageAjaxPage extends Page {
 					+ conversation + " is not found.</p>", exchange);
 			return;
 		}
-		MessageChunk chunk = SavedData.create(MessageChunk.class); // TODO: Automatize
+		MessageChunk chunk = ManagedData.create(MessageChunk.class); // TODO: Automatize
 		chunk.setConversation(conv);
 		Message msg = new Message();
 		msg.setSender(user);

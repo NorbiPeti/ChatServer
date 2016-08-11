@@ -10,7 +10,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
-import io.github.norbipeti.chat.server.db.domain.SavedData;
+import io.github.norbipeti.chat.server.db.domain.ManagedData;
 
 // @SuppressWarnings("rawtypes")
 public class LoaderCollectionSerializer extends TypeAdapter<LoaderCollection<?>> {
@@ -33,7 +33,7 @@ public class LoaderCollectionSerializer extends TypeAdapter<LoaderCollection<?>>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public LoaderCollection<? extends SavedData> read(JsonReader in) throws IOException {
+	public LoaderCollection<? extends ManagedData> read(JsonReader in) throws IOException {
 		if (in.peek().equals(JsonToken.NULL)) {
 			in.nextNull();
 			return null;
@@ -46,14 +46,14 @@ public class LoaderCollectionSerializer extends TypeAdapter<LoaderCollection<?>>
 			new Exception("Error: Next isn't \"class\"").printStackTrace();
 			return null;
 		}
-		Class<? extends SavedData> cl;
+		Class<? extends ManagedData> cl;
 		try {
-			cl = (Class<? extends SavedData>) Class.forName(DataManager.getPackageName() + "." + in.nextString());
+			cl = (Class<? extends ManagedData>) Class.forName(DataManager.getPackageName() + "." + in.nextString());
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			return null;
 		}
-		LoaderCollection<? extends SavedData> col;
+		LoaderCollection<? extends ManagedData> col;
 		try {
 			col = LoaderCollection.class.getDeclaredConstructor(Class.class).newInstance(cl);
 		} catch (Exception e) {

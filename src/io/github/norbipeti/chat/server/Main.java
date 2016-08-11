@@ -31,11 +31,11 @@ public class Main {
 			DataManager.init();
 			final GsonBuilder gsonBuilder = new GsonBuilder();
 			Reflections rf = new Reflections(
-					new ConfigurationBuilder().setUrls(ClasspathHelper.forClassLoader(SavedData.class.getClassLoader()))
-							.addClassLoader(SavedData.class.getClassLoader()).addScanners(new SubTypesScanner())
-							.filterInputsBy((String pkg) -> pkg.contains(SavedData.class.getPackage().getName())));
-			Set<Class<? extends SavedData>> datas = rf.getSubTypesOf(SavedData.class);
-			for (Class<? extends SavedData> data : datas) {
+					new ConfigurationBuilder().setUrls(ClasspathHelper.forClassLoader(ManagedData.class.getClassLoader()))
+							.addClassLoader(ManagedData.class.getClassLoader()).addScanners(new SubTypesScanner())
+							.filterInputsBy((String pkg) -> pkg.contains(ManagedData.class.getPackage().getName())));
+			Set<Class<? extends ManagedData>> datas = rf.getSubTypesOf(ManagedData.class);
+			for (Class<? extends ManagedData> data : datas) {
 				if (Modifier.isAbstract(data.getModifiers()))
 					continue;
 				gsonBuilder.registerTypeAdapter(new DataType(LoaderCollection.class, data),

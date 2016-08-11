@@ -82,7 +82,7 @@ public class Message implements Serializable {
 		int size = parent.getMesssageChunks().size();
 		MessageChunk chunk;
 		if (size == 0 || parent.getMesssageChunks().get(size - 1).getMessages().size() >= MESSAGE_LIMIT_PER_CHUNK) {
-			chunk = SavedData.create(MessageChunk.class);
+			chunk = ManagedData.create(MessageChunk.class);
 			chunk.setConversation(parent);
 			parent.getMesssageChunks().add(chunk);
 		} else

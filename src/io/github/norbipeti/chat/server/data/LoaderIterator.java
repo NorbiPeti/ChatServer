@@ -1,9 +1,9 @@
 package io.github.norbipeti.chat.server.data;
 
 import java.util.Iterator;
-import io.github.norbipeti.chat.server.db.domain.SavedData;
+import io.github.norbipeti.chat.server.db.domain.ManagedData;
 
-public final class LoaderIterator<T extends SavedData> implements Iterator<T> {
+public final class LoaderIterator<T extends ManagedData> implements Iterator<T> {
 	private Iterator<Long> iterator;
 	private T lastitem;
 	private Class<T> cl;

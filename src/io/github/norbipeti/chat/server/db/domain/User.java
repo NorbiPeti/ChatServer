@@ -9,7 +9,7 @@ import io.github.norbipeti.chat.server.data.LoaderCollection;
 
 @Entity
 @Table(name = "\"USER\"")
-public class User extends SavedData {
+public class User extends ManagedData {
 	private static final long serialVersionUID = 2862762084164225666L;
 	private Long id;
 	private String name;
@@ -110,6 +110,6 @@ public class User extends SavedData {
 	}
 
 	public static User createUser() {
-		return SavedData.create(User.class);
+		return ManagedData.create(User.class);
 	}
 }

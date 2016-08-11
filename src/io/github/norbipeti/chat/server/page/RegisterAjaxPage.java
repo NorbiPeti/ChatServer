@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 
 import io.github.norbipeti.chat.server.data.DataManager;
-import io.github.norbipeti.chat.server.db.domain.SavedData;
+import io.github.norbipeti.chat.server.db.domain.ManagedData;
 import io.github.norbipeti.chat.server.db.domain.User;
 import io.github.norbipeti.chat.server.io.IOHelper;
 
@@ -35,7 +35,7 @@ public class RegisterAjaxPage extends Page {
 				IOHelper.SendResponse(200, (doc) -> doc.html(msg).ownerDocument(), exchange);
 				return;
 			}
-			User user = SavedData.create(User.class);
+			User user = ManagedData.create(User.class);
 			user.setName(post.get("name").getAsString());
 			user.setEmail(post.get("email").getAsString());
 			user.setSalt(BCrypt.gensalt()); // http://www.mindrot.org/projects/jBCrypt/

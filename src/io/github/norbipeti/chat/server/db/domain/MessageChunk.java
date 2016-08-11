@@ -5,7 +5,7 @@ import java.util.List;
 
 import io.github.norbipeti.chat.server.data.LoaderRef;
 
-public class MessageChunk extends SavedData {
+public class MessageChunk extends ManagedData {
 	private static final long serialVersionUID = -1665300779209348467L;
 	
 	private Long id;

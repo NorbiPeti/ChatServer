@@ -6,7 +6,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
-import io.github.norbipeti.chat.server.db.domain.SavedData;
+import io.github.norbipeti.chat.server.db.domain.ManagedData;
 
 // @SuppressWarnings("rawtypes")
 public class LoaderRefSerializer extends TypeAdapter<LoaderRef<?>> {
@@ -39,14 +39,14 @@ public class LoaderRefSerializer extends TypeAdapter<LoaderRef<?>> {
 			new Exception("Error: Next isn't \"class\"").printStackTrace();
 			return null;
 		}
-		Class<? extends SavedData> cl;
+		Class<? extends ManagedData> cl;
 		try {
-			cl = (Class<? extends SavedData>) Class.forName(DataManager.getPackageName() + "." + in.nextString());
+			cl = (Class<? extends ManagedData>) Class.forName(DataManager.getPackageName() + "." + in.nextString());
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			return null;
 		}
-		LoaderRef<? extends SavedData> ref;
+		LoaderRef<? extends ManagedData> ref;
 		try {
 			ref = LoaderRef.class.getDeclaredConstructor(Class.class, Long.class).newInstance(cl, id);
 		} catch (Exception e) {

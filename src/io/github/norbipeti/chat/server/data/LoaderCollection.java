@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
 
-import io.github.norbipeti.chat.server.db.domain.SavedData;
+import io.github.norbipeti.chat.server.db.domain.ManagedData;
 
 /**
  * <p>
@@ -21,7 +21,7 @@ import io.github.norbipeti.chat.server.db.domain.SavedData;
  *
  * @param <T>
  */
-public class LoaderCollection<T extends SavedData> extends Loader implements List<T> {
+public class LoaderCollection<T extends ManagedData> extends Loader implements List<T> {
 	private static final long serialVersionUID = 5426152406394894301L;
 	List<Long> idlist;
 	Class<T> cl;
@@ -69,7 +69,7 @@ public class LoaderCollection<T extends SavedData> extends Loader implements Lis
 	@Override
 	public boolean addAll(Collection<? extends T> c) {
 		return idlist.addAll(c.stream().map((data) -> {
-			SavedData cde = ((SavedData) data);
+			ManagedData cde = ((ManagedData) data);
 			DataManager.save(cde);
 			return cde.getId();
 		}).collect(Collectors.toList()));
@@ -78,7 +78,7 @@ public class LoaderCollection<T extends SavedData> extends Loader implements Lis
 	@Override
 	public boolean addAll(int index, Collection<? extends T> c) {
 		return idlist.addAll(index, c.stream().map((data) -> {
-			SavedData cde = ((SavedData) data);
+			ManagedData cde = ((ManagedData) data);
 			DataManager.save(cde);
 			return cde.getId();
 		}).collect(Collectors.toList()));
@@ -137,9 +137,9 @@ public class LoaderCollection<T extends SavedData> extends Loader implements Lis
 	 */
 	@Override
 	public boolean remove(Object o) {
-		if (SavedData.class.isAssignableFrom(o.getClass())) {
-			DataManager.remove((SavedData) o);
-			return idlist.remove(((SavedData) o).getId());
+		if (ManagedData.class.isAssignableFrom(o.getClass())) {
+			DataManager.remove((ManagedData) o);
+			return idlist.remove(((ManagedData) o).getId());
 		}
 		if (Long.class.isAssignableFrom(o.getClass()))
 			DataManager.remove(cl, (Long) o);
@@ -155,8 +155,8 @@ public class LoaderCollection<T extends SavedData> extends Loader implements Lis
 	public boolean removeAll(Collection<?> c) {
 		boolean success = false;
 		for (Object item : c) {
-			if (SavedData.class.isAssignableFrom(item.getClass())) {
-				if (idlist.remove(((SavedData) item).getId())) {
+			if (ManagedData.class.isAssignableFrom(item.getClass())) {
+				if (idlist.remove(((ManagedData) item).getId())) {
 					success = true;
 					break;
 				}
@@ -174,8 +174,8 @@ public class LoaderCollection<T extends SavedData> extends Loader implements Lis
 	public boolean retainAll(Collection<?> c) {
 		List<Long> list = new ArrayList<Long>();
 		for (Object item : c) {
-			if (SavedData.class.isAssignableFrom(item.getClass())) {
-				list.add(((SavedData) item).getId());
+			if (ManagedData.class.isAssignableFrom(item.getClass())) {
+				list.add(((ManagedData) item).getId());
 			} else if (Long.class.isAssignableFrom(item.getClass())) {
 				list.add((Long) item);
 			}

@@ -6,17 +6,17 @@ import java.lang.reflect.Constructor;
 import io.github.norbipeti.chat.server.data.DataManager;
 
 @SuppressWarnings("serial")
-public abstract class SavedData implements Serializable {
+public abstract class ManagedData implements Serializable {
 	public abstract long getId();
 
 	public abstract void setId(long id);
 
 	protected abstract void init();
 
-	protected SavedData() {
+	protected ManagedData() {
 	}
 
-	static <T extends SavedData> T create(Class<T> cl) {
+	static <T extends ManagedData> T create(Class<T> cl) {
 		T obj;
 		try {
 			Constructor<T> constructor = cl.getDeclaredConstructor(new Class<?>[0]);

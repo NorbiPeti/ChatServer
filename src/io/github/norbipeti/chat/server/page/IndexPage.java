@@ -15,7 +15,7 @@ import io.github.norbipeti.chat.server.data.LoaderCollection;
 import io.github.norbipeti.chat.server.db.domain.Conversation;
 import io.github.norbipeti.chat.server.db.domain.Message;
 import io.github.norbipeti.chat.server.db.domain.MessageChunk;
-import io.github.norbipeti.chat.server.db.domain.SavedData;
+import io.github.norbipeti.chat.server.db.domain.ManagedData;
 import io.github.norbipeti.chat.server.db.domain.User;
 import io.github.norbipeti.chat.server.io.IOHelper;
 
