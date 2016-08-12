@@ -1,5 +1,5 @@
 var sendmsg = function sendmsg(msginputta) {
-    window.jsonobj = JSON.stringify({"message": msginputta.value, "conversation": window.convid});
+    window.jsonobj = JSON.stringify({ "message": msginputta.value, "conversation": window.convid });
     console.log(window.jsonobj);
     $.ajax({
         url: "/sendmessage", data: window.jsonobj, method: "POST", success: respfunc, error: respfunc
@@ -15,7 +15,7 @@ var respfunc = function respfunc(result) {
             sendmsg(msginput);
         }
         else {
-            showError.
+            showError(result.responseText);
             msginput.disabled = false;
         }
     }

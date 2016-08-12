@@ -11,7 +11,6 @@ import io.github.norbipeti.chat.server.data.DataManager;
 import io.github.norbipeti.chat.server.data.LoaderCollection;
 import io.github.norbipeti.chat.server.db.domain.Conversation;
 import io.github.norbipeti.chat.server.db.domain.Message;
-import io.github.norbipeti.chat.server.db.domain.MessageChunk;
 import io.github.norbipeti.chat.server.db.domain.ManagedData;
 import io.github.norbipeti.chat.server.db.domain.User;
 import io.github.norbipeti.chat.server.io.IOHelper;
@@ -33,7 +32,6 @@ public class SendMessageAjaxPage extends Page {
 		JsonObject obj = IOHelper.GetPOSTJSON(exchange);
 		if (obj == null) {
 			IOHelper.SendResponse(400, "JSONERROR: " + IOHelper.GetPOST(exchange), exchange);
-			// IOHelper.SendResponse(400, "JSONERROR", exchange);
 			return;
 		}
 		if (!obj.has("message") || !obj.has("conversation")) {

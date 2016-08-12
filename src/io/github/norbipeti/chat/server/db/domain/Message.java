@@ -1,6 +1,5 @@
 package io.github.norbipeti.chat.server.db.domain;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.*;
@@ -67,7 +66,6 @@ public class Message extends ManagedData {
 	}
 
 	private void setConv(Conversation parent) {
-		Message msg = this;
 		int size = parent.getMesssageChunks().size();
 		MessageChunk chunk;
 		if (size == 0 || parent.getMesssageChunks().get(size - 1).getMessages().size() >= MESSAGE_LIMIT_PER_CHUNK) {
@@ -76,7 +74,8 @@ public class Message extends ManagedData {
 			parent.getMesssageChunks().add(chunk);
 		} else
 			chunk = parent.getMesssageChunks().get(size - 1);
-		msg.messagechunk = new LoaderRef<MessageChunk>(chunk);
+		this.messagechunk = new LoaderRef<MessageChunk>(chunk);
+		chunk.getMessages().add(this);
 	}
 
 	public long getId() {

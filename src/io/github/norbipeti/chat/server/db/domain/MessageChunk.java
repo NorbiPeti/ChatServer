@@ -11,7 +11,6 @@ public class MessageChunk extends SavedData {
 	private Long id;
 	private List<Message> messages = new ArrayList<>();
 	private LoaderRef<Conversation> conversation;
-	private Long nextmsgid = 0L;
 
 	public List<Message> getMessages() {
 		return messages;

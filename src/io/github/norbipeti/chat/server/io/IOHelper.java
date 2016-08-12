@@ -21,6 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.sun.net.httpserver.HttpExchange;
@@ -100,7 +101,10 @@ public class IOHelper {
 	public static JsonObject GetPOSTJSON(HttpExchange exchange) {
 		try {
 			String content = GetPOST(exchange);
-			JsonObject obj = new JsonParser().parse(content).getAsJsonObject();
+			JsonElement e = new JsonParser().parse(content);
+			if (e == null)
+				return null;
+			JsonObject obj = e.getAsJsonObject();
 			return obj;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -189,7 +193,7 @@ public class IOHelper {
 		Cookies cookies = GetCookies(exchange);
 		if (!cookies.containsKey("user_id") || !cookies.containsKey("session_id"))
 			return null;
-		User user = DataManager.load(User.class, Long.parseLong(cookies.get("user_id").getValue()));
+		User user = DataManager.load(User.class, Long.parseLong(cookies.get("user_id").getValue()), false);
 		if (user != null && cookies.get("session_id") != null
 				&& cookies.get("session_id").getValue().equals(user.getSessionid())) {
 			if (cookies.getExpireTimeParsed().minusYears(1).isBefore(ZonedDateTime.now(ZoneId.of("GMT"))))

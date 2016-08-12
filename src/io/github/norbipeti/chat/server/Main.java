@@ -20,7 +20,6 @@ import io.github.norbipeti.chat.server.db.domain.*;
 import io.github.norbipeti.chat.server.io.DataType;
 import io.github.norbipeti.chat.server.page.*;
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpServerOptions;
 
 public class Main {
 	public static Gson gson;
@@ -77,17 +76,16 @@ public class Main {
 				}
 			}
 			server.start();
-			LogManager.getLogger().info("Starting websocket server...");
-			Vertx vertx = Vertx.vertx();
-			io.vertx.core.http.HttpServer socketserver = vertx.createHttpServer();
-			socketserver.websocketHandler(websocket -> {
-				websocket.writeFinalTextFrame("Hello"); // TODO
-			});
-			socketserver.listen(8180);
+			/*
+			 * LogManager.getLogger().info("Starting websocket server..."); Vertx vertx = Vertx.vertx(); io.vertx.core.http.HttpServer socketserver = vertx.createHttpServer();
+			 * socketserver.websocketHandler(websocket -> { websocket.writeFinalTextFrame("Hello"); // TODO }); socketserver.listen(8180);
+			 */
 			LogManager.getLogger().log(Level.INFO, "Ready... Press Enter to stop.");
 			System.in.read();
 			LogManager.getLogger().log(Level.INFO, "Stopping...");
 			server.stop(1);
+			// socketserver.close();
+			// vertx.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

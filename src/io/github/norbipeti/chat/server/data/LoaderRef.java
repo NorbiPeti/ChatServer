@@ -1,6 +1,6 @@
 package io.github.norbipeti.chat.server.data;
 
-import io.github.norbipeti.chat.server.db.domain.ManagedData;
+import io.github.norbipeti.chat.server.db.domain.SavedData;
 
 /**
  * <p>
@@ -13,7 +13,7 @@ import io.github.norbipeti.chat.server.db.domain.ManagedData;
  * @author Norbi
  * @param <T> The type of the stored object
  */
-public class LoaderRef<T extends ManagedData> extends Loader {
+public class LoaderRef<T extends SavedData> extends Loader {
 	private static final long serialVersionUID = 8458570738734235320L;
 	Class<T> cl;
 	Long id;
@@ -30,6 +30,6 @@ public class LoaderRef<T extends ManagedData> extends Loader {
 	}
 
 	public T get() {
-		return DataManager.load(cl, id);
+		return DataManager.load(cl, id, true);
 	}
 }

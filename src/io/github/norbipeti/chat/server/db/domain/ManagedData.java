@@ -30,7 +30,8 @@ public abstract class ManagedData implements Serializable {
 		obj.setId(DataManager.getNextIDs().getOrDefault(obj.getClass(), 0L));
 		DataManager.setNextID(obj.getClass(), obj.getId() + 1);
 		obj.init();
-		DataManager.save(obj);
+		if (SavedData.class.isAssignableFrom(cl))
+			DataManager.save((SavedData) obj);
 		return obj;
 	}
 }

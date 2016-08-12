@@ -66,7 +66,7 @@ public class IndexPage extends Page {
 						header.appendElement("span").addClass("converttime")
 								.text(isoFormat.format(message.getTime()) + "+00:00");
 						Element body = msgelement.appendElement("p");
-						body.text(message.getMessage()); // TODO: Use JavaScript to convert time
+						body.text(message.getMessage());
 					}
 				}
 				return doc;

@@ -1,9 +1,9 @@
 package io.github.norbipeti.chat.server.data;
 
 import java.util.Iterator;
-import io.github.norbipeti.chat.server.db.domain.ManagedData;
+import io.github.norbipeti.chat.server.db.domain.SavedData;
 
-public final class LoaderIterator<T extends ManagedData> implements Iterator<T> {
+public final class LoaderIterator<T extends SavedData> implements Iterator<T> {
 	private Iterator<Long> iterator;
 	private T lastitem;
 	private Class<T> cl;
@@ -20,7 +20,7 @@ public final class LoaderIterator<T extends ManagedData> implements Iterator<T> 
 
 	@Override
 	public T next() {
-		return lastitem = DataManager.load(cl, iterator.next());
+		return lastitem = DataManager.load(cl, iterator.next(), true);
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 
 import com.google.common.io.Files;
 import io.github.norbipeti.chat.server.Main;
+import io.github.norbipeti.chat.server.db.domain.ManagedData;
 import io.github.norbipeti.chat.server.db.domain.SavedData;
 
 public final class DataManager {
@@ -30,8 +31,8 @@ public final class DataManager {
 		}
 	}
 
-	public static <T extends SavedData> T load(Class<T> cl, long id) {
-		return loadFromFile(new File(datafolder, getFileName(cl, id)), cl);
+	public static <T extends SavedData> T load(Class<T> cl, long id, boolean create) {
+		return loadFromFile(new File(datafolder, getFileName(cl, id)), cl, create);
 	}
 
 	public static <T extends SavedData> LoaderCollection<T> getAll(Class<T> cl) {
@@ -59,11 +60,14 @@ public final class DataManager {
 	// TODO: Handle unloading of used objects (prevent detached objects)
 
 	@SuppressWarnings("unchecked")
-	private static <T extends SavedData> T loadFromFile(File file, Class<T> cl) {
+	private static <T extends SavedData> T loadFromFile(File file, Class<T> cl, boolean create) {
 		try {
 			if (!file.exists()) {
-				T obj = SavedData.create(cl);
-				return obj;
+				if (create) {
+					T obj = SavedData.create(cl);
+					return obj;
+				} else
+					return null;
 			}
 			if (cache.containsKey(file))
 				return (T) cache.get(file);
@@ -112,28 +116,29 @@ public final class DataManager {
 		}
 	}
 
-	private static HashMap<Class<? extends SavedData>, Long> nextids;
+	private static HashMap<Class<? extends ManagedData>, Long> nextids;
 
-	public static Map<Class<? extends SavedData>, Long> getNextIDs() {
+	public static Map<Class<? extends ManagedData>, Long> getNextIDs() {
 		return Collections.unmodifiableMap(nextids);
 	}
 
-	public static void setNextID(Class<? extends SavedData> cl, Long id) {
+	public static void setNextID(Class<? extends ManagedData> cl, Long id) {
 		nextids.put(cl, id);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static HashMap<Class<? extends SavedData>, Long> loadNextIDs() {
+	private static HashMap<Class<? extends ManagedData>, Long> loadNextIDs() {
 		try {
 			File file = new File("data", "idlist.ini");
 			if (!file.exists())
 				return new HashMap<>();
 			BufferedReader reader = Files.newReader(file, StandardCharsets.UTF_8);
 			String line;
-			HashMap<Class<? extends SavedData>, Long> ret = new HashMap<>();
+			HashMap<Class<? extends ManagedData>, Long> ret = new HashMap<>();
 			while ((line = reader.readLine()) != null) {
 				String[] spl = line.split("\\=");
-				ret.put((Class<? extends SavedData>) Class.forName(packagename + "." + spl[0]), Long.parseLong(spl[1]));
+				ret.put((Class<? extends ManagedData>) Class.forName(packagename + "." + spl[0]),
+						Long.parseLong(spl[1]));
 			}
 			return ret;
 		} catch (Exception e) {
@@ -142,11 +147,11 @@ public final class DataManager {
 		return new HashMap<>();
 	}
 
-	private static void saveNextIDs(HashMap<Class<? extends SavedData>, Long> ids) {
+	private static void saveNextIDs(HashMap<Class<? extends ManagedData>, Long> ids) {
 		try {
 			File file = new File("data", "idlist.ini");
 			String contents = "";
-			for (Entry<Class<? extends SavedData>, Long> item : ids.entrySet()) {
+			for (Entry<Class<? extends ManagedData>, Long> item : ids.entrySet()) {
 				contents += item.getKey().getSimpleName() + "=" + item.getValue() + "\n";
 			}
 			Files.write(contents, file, StandardCharsets.UTF_8);

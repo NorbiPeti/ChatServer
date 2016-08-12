@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.stream.Collectors;
 
-import io.github.norbipeti.chat.server.db.domain.ManagedData;
+import io.github.norbipeti.chat.server.db.domain.SavedData;
 
 /**
  * <p>
@@ -21,7 +21,7 @@ import io.github.norbipeti.chat.server.db.domain.ManagedData;
  *
  * @param <T>
  */
-public class LoaderCollection<T extends ManagedData> extends Loader implements List<T> {
+public class LoaderCollection<T extends SavedData> extends Loader implements List<T> {
 	private static final long serialVersionUID = 5426152406394894301L;
 	List<Long> idlist;
 	Class<T> cl;
@@ -69,7 +69,7 @@ public class LoaderCollection<T extends ManagedData> extends Loader implements L
 	@Override
 	public boolean addAll(Collection<? extends T> c) {
 		return idlist.addAll(c.stream().map((data) -> {
-			ManagedData cde = ((ManagedData) data);
+			SavedData cde = ((SavedData) data);
 			DataManager.save(cde);
 			return cde.getId();
 		}).collect(Collectors.toList()));
@@ -78,7 +78,7 @@ public class LoaderCollection<T extends ManagedData> extends Loader implements L
 	@Override
 	public boolean addAll(int index, Collection<? extends T> c) {
 		return idlist.addAll(index, c.stream().map((data) -> {
-			ManagedData cde = ((ManagedData) data);
+			SavedData cde = ((SavedData) data);
 			DataManager.save(cde);
 			return cde.getId();
 		}).collect(Collectors.toList()));
@@ -101,7 +101,7 @@ public class LoaderCollection<T extends ManagedData> extends Loader implements L
 
 	@Override
 	public T get(int index) {
-		return DataManager.load(cl, idlist.get(index));
+		return DataManager.load(cl, idlist.get(index), true);
 	}
 
 	@Override
@@ -137,9 +137,9 @@ public class LoaderCollection<T extends ManagedData> extends Loader implements L
 	 */
 	@Override
 	public boolean remove(Object o) {
-		if (ManagedData.class.isAssignableFrom(o.getClass())) {
-			DataManager.remove((ManagedData) o);
-			return idlist.remove(((ManagedData) o).getId());
+		if (SavedData.class.isAssignableFrom(o.getClass())) {
+			DataManager.remove((SavedData) o);
+			return idlist.remove(((SavedData) o).getId());
 		}
 		if (Long.class.isAssignableFrom(o.getClass()))
 			DataManager.remove(cl, (Long) o);
@@ -148,15 +148,15 @@ public class LoaderCollection<T extends ManagedData> extends Loader implements L
 
 	@Override
 	public T remove(int index) {
-		return DataManager.load(cl, idlist.remove(index));
+		return DataManager.load(cl, idlist.remove(index), true);
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
 		boolean success = false;
 		for (Object item : c) {
-			if (ManagedData.class.isAssignableFrom(item.getClass())) {
-				if (idlist.remove(((ManagedData) item).getId())) {
+			if (SavedData.class.isAssignableFrom(item.getClass())) {
+				if (idlist.remove(((SavedData) item).getId())) {
 					success = true;
 					break;
 				}
@@ -174,8 +174,8 @@ public class LoaderCollection<T extends ManagedData> extends Loader implements L
 	public boolean retainAll(Collection<?> c) {
 		List<Long> list = new ArrayList<Long>();
 		for (Object item : c) {
-			if (ManagedData.class.isAssignableFrom(item.getClass())) {
-				list.add(((ManagedData) item).getId());
+			if (SavedData.class.isAssignableFrom(item.getClass())) {
+				list.add(((SavedData) item).getId());
 			} else if (Long.class.isAssignableFrom(item.getClass())) {
 				list.add((Long) item);
 			}
@@ -185,7 +185,7 @@ public class LoaderCollection<T extends ManagedData> extends Loader implements L
 
 	@Override
 	public T set(int index, T element) {
-		return DataManager.load(cl, idlist.set(index, element.getId()));
+		return DataManager.load(cl, idlist.set(index, element.getId()), true);
 	}
 
 	@Override
@@ -201,14 +201,14 @@ public class LoaderCollection<T extends ManagedData> extends Loader implements L
 	@Override
 	public Object[] toArray() {
 		return idlist.stream().map((data) -> {
-			return DataManager.load(cl, data);
+			return DataManager.load(cl, data, true);
 		}).collect(Collectors.toList()).toArray();
 	}
 
 	@Override
 	public <U> U[] toArray(U[] a) {
 		return idlist.stream().map((data) -> {
-			return DataManager.load(cl, data);
+			return DataManager.load(cl, data, true);
 		}).collect(Collectors.toList()).toArray(a);
 	}
 
@@ -221,7 +221,7 @@ public class LoaderCollection<T extends ManagedData> extends Loader implements L
 		StringBuilder sb = new StringBuilder("[");
 		for (Long item : idlist) {
 			if (loaditems)
-				sb.append(DataManager.load(cl, item));
+				sb.append(DataManager.load(cl, item, true));
 			else
 				sb.append(item);
 		}

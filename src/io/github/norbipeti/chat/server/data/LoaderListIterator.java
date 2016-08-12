@@ -2,9 +2,9 @@ package io.github.norbipeti.chat.server.data;
 
 import java.util.ListIterator;
 
-import io.github.norbipeti.chat.server.db.domain.ManagedData;
+import io.github.norbipeti.chat.server.db.domain.SavedData;
 
-public final class LoaderListIterator<T extends ManagedData> implements ListIterator<T> {
+public final class LoaderListIterator<T extends SavedData> implements ListIterator<T> {
 	private ListIterator<Long> listiterator;
 	private T lastitem;
 	private Class<T> cl;
@@ -21,7 +21,7 @@ public final class LoaderListIterator<T extends ManagedData> implements ListIter
 
 	@Override
 	public T next() {
-		return lastitem = DataManager.load(cl, listiterator.next());
+		return lastitem = DataManager.load(cl, listiterator.next(), true);
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public final class LoaderListIterator<T extends ManagedData> implements ListIter
 
 	@Override
 	public T previous() {
-		return DataManager.load(cl, listiterator.previous());
+		return DataManager.load(cl, listiterator.previous(), true);
 	}
 
 	@Override
