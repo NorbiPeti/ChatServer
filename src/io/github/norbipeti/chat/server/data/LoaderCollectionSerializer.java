@@ -1,6 +1,7 @@
 package io.github.norbipeti.chat.server.data;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -14,9 +15,7 @@ import io.github.norbipeti.chat.server.db.domain.ManagedData;
 
 // @SuppressWarnings("rawtypes")
 public class LoaderCollectionSerializer extends TypeAdapter<LoaderCollection<?>> {
-	// private static final Type returnType = getReturnType();
 
-	// http://stackoverflow.com/a/17300227
 	@Override
 	public void write(JsonWriter out, LoaderCollection<?> value) throws IOException {
 		if (value == null) {
@@ -40,9 +39,13 @@ public class LoaderCollectionSerializer extends TypeAdapter<LoaderCollection<?>>
 		}
 		in.beginObject();
 		in.nextName();
-		List<Long> list = new Gson().fromJson(in, new TypeToken<List<Long>>() {
+		List<Long> list;
+		LoaderCollection<? extends ManagedData> itemcol;
+		list = new Gson().fromJson(in, new TypeToken<List<Long>>() {
 		}.getType());
-		if (!in.nextName().equals("class")) {
+		if (!in.nextName().equals("class"))
+
+		{
 			new Exception("Error: Next isn't \"class\"").printStackTrace();
 			return null;
 		}

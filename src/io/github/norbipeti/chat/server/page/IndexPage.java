@@ -2,6 +2,7 @@ package io.github.norbipeti.chat.server.page;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.TimeZone;
 
 import org.apache.logging.log4j.Level;
@@ -49,6 +50,7 @@ public class IndexPage extends Page {
 						convs.add(c); // TODO: Handle no conversation open
 					}
 					user.getConversations().add(convs.get(0));
+					convs.get(0).getUsers().add(user);
 				}
 				Conversation conv = user.getConversations().get(0);
 				Element cide = channelmessages.appendElement("p");
@@ -56,17 +58,13 @@ public class IndexPage extends Page {
 				cide.attr("id", "convidp");
 				cide.text(Long.toString(conv.getId()));
 				LogManager.getLogger().log(Level.DEBUG, "Messages: " + conv.getMesssageChunks().size());
-				for (MessageChunk chunk : conv.getMesssageChunks()) { // TODO: Reverse
+				@SuppressWarnings("unchecked")
+				LoaderCollection<MessageChunk> chunks = (LoaderCollection<MessageChunk>) conv.getMesssageChunks()
+						.clone();
+				Collections.reverse(chunks);
+				for (MessageChunk chunk : chunks) {
 					for (Message message : chunk.getMessages()) {
-						Element msgelement = channelmessages.appendElement("div");
-						Element header = msgelement.appendElement("p");
-						header.text(message.getSender().get().getName() + " - ");
-						SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-						isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-						header.appendElement("span").addClass("converttime")
-								.text(isoFormat.format(message.getTime()) + "+00:00");
-						Element body = msgelement.appendElement("p");
-						body.text(message.getMessage());
+						message.getAsHTML(channelmessages);
 					}
 				}
 				return doc;

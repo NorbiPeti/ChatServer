@@ -71,6 +71,8 @@ public class SendMessageAjaxPage extends Page {
 		LogManager.getLogger().log(Level.DEBUG,
 				"Added conversation's message count: " + conv.getMesssageChunks().size());
 
+		ReceiveMessageAjaxPage.sendMessageBack(msg, conv);
+
 		IOHelper.SendResponse(200, "Success", exchange);
 	}
 

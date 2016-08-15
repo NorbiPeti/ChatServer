@@ -7,8 +7,8 @@ var sendmsg = function sendmsg(msginputta) {
 };
 
 var respfunc = function respfunc(result) {
+    var msginput = document.getElementById("msginput");
     if (result != "Success") { //on success result is string
-        var msginput = document.getElementById("msginput");
         if (result.responseText.indexOf("JSONERROR") != -1) {
             console.log("Got JSON error. Retrying...");
             console.log(result.responseText);
@@ -19,8 +19,10 @@ var respfunc = function respfunc(result) {
             msginput.disabled = false;
         }
     }
-    else
-        location.reload(true); //TODO: Don't referesh on message send
+    else {
+        msginput.value = "";
+        msginput.disabled = false;
+    }
 };
 
 var sendmsgonenter = function sendmsgonenter(e) {

@@ -18,7 +18,6 @@ import io.github.norbipeti.chat.server.db.domain.SavedData;
  * </p>
  * 
  * @author Norbi
- *
  * @param <T>
  */
 public class LoaderCollection<T extends SavedData> extends Loader implements List<T> {
@@ -41,7 +40,7 @@ public class LoaderCollection<T extends SavedData> extends Loader implements Lis
 
 	public LoaderCollection(LoaderCollection<T> parentofsub, int fromIndex, int toIndex) {
 		this.cl = parentofsub.cl;
-		idlist = parentofsub.idlist.subList(fromIndex, toIndex);
+		idlist = parentofsub.idlist.subList(fromIndex, toIndex); // TODO: Test
 	}
 
 	public LoaderCollection(Class<T> cl, int capacity) {
@@ -132,8 +131,7 @@ public class LoaderCollection<T extends SavedData> extends Loader implements Lis
 	/**
 	 * Remove an object from this collection
 	 * 
-	 * @param o
-	 *            Either the object of type T or the ID
+	 * @param o Either the object of type T or the ID
 	 */
 	@Override
 	public boolean remove(Object o) {
@@ -227,5 +225,20 @@ public class LoaderCollection<T extends SavedData> extends Loader implements Lis
 		}
 		sb.append("]");
 		return sb.toString();
+	}
+
+	@SuppressWarnings("unchecked")
+	public Object clone() {
+		Object cloned = null;
+		if (idlist instanceof ArrayList<?>)
+			cloned = ((ArrayList<Long>) idlist).clone();
+		if (cloned == null)
+			return cloned;
+		else {
+			LoaderCollection<T> lc = new LoaderCollection<T>(cl, this.size());
+			if (cloned instanceof List<?>)
+				lc.idlist = (List<Long>) cloned;
+			return lc;
+		}
 	}
 }

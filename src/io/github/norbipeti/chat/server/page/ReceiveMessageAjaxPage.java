@@ -1,9 +1,18 @@
 package io.github.norbipeti.chat.server.page;
 
 import java.io.IOException;
+import java.util.HashMap;
+
+import org.apache.logging.log4j.LogManager;
+
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 
+import io.github.norbipeti.chat.server.Main;
+import io.github.norbipeti.chat.server.data.LoaderRef;
+import io.github.norbipeti.chat.server.db.domain.Conversation;
+import io.github.norbipeti.chat.server.db.domain.Message;
 import io.github.norbipeti.chat.server.db.domain.User;
 import io.github.norbipeti.chat.server.io.IOHelper;
 
@@ -15,6 +24,8 @@ public class ReceiveMessageAjaxPage extends Page {
 		return "receivemessage";
 	}
 
+	public static HashMap<User, HttpExchange> exmap = new HashMap<>();
+
 	@Override
 	public void handlePage(HttpExchange exchange) throws IOException {
 		User user = IOHelper.GetLoggedInUser(exchange);
@@ -22,7 +33,7 @@ public class ReceiveMessageAjaxPage extends Page {
 			IOHelper.SendResponse(403, "<p>Please log in to receive messages</p>", exchange);
 			return;
 		}
-		JsonObject obj = new JsonObject(); // TODO
+		exmap.put(user, exchange);
 		/*
 		 * String message = obj.get("message").getAsString().trim(); int conversation = obj.get("conversation").getAsInt(); if (message.trim().length() == 0) { IOHelper.SendResponse(400,
 		 * "<h1>400 Bad request</h1><p>The message cannot be empty.</p>", exchange); return; } LoaderCollection<Conversation> convos = user.getConversations(); Conversation conv = null;
@@ -33,7 +44,18 @@ public class ReceiveMessageAjaxPage extends Page {
 		 * "Added conversation's message count: " + conv.getMesssageChunks().size());
 		 */
 
-		IOHelper.SendResponse(200, "Success", exchange);
 	}
 
+	public static void sendMessageBack(Message msg, Conversation conv) throws IOException {
+		for (User user : conv.getUsers()) {
+			LogManager.getLogger().debug("User: " + user);
+			if (exmap.containsKey(user)) {
+				LogManager.getLogger().debug("Exmap contains user");
+				JsonObject msgobj = msg.getAsJson();
+				IOHelper.SendResponse(200, msgobj.toString(), exmap.get(user));
+				exmap.remove(user);
+			} else
+				LogManager.getLogger().warn("User is not listening: " + user);
+		}
+	}
 }

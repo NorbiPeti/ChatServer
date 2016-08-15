@@ -1,9 +1,17 @@
 package io.github.norbipeti.chat.server.db.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import javax.persistence.*;
 
+import org.jsoup.nodes.Element;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+
+import io.github.norbipeti.chat.server.Main;
 import io.github.norbipeti.chat.server.data.LoaderRef;
 
 @Entity
@@ -91,5 +99,29 @@ public class Message extends ManagedData {
 
 	@Override
 	protected void init() {
+	}
+
+	public Element getAsHTML(Element channelmessages) {
+		Element msgelement = channelmessages.appendElement("div");
+		Element header = msgelement.appendElement("p");
+		header.text(getSender().get().getName() + " - ");
+		header.appendElement("span").addClass("converttime").text(formatDate());
+		Element body = msgelement.appendElement("p");
+		body.text(getMessage());
+		return msgelement;
+	}
+
+	public JsonObject getAsJson() {
+		JsonObject msgobj = new JsonObject();
+		msgobj.add("sender", Main.gson.toJsonTree(getSender().get()));
+		msgobj.add("message", new JsonPrimitive(getMessage()));
+		msgobj.add("time", new JsonPrimitive(formatDate()));
+		return msgobj;
+	}
+
+	private String formatDate() {
+		SimpleDateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+		isoFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		return isoFormat.format(getTime()) + "+00:00";
 	}
 }

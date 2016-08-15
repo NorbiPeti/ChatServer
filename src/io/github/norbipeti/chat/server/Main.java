@@ -30,7 +30,8 @@ public class Main {
 				// https://docs.oracle.com/javase/8/docs/api/
 			LogManager.getLogger().log(Level.INFO, "Loading files...");
 			DataManager.init();
-			final GsonBuilder gsonBuilder = new GsonBuilder();
+			final GsonBuilder saveGsonBuilder = new GsonBuilder();
+			final GsonBuilder exchangeGsonBuilder = new GsonBuilder();
 			Reflections rf = new Reflections(new ConfigurationBuilder()
 					.setUrls(ClasspathHelper.forClassLoader(ManagedData.class.getClassLoader()))
 					.addClassLoader(ManagedData.class.getClassLoader()).addScanners(new SubTypesScanner())
@@ -39,11 +40,11 @@ public class Main {
 			for (Class<? extends ManagedData> data : datas) {
 				if (Modifier.isAbstract(data.getModifiers()))
 					continue;
-				gsonBuilder.registerTypeAdapter(new DataType(LoaderCollection.class, data),
+				saveGsonBuilder.registerTypeAdapter(new DataType(LoaderCollection.class, data),
 						new LoaderCollectionSerializer());
-				gsonBuilder.registerTypeAdapter(new DataType(LoaderRef.class, data), new LoaderRefSerializer());
+				saveGsonBuilder.registerTypeAdapter(new DataType(LoaderRef.class, data), new LoaderRefSerializer());
 			}
-			gson = gsonBuilder.create();
+			gson = saveGsonBuilder.create();
 			/*
 			 * User user = new User(); user.setName("asd"); user.setEmail("test@test.com"); User user2 = new User(); user2.setName("Teszt"); user2.setEmail("test2@test.com"); // user =
 			 * provider.save(user); // user2 = provider.save(user2); user.getContacts().add(user2); user2.getContacts().add(user); LogManager.getLogger().log(Level.DEBUG, "1st's contact: " +

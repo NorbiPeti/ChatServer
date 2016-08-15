@@ -14,7 +14,7 @@ function getFormData($form) {
 
 function showError(message) {
     var errormsg = document.getElementById("errormsg");
-    errormsg.innerHTML = result.responseText;
+    errormsg.innerHTML = message;
     errormsg.style = "display: block";
-    setTimeout(function(){errormsg.style.display="none";}, 2000);
+    setTimeout(function () { errormsg.style.display = "none"; }, 2000);
 }

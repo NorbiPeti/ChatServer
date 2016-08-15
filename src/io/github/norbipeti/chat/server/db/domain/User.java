@@ -95,10 +95,6 @@ public class User extends SavedData {
 	private User() {
 	}
 
-	public static LoaderCollection<User> getUsers() {
-		return DataManager.getAll(User.class);
-	}
-
 	@Override
 	public long getId() {
 		return id;
