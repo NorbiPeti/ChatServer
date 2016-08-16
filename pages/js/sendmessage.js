@@ -17,11 +17,13 @@ var respfunc = function respfunc(result) {
         else {
             showError(result.responseText);
             msginput.disabled = false;
+            msginput.focus();
         }
     }
     else {
         msginput.value = "";
         msginput.disabled = false;
+        msginput.focus();
     }
 };
 
@@ -31,7 +33,7 @@ var sendmsgonenter = function sendmsgonenter(e) {
         return;
     }
     e.preventDefault();
-    var textarea = event.target;
+    var textarea = e.target;
     if (textarea.value.trim().length == 0)
         return;
     textarea.disabled = true; //msginput

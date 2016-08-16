@@ -49,10 +49,14 @@ public class ReceiveMessageAjaxPage extends Page {
 	public static void sendMessageBack(Message msg, Conversation conv) throws IOException {
 		for (User user : conv.getUsers()) {
 			LogManager.getLogger().debug("User: " + user);
-			if (exmap.containsKey(user)) {
+			if (exmap.containsKey(user)) { // TODO: Save new messages if not listening
 				LogManager.getLogger().debug("Exmap contains user");
 				JsonObject msgobj = msg.getAsJson();
-				IOHelper.SendResponse(200, msgobj.toString(), exmap.get(user));
+				try {
+					IOHelper.SendResponse(200, msgobj.toString(), exmap.get(user));
+				} catch (IOException e) { // Remove users even if an error occurs (otherwise they may not be able to send a new message due to "headers already sent")
+					e.printStackTrace();
+				}
 				exmap.remove(user);
 			} else
 				LogManager.getLogger().warn("User is not listening: " + user);

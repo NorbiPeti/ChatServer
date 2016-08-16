@@ -8,7 +8,8 @@ $(document).ready(function () {
         var nodes = cmsgs.children;
         for (var x = 0; x < nodes.length; x++) {
             var item = nodes[x];
-            handlereceivedmessage(item);
+            if (item.tagName == "DIV")
+                handlereceivedmessage(item);
         }
     }
 });

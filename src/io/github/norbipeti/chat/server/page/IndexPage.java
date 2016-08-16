@@ -58,14 +58,9 @@ public class IndexPage extends Page {
 				cide.attr("id", "convidp");
 				cide.text(Long.toString(conv.getId()));
 				LogManager.getLogger().log(Level.DEBUG, "Messages: " + conv.getMesssageChunks().size());
-				@SuppressWarnings("unchecked")
-				LoaderCollection<MessageChunk> chunks = (LoaderCollection<MessageChunk>) conv.getMesssageChunks()
-						.clone();
-				Collections.reverse(chunks);
-				for (MessageChunk chunk : chunks) {
-					for (Message message : chunk.getMessages()) {
-						message.getAsHTML(channelmessages);
-					}
+				MessageChunk chunk = conv.getMesssageChunks().get(conv.getMesssageChunks().size() - 1);
+				for (Message message : chunk.getMessages()) {
+					message.getAsHTML(channelmessages);
 				}
 				return doc;
 			}, exchange);

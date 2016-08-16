@@ -69,7 +69,7 @@ public class SendMessageAjaxPage extends Page {
 		msg.setTime(new Date());
 		DataManager.save(conv);
 		LogManager.getLogger().log(Level.DEBUG,
-				"Added conversation's message count: " + conv.getMesssageChunks().size());
+				"Added conversation's messagechunk count: " + conv.getMesssageChunks().size());
 
 		ReceiveMessageAjaxPage.sendMessageBack(msg, conv);
 

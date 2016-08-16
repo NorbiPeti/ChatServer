@@ -23,12 +23,12 @@ public class RegisterAjaxPage extends Page {
 				return; // TODO: Use JavaScript too, for error checks
 			}
 			for (User user : DataManager.getAll(User.class)) { // TODO: Optimize
-				if (post.get("email").equals(user.getEmail())) {
-					errormsg += "<p>An user with this name already exists</p>";
+				if (post.get("email").getAsString().equals(user.getEmail())) {
+					errormsg += "<p>An user with this E-mail already exists</p>";
 					break;
 				}
 			}
-			if (!post.get("pass").equals(post.get("pass2")))
+			if (!post.get("pass").getAsString().equals(post.get("pass2").getAsString()))
 				errormsg += "<p>The passwords don't match</p>";
 			if (errormsg.length() > 0) {
 				final String msg = errormsg;
