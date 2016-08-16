@@ -19,7 +19,6 @@ import io.github.norbipeti.chat.server.data.*;
 import io.github.norbipeti.chat.server.db.domain.*;
 import io.github.norbipeti.chat.server.io.DataType;
 import io.github.norbipeti.chat.server.page.*;
-import io.vertx.core.Vertx;
 
 public class Main {
 	public static Gson gson;
@@ -31,7 +30,6 @@ public class Main {
 			LogManager.getLogger().log(Level.INFO, "Loading files...");
 			DataManager.init();
 			final GsonBuilder saveGsonBuilder = new GsonBuilder();
-			final GsonBuilder exchangeGsonBuilder = new GsonBuilder();
 			Reflections rf = new Reflections(new ConfigurationBuilder()
 					.setUrls(ClasspathHelper.forClassLoader(ManagedData.class.getClassLoader()))
 					.addClassLoader(ManagedData.class.getClassLoader()).addScanners(new SubTypesScanner())

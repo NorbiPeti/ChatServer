@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import javax.persistence.*;
 
-import io.github.norbipeti.chat.server.data.DataManager;
 import io.github.norbipeti.chat.server.data.LoaderCollection;
 
 @Entity

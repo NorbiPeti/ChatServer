@@ -1,11 +1,11 @@
 var sendmsg = function sendmsg(msginputta) {
     window.jsonobj = JSON.stringify({ "message": msginputta.value, "conversation": window.convid });
-    console.log(window.jsonobj);
     $.ajax({
         url: "/sendmessage", data: window.jsonobj, method: "POST", success: respfunc, error: respfunc
     });
 };
 
+var justsentmsgread = false;
 var respfunc = function respfunc(result) {
     var msginput = document.getElementById("msginput");
     if (result != "Success") { //on success result is string
@@ -18,12 +18,14 @@ var respfunc = function respfunc(result) {
             showError(result.responseText);
             msginput.disabled = false;
             msginput.focus();
+            resetUnread();
         }
     }
     else {
         msginput.value = "";
         msginput.disabled = false;
         msginput.focus();
+        justsentmsgread = true;
     }
 };
 

@@ -1,7 +1,6 @@
 package io.github.norbipeti.chat.server.data;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -40,7 +39,6 @@ public class LoaderCollectionSerializer extends TypeAdapter<LoaderCollection<?>>
 		in.beginObject();
 		in.nextName();
 		List<Long> list;
-		LoaderCollection<? extends ManagedData> itemcol;
 		list = new Gson().fromJson(in, new TypeToken<List<Long>>() {
 		}.getType());
 		if (!in.nextName().equals("class"))

@@ -1,17 +1,19 @@
 package io.github.norbipeti.chat.server.page;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
+import java.util.Iterator;
+
+import javax.swing.text.html.HTMLDocument;
 
 import org.apache.logging.log4j.LogManager;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 
-import io.github.norbipeti.chat.server.Main;
-import io.github.norbipeti.chat.server.data.LoaderRef;
 import io.github.norbipeti.chat.server.db.domain.Conversation;
 import io.github.norbipeti.chat.server.db.domain.Message;
 import io.github.norbipeti.chat.server.db.domain.User;
@@ -26,7 +28,7 @@ public class ReceiveMessageAjaxPage extends Page {
 	}
 
 	public static HashMap<User, HttpExchange> exmap = new HashMap<>();
-	public static HashMap<User, Message> unsentmessages = new HashMap<>();
+	public static HashMap<User, ArrayList<Message>> unsentmessages = new HashMap<>();
 
 	@Override
 	public void handlePage(HttpExchange exchange) throws IOException {
@@ -36,42 +38,35 @@ public class ReceiveMessageAjaxPage extends Page {
 			return;
 		}
 		exmap.put(user, exchange);
-		/*
-		 * String message = obj.get("message").getAsString().trim(); int conversation = obj.get("conversation").getAsInt(); if (message.trim().length() == 0) { IOHelper.SendResponse(400,
-		 * "<h1>400 Bad request</h1><p>The message cannot be empty.</p>", exchange); return; } LoaderCollection<Conversation> convos = user.getConversations(); Conversation conv = null;
-		 * LogManager.getLogger().log(Level.DEBUG, "Len: " + convos.size()); for (Conversation con : convos) { LogManager.getLogger().log(Level.DEBUG, con.getId()); if (con.getId() == conversation) {
-		 * conv = con; break; } } if (conv == null) { IOHelper.SendResponse(400, "<h1>400 Conversation not found</h1><p>The conversation with the id " + conversation + " is not found.</p>", exchange);
-		 * return; } MessageChunk chunk = ManagedData.create(MessageChunk.class); chunk.setConversation(conv); Message msg = new Message(); msg.setSender(user); msg.setMessage(message);
-		 * msg.setTime(new Date()); msg.setMessageChunk(chunk); chunk.getMessages().add(msg); conv.getMesssageChunks().add(chunk); DataManager.save(conv); LogManager.getLogger().log(Level.DEBUG,
-		 * "Added conversation's message count: " + conv.getMesssageChunks().size());
-		 */
-
 	}
 
 	public static void sendMessageBack(Message msg, Conversation conv) throws IOException {
 		for (User user : conv.getUsers()) { // TODO: Load older messages when scrolling up
-			if (unsentmessages.size() > 10)
-				unsentmessages.clear();
-			if (exmap.containsKey(user)) { // TODO: Save new messages if not listening - If message count is bigger than 10, remove (the user is probably offline)
-				unsentmessages.put(user, msg);
-				for (Entry<User, Message> entry : unsentmessages.) { //TODO: Only one key allowed, fix
-					JsonObject msgobj = entry.getValue().getAsJson(); // TODO: Only send messages if the user's current conversation matches
+			if (unsentmessages.containsKey(user) && unsentmessages.get(user).size() > 10) {
+				unsentmessages.get(user).clear();
+			}
+			if (!unsentmessages.containsKey(user))
+				unsentmessages.put(user, new ArrayList<Message>());
+			unsentmessages.get(user).add(msg);
+			if (exmap.containsKey(user)) {
+				Iterator<Message> it = unsentmessages.get(user).iterator();
+				String finalmsghtml = "";
+				while (it.hasNext()) {
+					Message entry = it.next();
+					Element msgobj = entry.getAsHTML(new Document("")); // TODO: Only send messages if the user's current conversation matches
+					finalmsghtml += msgobj.toString() + "\n";
 					try {
-						IOHelper.SendResponse(200, msgobj.toString(), exmap.get(user));
-					} catch (IOException e) { // Remove users even if an error occurs (otherwise they may not be able to send a new message due to "headers already sent")
+						it.remove(); // Remove sent message
+					} catch (Exception e) { // Remove users even if an error occurs (otherwise they may not be able to send a new/ message due to "headers already sent")
 						e.printStackTrace();
 					}
 				}
-				JsonObject msgobj = msg.getAsJson(); // TODO: Only send messages if the user's current conversation matches
-				try {
-					IOHelper.SendResponse(200, msgobj.toString(), exmap.get(user));
-				} catch (IOException e) { // Remove users even if an error occurs (otherwise they may not be able to send a new message due to "headers already sent")
-					e.printStackTrace();
-				}
+				IOHelper.SendResponse(200, finalmsghtml, exmap.get(user));
 				exmap.remove(user);
+				if (unsentmessages.get(user).size() == 0)
+					unsentmessages.remove(user);
 			} else {
 				LogManager.getLogger().warn("User is not listening: " + user);
-				unsentmessages.put(user, msg);
 			}
 		}
 	}

@@ -1,10 +1,6 @@
 package io.github.norbipeti.chat.server.page;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.TimeZone;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.jsoup.nodes.Element;
@@ -57,10 +53,12 @@ public class IndexPage extends Page {
 				cide.attr("style", "display: none");
 				cide.attr("id", "convidp");
 				cide.text(Long.toString(conv.getId()));
-				LogManager.getLogger().log(Level.DEBUG, "Messages: " + conv.getMesssageChunks().size());
-				MessageChunk chunk = conv.getMesssageChunks().get(conv.getMesssageChunks().size() - 1);
-				for (Message message : chunk.getMessages()) {
-					message.getAsHTML(channelmessages);
+				LogManager.getLogger().log(Level.DEBUG, "Messagechunks: " + conv.getMesssageChunks().size());
+				if (conv.getMesssageChunks().size() > 0) {
+					MessageChunk chunk = conv.getMesssageChunks().get(conv.getMesssageChunks().size() - 1);
+					for (Message message : chunk.getMessages()) {
+						message.getAsHTML(channelmessages);
+					}
 				}
 				return doc;
 			}, exchange);

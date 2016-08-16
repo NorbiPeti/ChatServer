@@ -103,14 +103,20 @@ public class Message extends ManagedData {
 
 	public Element getAsHTML(Element channelmessages) {
 		Element msgelement = channelmessages.appendElement("div");
+		msgelement.addClass("chmessage");
 		Element header = msgelement.appendElement("p");
 		header.text(getSender().get().getName() + " - ");
-		header.appendElement("span").addClass("converttime").text(formatDate());
+		header.appendElement("span").addClass("converttime").attr("data-val", formatDate());
 		Element body = msgelement.appendElement("p");
 		body.text(getMessage());
 		return msgelement;
 	}
 
+	/**
+	 * 
+	 * @Deprecated Why send it as JSON then convert it to HTML?
+	 */
+	@Deprecated
 	public JsonObject getAsJson() {
 		JsonObject msgobj = new JsonObject();
 		msgobj.add("sender", Main.gson.toJsonTree(getSender().get()));

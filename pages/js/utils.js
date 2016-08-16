@@ -12,9 +12,16 @@ function getFormData($form) {
     return indexed_array;
 }
 
+var errorcleartimer = null;
 function showError(message) {
+    if (errorcleartimer != null)
+        clearInterval(errorcleartimer);
     var errormsg = document.getElementById("errormsg");
     errormsg.innerHTML = message;
     errormsg.style = "display: block";
-    setTimeout(function () { errormsg.style.display = "none"; }, 2000);
+    errorcleartimer = setTimeout(function () { errormsg.style.display = "none"; }, 2000);
+}
+
+function isLoggedIn() {
+    return document.getElementById("usercontent") != null;
 }
