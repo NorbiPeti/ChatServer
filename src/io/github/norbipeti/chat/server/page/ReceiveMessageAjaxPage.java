@@ -2,6 +2,7 @@ package io.github.norbipeti.chat.server.page;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -25,6 +26,7 @@ public class ReceiveMessageAjaxPage extends Page {
 	}
 
 	public static HashMap<User, HttpExchange> exmap = new HashMap<>();
+	public static HashMap<User, Message> unsentmessages = new HashMap<>();
 
 	@Override
 	public void handlePage(HttpExchange exchange) throws IOException {
@@ -47,19 +49,30 @@ public class ReceiveMessageAjaxPage extends Page {
 	}
 
 	public static void sendMessageBack(Message msg, Conversation conv) throws IOException {
-		for (User user : conv.getUsers()) {
-			LogManager.getLogger().debug("User: " + user);
-			if (exmap.containsKey(user)) { // TODO: Save new messages if not listening
-				LogManager.getLogger().debug("Exmap contains user");
-				JsonObject msgobj = msg.getAsJson();
+		for (User user : conv.getUsers()) { // TODO: Load older messages when scrolling up
+			if (unsentmessages.size() > 10)
+				unsentmessages.clear();
+			if (exmap.containsKey(user)) { // TODO: Save new messages if not listening - If message count is bigger than 10, remove (the user is probably offline)
+				unsentmessages.put(user, msg);
+				for (Entry<User, Message> entry : unsentmessages.) { //TODO: Only one key allowed, fix
+					JsonObject msgobj = entry.getValue().getAsJson(); // TODO: Only send messages if the user's current conversation matches
+					try {
+						IOHelper.SendResponse(200, msgobj.toString(), exmap.get(user));
+					} catch (IOException e) { // Remove users even if an error occurs (otherwise they may not be able to send a new message due to "headers already sent")
+						e.printStackTrace();
+					}
+				}
+				JsonObject msgobj = msg.getAsJson(); // TODO: Only send messages if the user's current conversation matches
 				try {
 					IOHelper.SendResponse(200, msgobj.toString(), exmap.get(user));
 				} catch (IOException e) { // Remove users even if an error occurs (otherwise they may not be able to send a new message due to "headers already sent")
 					e.printStackTrace();
 				}
 				exmap.remove(user);
-			} else
+			} else {
 				LogManager.getLogger().warn("User is not listening: " + user);
+				unsentmessages.put(user, msg);
+			}
 		}
 	}
 }
