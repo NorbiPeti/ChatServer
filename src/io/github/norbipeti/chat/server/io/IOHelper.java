@@ -101,6 +101,8 @@ public class IOHelper {
 	public static JsonObject GetPOSTJSON(HttpExchange exchange) {
 		try {
 			String content = GetPOST(exchange);
+			if (content.length() == 0)
+				return null;
 			JsonElement e = new JsonParser().parse(content);
 			if (e == null)
 				return null;
