@@ -32,4 +32,19 @@ public class LoaderRef<T extends SavedData> extends Loader {
 	public T get() {
 		return DataManager.load(cl, id, true);
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return super.equals(obj);
+		if (cl.isAssignableFrom(obj.getClass()))
+			return ((T) obj).getId() == id;
+		else if (Long.class.isAssignableFrom(obj.getClass()) || long.class.isAssignableFrom(obj.getClass()))
+			return (Long) obj == id;
+		else if (LoaderRef.class.isAssignableFrom(obj.getClass()))
+			return ((LoaderRef<?>) obj).id == id;
+		else
+			return super.equals(obj);
+	}
 }

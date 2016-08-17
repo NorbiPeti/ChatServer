@@ -63,3 +63,19 @@ html, body {
     height: 100%;
     margin: 0;
 }
+
+#conversations
+{
+    width: 20%;
+    float: left;
+}
+
+#conversation
+{
+
+}
+
+#unreadmsg
+{
+    background-color: #DDD;
+}

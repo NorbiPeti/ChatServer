@@ -35,34 +35,46 @@ public class IndexPage extends Page {
 				Element userbox = doc.getElementById("userbox");
 				userbox.html(userbox.html().replace("<username />", user.getName()));
 				Element channelmessages = doc.getElementById("channelmessages");
-				LogManager.getLogger().log(Level.DEBUG,
-						"Conversations: " + DataManager.getAll(Conversation.class).size());
-				LogManager.getLogger().log(Level.DEBUG, "User conversations: " + user.getConversations().size());
-				LogManager.getLogger().log(Level.DEBUG, "Username: " + user.getName());
-				if (user.getConversations().size() == 0) {
-					LoaderCollection<Conversation> convs = DataManager.getAll(Conversation.class);
-					if (convs.size() == 0) {
-						Conversation c = ManagedData.create(Conversation.class);
-						convs.add(c); // TODO: Handle no conversation open
-					}
-					user.getConversations().add(convs.get(0));
-					convs.get(0).getUsers().add(user);
-				}
-				Conversation conv = user.getConversations().get(0);
 				Element cide = channelmessages.appendElement("p");
+				long convid = -1;
+				if (user.getCurrentConversation() != null) {
+					Conversation conv = user.getCurrentConversation().get();
+					convid = conv.getId();
+					if (conv.getMesssageChunks().size() > 0) {
+						MessageChunk chunk = conv.getMesssageChunks().get(conv.getMesssageChunks().size() - 1);
+						for (Message message : chunk.getMessages()) {
+							message.getAsHTML(channelmessages);
+						}
+					}
+				}
 				cide.attr("style", "display: none");
 				cide.attr("id", "convidp");
-				cide.text(Long.toString(conv.getId()));
-				LogManager.getLogger().log(Level.DEBUG, "Messagechunks: " + conv.getMesssageChunks().size());
-				if (conv.getMesssageChunks().size() > 0) {
-					MessageChunk chunk = conv.getMesssageChunks().get(conv.getMesssageChunks().size() - 1);
-					for (Message message : chunk.getMessages()) {
-						message.getAsHTML(channelmessages);
+				cide.text(Long.toString(convid));
+				Element conversations = doc.getElementById("conversations");
+				for (Conversation conv : user.getConversations()) {
+					Element conversation = conversations.appendElement("div");
+					conversation.addClass("conversation");
+					String users = "";
+					StringBuilder sb = new StringBuilder();
+					for (User item : conv.getUsers()) {
+						sb.append(item.getName()).append(", ");
 					}
+					if (sb.length() > 2)
+						sb.replace(sb.length() - 2, sb.length() - 1, "");
+					users = sb.toString();
+					conversation.appendElement("a").text(users).attr("href",
+							"javascript:changeConversation(" + conv.getId() + ")");
 				}
 				return doc;
 			}, exchange);
-	} // TODO: Validation at registration (no special chars, etc.)
+	} // TODO:
+		// Validation
+		// at
+		// registration
+		// (no
+		// special
+		// chars,
+		// etc.)
 
 	@Override
 	public String GetName() {

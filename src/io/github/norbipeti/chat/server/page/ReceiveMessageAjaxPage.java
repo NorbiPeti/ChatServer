@@ -14,6 +14,7 @@ import org.jsoup.nodes.Element;
 import com.google.gson.JsonObject;
 import com.sun.net.httpserver.HttpExchange;
 
+import io.github.norbipeti.chat.server.data.LoaderRef;
 import io.github.norbipeti.chat.server.db.domain.Conversation;
 import io.github.norbipeti.chat.server.db.domain.Message;
 import io.github.norbipeti.chat.server.db.domain.User;
@@ -37,11 +38,27 @@ public class ReceiveMessageAjaxPage extends Page {
 			IOHelper.SendResponse(403, "<p>Please log in to receive messages</p>", exchange);
 			return;
 		}
-		exmap.put(user, exchange);
+		String post = IOHelper.GetPOST(exchange);
+		if (post.length() == 0) {
+			IOHelper.SendResponse(400, "ERROR: Empty string", exchange);
+		}
+		long convid = Long.parseLong(post);
+		LoaderRef<Conversation> currentconversation = convid == -1 ? null : new LoaderRef<>(Conversation.class, convid);
+		Conversation conv = currentconversation == null ? null : currentconversation.get();
+		if (conv == null || !conv.getUsers().contains(user))
+			user.setCurrentConversation(null);
+		else {
+			if (user.getCurrentConversation() == null || !user.getCurrentConversation().equals(currentconversation))
+				sendMessagesToUser(user, conv);
+			user.setCurrentConversation(currentconversation);
+			exmap.put(user, exchange);
+		}
 	}
 
 	public static void sendMessageBack(Message msg, Conversation conv) throws IOException {
 		for (User user : conv.getUsers()) { // TODO: Load older messages when scrolling up
+			if (user.getCurrentConversation() == null || !user.getCurrentConversation().get().equals(conv))
+				continue;
 			if (unsentmessages.containsKey(user) && unsentmessages.get(user).size() > 10) {
 				unsentmessages.get(user).clear();
 			}
@@ -50,24 +67,36 @@ public class ReceiveMessageAjaxPage extends Page {
 			unsentmessages.get(user).add(msg);
 			if (exmap.containsKey(user)) {
 				Iterator<Message> it = unsentmessages.get(user).iterator();
-				String finalmsghtml = "";
+				Document doc = new Document("");
 				while (it.hasNext()) {
 					Message entry = it.next();
-					Element msgobj = entry.getAsHTML(new Document("")); // TODO: Only send messages if the user's current conversation matches
-					finalmsghtml += msgobj.toString() + "\n";
+					entry.getAsHTML(doc); // TODO: Only send messages if the user's current conversation matches
 					try {
 						it.remove(); // Remove sent message
 					} catch (Exception e) { // Remove users even if an error occurs (otherwise they may not be able to send a new/ message due to "headers already sent")
 						e.printStackTrace();
 					}
 				}
-				IOHelper.SendResponse(200, finalmsghtml, exmap.get(user));
+				IOHelper.SendResponse(200, doc.toString(), exmap.get(user));
 				exmap.remove(user);
 				if (unsentmessages.get(user).size() == 0)
 					unsentmessages.remove(user);
 			} else {
 				LogManager.getLogger().warn("User is not listening: " + user);
 			}
+		}
+	}
+
+	public static void sendMessagesToUser(User user, Conversation conv) throws IOException {
+		LogManager.getLogger().debug("Attempting to send channel messages to user: " + user);
+		if (exmap.containsKey(user)) {
+			Document doc = new Document("");
+			for (Message msg : conv.getMesssageChunks().get(conv.getMesssageChunks().size() - 1).getMessages())
+				msg.getAsHTML(doc);
+			IOHelper.SendResponse(200, doc.toString(), exmap.get(user));
+			exmap.remove(user);
+		} else {
+			LogManager.getLogger().warn("User is not listening: " + user);
 		}
 	}
 }

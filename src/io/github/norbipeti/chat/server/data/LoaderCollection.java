@@ -88,13 +88,26 @@ public class LoaderCollection<T extends SavedData> extends Loader implements Lis
 		idlist.clear();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean contains(Object o) {
+		if (cl.isAssignableFrom(o.getClass())) {
+			return idlist.contains(((T) o).getId());
+		}
 		return idlist.contains(o);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean containsAll(Collection<?> c) {
+		List<Long> list = new ArrayList<>();
+		for (Object o : c) {
+			if (cl.isAssignableFrom(o.getClass())) {
+				list.add(((T) o).getId());
+			}
+		}
+		if (list.size() > 0)
+			return idlist.containsAll(list);
 		return idlist.containsAll(c);
 	}
 
@@ -219,11 +232,14 @@ public class LoaderCollection<T extends SavedData> extends Loader implements Lis
 		StringBuilder sb = new StringBuilder("[");
 		for (Long item : idlist) {
 			if (loaditems)
-				sb.append(DataManager.load(cl, item, true));
+				sb.append(DataManager.load(cl, item, true)).append(", ");
 			else
-				sb.append(item);
+				sb.append(item).append(", ");
 		}
-		sb.append("]");
+		if (sb.length() > 2)
+			sb.replace(sb.length() - 2, sb.length() - 1, "]");
+		else
+			sb.append("]");
 		return sb.toString();
 	}
 

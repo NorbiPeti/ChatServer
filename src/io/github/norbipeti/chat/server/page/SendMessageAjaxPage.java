@@ -49,9 +49,7 @@ public class SendMessageAjaxPage extends Page {
 		}
 		LoaderCollection<Conversation> convos = user.getConversations();
 		Conversation conv = null;
-		LogManager.getLogger().log(Level.DEBUG, "Len: " + convos.size());
 		for (Conversation con : convos) {
-			LogManager.getLogger().log(Level.DEBUG, con.getId());
 			if (con.getId() == conversation) {
 				conv = con;
 				break;
@@ -68,8 +66,6 @@ public class SendMessageAjaxPage extends Page {
 		msg.setMessage(message);
 		msg.setTime(new Date());
 		DataManager.save(conv);
-		LogManager.getLogger().log(Level.DEBUG,
-				"Added conversation's messagechunk count: " + conv.getMesssageChunks().size());
 
 		ReceiveMessageAjaxPage.sendMessageBack(msg, conv);
 

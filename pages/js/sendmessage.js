@@ -38,9 +38,12 @@ var sendmsgonenter = function sendmsgonenter(e) {
     var textarea = e.target;
     if (textarea.value.trim().length == 0)
         return;
-    textarea.disabled = true; //msginput
-    window.convid = document.getElementById("convidp").innerText * 1;
-    sendmsg(textarea);
+    var convidp = document.getElementById("convidp");
+    if (convidp != null) {
+        textarea.disabled = true; //msginput
+        window.convid = convidp.innerText * 1;
+        sendmsg(textarea);
+    }
 };
 
 $(document).ready(function () {

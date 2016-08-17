@@ -23,9 +23,9 @@ var updateUnreadCount = function () {
     var msgs = document.getElementById("channelmessages").getElementsByClassName("chmessage");
     for (var i = msgs.length - 1; i >= 0; i--) {
         if (i >= msgs.length - unreadCount)
-            msgs[i].style.backgroundColor = "darkgray";
+            msgs[i].classList.add("unreadmsg");
         else
-            msgs[i].style = "";
+            msgs[i].classList.remove("unreadmsg");
         updatemsgtime(msgs[i]);
     }
 };
@@ -40,29 +40,49 @@ var resetUnread = function resetUnread() {
     updateUnreadCount();
 };
 
+var shouldpoll = false;
+function poll() {
+    setTimeout(function () {
+        if (!shouldpoll)
+            return;
+        $.ajax({
+            url: "/receivemessage", data: document.getElementById("convidp").innerText, success: function (data) {
+                var msgs = document.getElementById("channelmessages");
+                msgs.innerHTML += data;
+                var msgelement = msgs.children[msgs.children.length - 1];
+                handlereceivedmessage(msgelement);
+                if (justsentmsgread)
+                    justsentmsgread = false;
+                else
+                    addUnread();
+            }, error: function (data) {
+                if (data.responseText) {
+                    if (data.responseText.indexOf("ERROR") == -1)
+                        showError(data.responseText);
+                    else
+                        console.log("Got empty string error...");
+                }
+                else
+                    showError("Can't connect to the server!");
+            }, dataType: "text", complete: poll, method: "POST"
+        });
+    }, 100);
+};
+
+function startPoll() {
+    if (!shouldpoll) {
+        shouldpoll = true;
+        poll();
+    }
+}
+
+function stopPoll() {
+    shouldpoll = false;
+}
+
 var readTimer = null;
 $(document).ready(function () {
     $('#msginput').on("focus", function () { readTimer == null ? readTimer = setTimeout(function () { resetUnread(); }, 3000) : readTimer; });
     $('#msginput').on("keydown", resetUnread);
     $('#msginput').on("blur", function () { readTimer != null ? clearTimeout(readTimer) : readTimer; });
-
-    if (isLoggedIn())
-        (function poll() {
-            setTimeout(function () {
-                $.ajax({
-                    url: "/receivemessage", success: function (data) {
-                        var msgs = document.getElementById("channelmessages");
-                        msgs.innerHTML += data;
-                        var msgelement = msgs.children[msgs.children.length - 1];
-                        handlereceivedmessage(msgelement);
-                        if (justsentmsgread)
-                            justsentmsgread = false;
-                        else
-                            addUnread();
-                    }, error: function (data) {
-                        showError(data.responseText);
-                    }, dataType: "text", complete: poll
-                });
-            }, 100);
-        })();
 });

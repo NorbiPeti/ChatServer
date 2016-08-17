@@ -16,6 +16,14 @@ public abstract class ManagedData implements Serializable {
 	protected ManagedData() {
 	}
 
+	@Override
+	public boolean equals(Object object) {
+		if (!this.getClass().equals(object.getClass()))
+			return false;
+		ManagedData data = (ManagedData) object;
+		return this.getId() == data.getId();
+	}
+
 	public static <T extends ManagedData> T create(Class<T> cl) {
 		T obj;
 		try {

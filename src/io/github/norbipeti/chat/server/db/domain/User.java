@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import io.github.norbipeti.chat.server.data.LoaderCollection;
+import io.github.norbipeti.chat.server.data.LoaderRef;
 
 @Entity
 @Table(name = "\"USER\"")
@@ -30,6 +31,7 @@ public class User extends SavedData {
 	// inverseJoinColumns = @JoinColumn(referencedColumnName = "id", unique =
 	// false))
 	private LoaderCollection<Conversation> conversations = new LoaderCollection<>(Conversation.class);
+	private LoaderRef<Conversation> currentconversation;
 
 	/**
 	 * Loads all contact data
@@ -89,6 +91,14 @@ public class User extends SavedData {
 
 	public LoaderCollection<Conversation> getConversations() {
 		return conversations;
+	}
+
+	public LoaderRef<Conversation> getCurrentConversation() {
+		return currentconversation;
+	}
+
+	public void setCurrentConversation(LoaderRef<Conversation> currentconversation) {
+		this.currentconversation = currentconversation;
 	}
 
 	private User() {
