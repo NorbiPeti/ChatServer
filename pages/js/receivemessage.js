@@ -41,6 +41,7 @@ var resetUnread = function resetUnread() {
 };
 
 var shouldpoll = false;
+var canswitchconversations = true;
 function poll() {
     setTimeout(function () {
         if (!shouldpoll)
@@ -51,10 +52,12 @@ function poll() {
                 msgs.innerHTML += data;
                 var msgelement = msgs.children[msgs.children.length - 1];
                 handlereceivedmessage(msgelement);
+                canswitchconversations = true;
                 if (justsentmsgread)
                     justsentmsgread = false;
                 else
                     addUnread();
+
             }, error: function (data) {
                 if (data.responseText) {
                     if (data.responseText.indexOf("ERROR") == -1)

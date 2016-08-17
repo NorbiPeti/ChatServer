@@ -51,22 +51,11 @@ public class IndexPage extends Page {
 				cide.attr("id", "convidp");
 				cide.text(Long.toString(convid));
 				Element conversations = doc.getElementById("conversations");
-				for (Conversation conv : user.getConversations()) {
-					Element conversation = conversations.appendElement("div");
-					conversation.addClass("conversation");
-					String users = "";
-					StringBuilder sb = new StringBuilder();
-					for (User item : conv.getUsers()) {
-						sb.append(item.getName()).append(", ");
-					}
-					if (sb.length() > 2)
-						sb.replace(sb.length() - 2, sb.length() - 1, "");
-					users = sb.toString();
-					conversation.appendElement("a").text(users).attr("href",
-							"javascript:changeConversation(" + conv.getId() + ")");
-				}
+				for (Conversation conv : user.getConversations())
+					conv.getAsHtml(conversations);
 				return doc;
 			}, exchange);
+
 	} // TODO:
 		// Validation
 		// at

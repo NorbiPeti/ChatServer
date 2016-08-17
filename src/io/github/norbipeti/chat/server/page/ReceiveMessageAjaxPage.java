@@ -41,6 +41,7 @@ public class ReceiveMessageAjaxPage extends Page {
 		String post = IOHelper.GetPOST(exchange);
 		if (post.length() == 0) {
 			IOHelper.SendResponse(400, "ERROR: Empty string", exchange);
+			return;
 		}
 		long convid = Long.parseLong(post);
 		LoaderRef<Conversation> currentconversation = convid == -1 ? null : new LoaderRef<>(Conversation.class, convid);
@@ -91,8 +92,9 @@ public class ReceiveMessageAjaxPage extends Page {
 		LogManager.getLogger().debug("Attempting to send channel messages to user: " + user);
 		if (exmap.containsKey(user)) {
 			Document doc = new Document("");
-			for (Message msg : conv.getMesssageChunks().get(conv.getMesssageChunks().size() - 1).getMessages())
-				msg.getAsHTML(doc);
+			if (conv.getMesssageChunks().size() > 0)
+				for (Message msg : conv.getMesssageChunks().get(conv.getMesssageChunks().size() - 1).getMessages())
+					msg.getAsHTML(doc);
 			IOHelper.SendResponse(200, doc.toString(), exmap.get(user));
 			exmap.remove(user);
 		} else {

@@ -2,6 +2,8 @@ package io.github.norbipeti.chat.server.db.domain;
 
 import javax.persistence.*;
 
+import org.jsoup.nodes.Element;
+
 import io.github.norbipeti.chat.server.data.LoaderCollection;
 
 @Entity
@@ -55,5 +57,20 @@ public class Conversation extends SavedData {
 
 	@Override
 	protected void init() {
+	}
+
+	public Element getAsHtml(Element conversations) {
+		Element conversation = conversations.appendElement("div");
+		conversation.addClass("conversation");
+		String users = "";
+		StringBuilder sb = new StringBuilder();
+		for (User item : getUsers()) {
+			sb.append(item.getName()).append(", ");
+		}
+		if (sb.length() > 2)
+			sb.replace(sb.length() - 2, sb.length() - 1, "");
+		users = sb.toString();
+		conversation.appendElement("a").text(users).attr("href", "javascript:changeConversation(" + getId() + ")");
+		return conversation;
 	}
 }

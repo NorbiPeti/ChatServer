@@ -29,6 +29,14 @@ function changeConversation(convid) {
     var convidp = document.getElementById("convidp");
     if (convidp.innerText == convid + "")
         return;
+    if (!canswitchconversations)
+        return;
+    canswitchconversations = false;
+    stopPoll();
+    var chmsgse = document.getElementById("channelmessages");
+    var chmsgs = chmsgse.getElementsByClassName("chmessage");
+    for (var i = 0; i < chmsgs.length; i++)
+        chmsgse.removeChild(chmsgs[i]);
     convidp.innerText = convid;
     conversationChanged();
 }

@@ -1,4 +1,5 @@
 var sendmsg = function sendmsg(msginputta) {
+    window.convid = document.getElementById("convidp").innerText * 1;
     window.jsonobj = JSON.stringify({ "message": msginputta.value, "conversation": window.convid });
     $.ajax({
         url: "/sendmessage", data: window.jsonobj, method: "POST", success: respfunc, error: respfunc
