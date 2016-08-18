@@ -33,7 +33,7 @@ public class RegisterAjaxPage extends Page {
 			if (errormsg.length() > 0) {
 				final String msg = errormsg;
 				IOHelper.SendResponse(200, (doc) -> doc.html(msg).ownerDocument(), exchange);
-				return;
+				return; // TODO: Fix: java.io.FileNotFoundException: data\Conversation-1.json (The process cannot access the file because it is being used by another process)
 			}
 			User user = ManagedData.create(User.class);
 			user.setName(post.get("name").getAsString());
