@@ -31,12 +31,13 @@ function changeConversation(convid) {
         return;
     if (!canswitchconversations)
         return;
+    console.log("Can't switch conversations now");
     canswitchconversations = false;
     stopPoll();
     var chmsgse = document.getElementById("channelmessages");
     var chmsgs = chmsgse.getElementsByClassName("chmessage");
-    for (var i = 0; i < chmsgs.length; i++)
-        chmsgse.removeChild(chmsgs[i]);
+    while (chmsgs.length > 0)
+        chmsgse.removeChild(chmsgs[0]);
     convidp.innerText = convid;
     conversationChanged();
 }

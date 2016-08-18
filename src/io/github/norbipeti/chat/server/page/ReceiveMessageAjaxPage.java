@@ -49,16 +49,18 @@ public class ReceiveMessageAjaxPage extends Page {
 		if (conv == null || !conv.getUsers().contains(user))
 			user.setCurrentConversation(null);
 		else {
+			exmap.put(user, exchange);
 			if (user.getCurrentConversation() == null || !user.getCurrentConversation().equals(currentconversation))
 				sendMessagesToUser(user, conv);
 			user.setCurrentConversation(currentconversation);
-			exmap.put(user, exchange);
 		}
 	}
 
 	public static void sendMessageBack(Message msg, Conversation conv) throws IOException {
 		for (User user : conv.getUsers()) { // TODO: Load older messages when scrolling up
 			if (user.getCurrentConversation() == null || !user.getCurrentConversation().get().equals(conv))
+				continue;
+			if (!user.isLoggedIn())
 				continue;
 			if (unsentmessages.containsKey(user) && unsentmessages.get(user).size() > 10) {
 				unsentmessages.get(user).clear();
@@ -71,14 +73,18 @@ public class ReceiveMessageAjaxPage extends Page {
 				Document doc = new Document("");
 				while (it.hasNext()) {
 					Message entry = it.next();
-					entry.getAsHTML(doc); // TODO: Only send messages if the user's current conversation matches
+					entry.getAsHTML(doc);
 					try {
 						it.remove(); // Remove sent message
 					} catch (Exception e) { // Remove users even if an error occurs (otherwise they may not be able to send a new/ message due to "headers already sent")
 						e.printStackTrace();
 					}
+				} // TODO: Allow logins from multiple locations - Map<IP, UUID>
+				try {
+					IOHelper.SendResponse(200, doc.toString(), exmap.get(user));
+				} catch (Exception e) {
+					LogManager.getLogger().warn("Error: Can't send " + doc.toString() + " to " + user + "\n" + e);
 				}
-				IOHelper.SendResponse(200, doc.toString(), exmap.get(user));
 				exmap.remove(user);
 				if (unsentmessages.get(user).size() == 0)
 					unsentmessages.remove(user);

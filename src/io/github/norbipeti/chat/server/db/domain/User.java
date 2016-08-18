@@ -2,6 +2,8 @@ package io.github.norbipeti.chat.server.db.domain;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
+
 import javax.persistence.*;
 
 import io.github.norbipeti.chat.server.data.LoaderCollection;
@@ -116,5 +118,9 @@ public class User extends SavedData {
 
 	@Override
 	public void init() {
+	}
+
+	public boolean isLoggedIn() {
+		return !sessionid.equals(new UUID(0, 0));
 	}
 }

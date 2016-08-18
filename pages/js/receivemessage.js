@@ -52,6 +52,7 @@ function poll() {
                 msgs.innerHTML += data;
                 var msgelement = msgs.children[msgs.children.length - 1];
                 handlereceivedmessage(msgelement);
+                console.log("Can switch conversations now");
                 canswitchconversations = true;
                 if (justsentmsgread)
                     justsentmsgread = false;
