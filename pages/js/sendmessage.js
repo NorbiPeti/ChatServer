@@ -6,7 +6,6 @@ var sendmsg = function sendmsg(msginputta) {
     });
 };
 
-var justsentmsgread = false;
 var respfunc = function respfunc(result) {
     var msginput = document.getElementById("msginput");
     if (result != "Success") { //on success result is string
@@ -26,7 +25,6 @@ var respfunc = function respfunc(result) {
         msginput.value = "";
         msginput.disabled = false;
         msginput.focus();
-        justsentmsgread = true;
     }
 };
 

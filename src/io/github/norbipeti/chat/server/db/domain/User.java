@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import javax.persistence.*;
 
+import org.jsoup.nodes.Element;
+
 import io.github.norbipeti.chat.server.data.LoaderCollection;
 import io.github.norbipeti.chat.server.data.LoaderRef;
 

@@ -46,6 +46,12 @@ public class IndexPage extends Page {
 							message.getAsHTML(channelmessages);
 						}
 					}
+					for (int i = 0; i < conv.getUsers().size(); i++)
+						doc.getElementById("usersinconv").appendElement("div").attr("id", "convuser" + i)
+								.addClass("convuser").appendElement("p").text(conv.getUsers().get(i).getName());
+					doc.getElementById("sidebarr").appendElement("div").attr("id", "addconvuser").appendElement("a")
+							.text("Add user to conversation").attr("href", "javascript:showAddUserToConv()");
+					// TODO: Update users and conversations automatically on conv change
 				}
 				cide.attr("style", "display: none");
 				cide.attr("id", "convidp");
@@ -53,17 +59,12 @@ public class IndexPage extends Page {
 				Element conversations = doc.getElementById("conversations");
 				for (Conversation conv : user.getConversations())
 					conv.getAsHtml(conversations);
+				conversations.appendElement("div").attr("id", "addconv").appendElement("a").attr("href", "#")
+						.attr("onclick", "return addConversation();").text("Add conversation");
 				return doc;
 			}, exchange);
 
-	} // TODO:
-		// Validation
-		// at
-		// registration
-		// (no
-		// special
-		// chars,
-		// etc.)
+	} // TODO: Validation at registration (no special chars, etc.)
 
 	@Override
 	public String GetName() {

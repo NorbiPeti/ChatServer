@@ -41,7 +41,7 @@ public abstract class Page implements HttpHandler {
 				str.print("</pre>");
 				IOHelper.SendResponse(500, baos.toString(StandardCharsets.ISO_8859_1), exchange);
 			} catch (Exception e1) {
-				e1.printStackTrace(); // TODO: Message listener JS
+				e1.printStackTrace();
 			}
 		}
 	}

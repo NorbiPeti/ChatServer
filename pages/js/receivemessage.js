@@ -31,6 +31,8 @@ var updateUnreadCount = function () {
 };
 
 var addUnread = function addUnread() {
+    if (shouldread || document.getElementById("msginput").disabled)
+        return;
     unreadCount++;
     updateUnreadCount();
 };
@@ -54,10 +56,7 @@ function poll() {
                 handlereceivedmessage(msgelement);
                 console.log("Can switch conversations now");
                 canswitchconversations = true;
-                if (justsentmsgread)
-                    justsentmsgread = false;
-                else
-                    addUnread();
+                addUnread();
 
             }, error: function (data) {
                 if (data.responseText) {
@@ -85,8 +84,17 @@ function stopPoll() {
 }
 
 var readTimer = null;
+var shouldread = false;
 $(document).ready(function () {
-    $('#msginput').on("focus", function () { readTimer == null ? readTimer = setTimeout(function () { resetUnread(); }, 3000) : readTimer; });
+    $('#msginput').on("focus", function () {
+        readTimer == null ? readTimer = setTimeout(function () {
+            resetUnread();
+        }, 3000) : readTimer;
+        shouldread = true;
+    });
     $('#msginput').on("keydown", resetUnread);
-    $('#msginput').on("blur", function () { readTimer != null ? clearTimeout(readTimer) : readTimer; });
+    $('#msginput').on("blur", function () {
+        readTimer != null ? clearTimeout(readTimer) : readTimer;
+        shouldread = false;
+    });
 });

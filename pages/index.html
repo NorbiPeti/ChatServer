@@ -13,22 +13,24 @@
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/index.js"></script>
     <script src="js/conversations.js"></script>
+    <script src="js/users.js"></script>
 </head>
 
 <body>
     <div id="errormsg">
     </div>
-    <div id="conversations">
-        <div id="addconv">
-            <a href="#" onclick="return addConversation();">Add conversation</a>
+    <div id="sidebarl">
+        <div id="conversations">
         </div>
     </div>
-    <div id="sidebar">
+    <div id="sidebarr">
         <div id="userbox">
             <p>Logged in as
                 <username/>
             </p>
             <a href="/logout">Logout</a>
+        </div>
+        <div id="usersinconv">
         </div>
     </div>
     <div id="loginregisterbox">
@@ -96,5 +98,12 @@
     <div id="usercontent">
         <div id="channelmessages"></div>
         <textarea id="msginput" autofocus="autofocus"></textarea>
+    </div>
+    <div id="hoverdialogcont">
+        <div id="hoverdialogmid">
+            <div id="hoverdialog">
+                <p>Loading...</p>
+            </div>
+        </div>
     </div>
 </body>

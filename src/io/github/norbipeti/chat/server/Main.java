@@ -55,7 +55,7 @@ public class Main {
 			 * conversation.getUsers().add(loggedinuser); loggedinuser.getConversations().add(conversation); DataManager.save(user); DataManager.save(user2); DataManager.save(loggedinuser);
 			 * DataManager.save(conversation);
 			 */
-			LogManager.getLogger().log(Level.INFO, "Starting webserver..."); // TODO: Separate IDs for conversations and users
+			LogManager.getLogger().log(Level.INFO, "Starting webserver...");
 			HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLocalHost(), 8080), 10);
 			rf = new Reflections(
 					new ConfigurationBuilder().setUrls(ClasspathHelper.forClassLoader(Page.class.getClassLoader()))
@@ -75,16 +75,10 @@ public class Main {
 				}
 			}
 			server.start();
-			/*
-			 * LogManager.getLogger().info("Starting websocket server..."); Vertx vertx = Vertx.vertx(); io.vertx.core.http.HttpServer socketserver = vertx.createHttpServer();
-			 * socketserver.websocketHandler(websocket -> { websocket.writeFinalTextFrame("Hello"); // TODO }); socketserver.listen(8180);
-			 */
 			LogManager.getLogger().log(Level.INFO, "Ready... Press Enter to stop.");
 			System.in.read();
 			LogManager.getLogger().log(Level.INFO, "Stopping...");
 			server.stop(1);
-			// socketserver.close();
-			// vertx.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
