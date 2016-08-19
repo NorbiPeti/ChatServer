@@ -1,6 +1,8 @@
 package io.github.norbipeti.chat.server.page;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
+
 import org.mindrot.jbcrypt.BCrypt;
 
 import com.google.gson.JsonObject;
@@ -12,6 +14,8 @@ import io.github.norbipeti.chat.server.db.domain.User;
 import io.github.norbipeti.chat.server.io.IOHelper;
 
 public class RegisterAjaxPage extends Page {
+	private static final Pattern EMAIL_PATTERN = Pattern.compile("^[\\w.-]+@[\\w.-]+\\.[\\w.-]+$");
+
 	@Override
 	public void handlePage(HttpExchange exchange) throws IOException {
 		JsonObject post = IOHelper.GetPOSTJSON(exchange);
@@ -22,10 +26,15 @@ public class RegisterAjaxPage extends Page {
 				IOHelper.SendResponse(200, (doc) -> doc.html(msg).ownerDocument(), exchange);
 				return; // TODO: Use JavaScript too, for error checks
 			}
-			for (User user : DataManager.getAll(User.class)) { // TODO: Optimize
-				if (post.get("email").getAsString().equals(user.getEmail())) {
-					errormsg += "<p>An user with this E-mail already exists</p>";
-					break;
+			String email = post.get("email").getAsString();
+			if (!EMAIL_PATTERN.matcher(email).matches())
+				errormsg += "<p>Invalid E-mail address</p>";
+			else {
+				for (User user : DataManager.getAll(User.class)) { // TODO: Optimize
+					if (email.equals(user.getEmail())) {
+						errormsg += "<p>An user with this E-mail already exists</p>";
+						break;
+					}
 				}
 			}
 			if (!post.get("pass").getAsString().equals(post.get("pass2").getAsString()))
@@ -37,7 +46,7 @@ public class RegisterAjaxPage extends Page {
 			}
 			User user = ManagedData.create(User.class);
 			user.setName(post.get("name").getAsString());
-			user.setEmail(post.get("email").getAsString());
+			user.setEmail(email);
 			user.setSalt(BCrypt.gensalt()); // http://www.mindrot.org/projects/jBCrypt/
 			user.setPassword(BCrypt.hashpw(post.get("pass").getAsString(), user.getSalt()));
 			IOHelper.LoginUser(exchange, user);

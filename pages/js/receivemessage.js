@@ -89,12 +89,14 @@ $(document).ready(function () {
     $('#msginput').on("focus", function () {
         readTimer == null ? readTimer = setTimeout(function () {
             resetUnread();
+            readTimer = null;
         }, 3000) : readTimer;
         shouldread = true;
     });
     $('#msginput').on("keydown", resetUnread);
     $('#msginput').on("blur", function () {
         readTimer != null ? clearTimeout(readTimer) : readTimer;
+        readTimer = null;
         shouldread = false;
     });
 });

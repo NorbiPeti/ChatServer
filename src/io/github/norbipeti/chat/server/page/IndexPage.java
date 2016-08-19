@@ -64,7 +64,7 @@ public class IndexPage extends Page {
 				return doc;
 			}, exchange);
 
-	} // TODO: Validation at registration (no special chars, etc.)
+	}
 
 	@Override
 	public String GetName() {
